@@ -210,8 +210,10 @@ class GameViewController: UIViewController {
     }
     
     //var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
+    //var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/json_file").words
     var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
-        
+    //var _words:[String] = WordList(url: "http://google").words
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

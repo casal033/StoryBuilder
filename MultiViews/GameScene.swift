@@ -59,7 +59,7 @@ class GameScene: SKScene {
  
     
     var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
-    //WordList(url: "https://wordriver.herokuapp.com/json_file").words
+    //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
     //var _words:[String] = []
     var _currentLabel:SKLabelNode = SKLabelNode()
     
@@ -130,7 +130,7 @@ class GameScene: SKScene {
         tileLayer.removeAllChildren()
         tilesArray = []
         extraWordCount = 0
-        //_words = WordList(url: "https://wordriver.herokuapp.com/json_file").words
+        //_words = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
         _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     }
     
