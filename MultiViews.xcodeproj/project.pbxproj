@@ -147,9 +147,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		84B6E2FC1975A2130041C4E1 /* MultiViews */ = {
+		84B6E2FC1975A2130041C4E1 /* MultiViewsiPad */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViews" */;
+			buildConfigurationList = 84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViewsiPad" */;
 			buildPhases = (
 				84B6E2F91975A2130041C4E1 /* Sources */,
 				84B6E2FA1975A2130041C4E1 /* Frameworks */,
@@ -159,7 +159,7 @@
 			);
 			dependencies = (
 			);
-			name = MultiViews;
+			name = MultiViewsiPad;
 			productName = MultiViews;
 			productReference = 84B6E2FD1975A2130041C4E1 /* MultiViews.app */;
 			productType = "com.apple.product-type.application";
@@ -214,7 +214,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				84B6E2FC1975A2130041C4E1 /* MultiViews */,
+				84B6E2FC1975A2130041C4E1 /* MultiViewsiPad */,
 				84B6E3121975A2140041C4E1 /* MultiViewsTests */,
 			);
 		};
@@ -271,7 +271,7 @@
 /* Begin PBXTargetDependency section */
 		84B6E3151975A2140041C4E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 84B6E2FC1975A2130041C4E1 /* MultiViews */;
+			target = 84B6E2FC1975A2130041C4E1 /* MultiViewsiPad */;
 			targetProxy = 84B6E3141975A2140041C4E1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -455,7 +455,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViews" */ = {
+		84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViewsiPad" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84B6E31E1975A2140041C4E1 /* Debug */,

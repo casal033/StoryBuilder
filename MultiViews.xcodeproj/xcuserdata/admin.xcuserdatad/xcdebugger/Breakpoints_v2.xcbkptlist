@@ -469,7 +469,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultiViews/Extensions.swift"
-            timestampString = "455731093.529061"
+            timestampString = "455756903.060711"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "62"
@@ -485,11 +485,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultiViews/Extensions.swift"
-            timestampString = "455731093.529061"
+            timestampString = "455756903.060711"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "51"
             endingLineNumber = "51"
+            landmarkName = "loadJSONFromWeb(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MultiViews/Extensions.swift"
+            timestampString = "455756903.060711"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
             landmarkName = "loadJSONFromWeb(_:)"
             landmarkType = "5">
          </BreakpointContent>
