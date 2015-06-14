@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-               BuildableName = "MultiViewsiPad.app"
-               BlueprintName = "MultiViewsiPad"
+               BuildableName = "MultiViews.app"
+               BlueprintName = "MultiViews"
                ReferencedContainer = "container:MultiViews.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-            BuildableName = "MultiViewsiPad.app"
-            BlueprintName = "MultiViewsiPad"
+            BuildableName = "MultiViews.app"
+            BlueprintName = "MultiViews"
             ReferencedContainer = "container:MultiViews.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -53,8 +53,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-            BuildableName = "MultiViewsiPad.app"
-            BlueprintName = "MultiViewsiPad"
+            BuildableName = "MultiViews.app"
+            BlueprintName = "MultiViews"
             ReferencedContainer = "container:MultiViews.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -72,8 +72,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-            BuildableName = "MultiViewsiPad.app"
-            BlueprintName = "MultiViewsiPad"
+            BuildableName = "MultiViews.app"
+            BlueprintName = "MultiViews"
             ReferencedContainer = "container:MultiViews.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

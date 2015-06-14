@@ -11,6 +11,7 @@
 		84142B5F199401B600EFC78F /* MyDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84142B5E199401B600EFC78F /* MyDataHandler.swift */; };
 		84142B61199402DD00EFC78F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84142B60199402DD00EFC78F /* Extensions.swift */; };
 		8467B77D19BE934200B8E06A /* Untitled drawing.png in Resources */ = {isa = PBXBuildFile; fileRef = 8467B77C19BE934200B8E06A /* Untitled drawing.png */; };
+		848566B91B2E0FEF00747016 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848566B81B2E0FEF00747016 /* SwiftyJSON.swift */; };
 		84B500E61977126B0082FCFD /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B500E51977126B0082FCFD /* Tile.swift */; };
 		84B6E3031975A2130041C4E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B6E3021975A2130041C4E1 /* AppDelegate.swift */; };
 		84B6E3051975A2130041C4E1 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 84B6E3041975A2130041C4E1 /* GameScene.sks */; };
@@ -38,6 +39,7 @@
 		84142B5E199401B600EFC78F /* MyDataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyDataHandler.swift; sourceTree = "<group>"; };
 		84142B60199402DD00EFC78F /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8467B77C19BE934200B8E06A /* Untitled drawing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Untitled drawing.png"; sourceTree = "<group>"; };
+		848566B81B2E0FEF00747016 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		84B500E51977126B0082FCFD /* Tile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		84B6E2FD1975A2130041C4E1 /* MultiViews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiViews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B6E3011975A2130041C4E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				84142B60199402DD00EFC78F /* Extensions.swift */,
 				84142B5C1993FFAB00EFC78F /* wordList.swift */,
 				84B6E3081975A2140041C4E1 /* GameViewController.swift */,
+				848566B81B2E0FEF00747016 /* SwiftyJSON.swift */,
 				84B6E3061975A2130041C4E1 /* GameScene.swift */,
 				84B500E51977126B0082FCFD /* Tile.swift */,
 				84E954CE19B2B05E00F5EA81 /* Phrase.swift */,
@@ -147,9 +150,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		84B6E2FC1975A2130041C4E1 /* MultiViewsiPad */ = {
+		84B6E2FC1975A2130041C4E1 /* MultiViews */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViewsiPad" */;
+			buildConfigurationList = 84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViews" */;
 			buildPhases = (
 				84B6E2F91975A2130041C4E1 /* Sources */,
 				84B6E2FA1975A2130041C4E1 /* Frameworks */,
@@ -159,7 +162,7 @@
 			);
 			dependencies = (
 			);
-			name = MultiViewsiPad;
+			name = MultiViews;
 			productName = MultiViews;
 			productReference = 84B6E2FD1975A2130041C4E1 /* MultiViews.app */;
 			productType = "com.apple.product-type.application";
@@ -214,7 +217,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				84B6E2FC1975A2130041C4E1 /* MultiViewsiPad */,
+				84B6E2FC1975A2130041C4E1 /* MultiViews */,
 				84B6E3121975A2140041C4E1 /* MultiViewsTests */,
 			);
 		};
@@ -253,6 +256,7 @@
 				84142B5F199401B600EFC78F /* MyDataHandler.swift in Sources */,
 				84E954CF19B2B05E00F5EA81 /* Phrase.swift in Sources */,
 				84B500E61977126B0082FCFD /* Tile.swift in Sources */,
+				848566B91B2E0FEF00747016 /* SwiftyJSON.swift in Sources */,
 				84B6E3091975A2140041C4E1 /* GameViewController.swift in Sources */,
 				84B6E3031975A2130041C4E1 /* AppDelegate.swift in Sources */,
 			);
@@ -271,7 +275,7 @@
 /* Begin PBXTargetDependency section */
 		84B6E3151975A2140041C4E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 84B6E2FC1975A2130041C4E1 /* MultiViewsiPad */;
+			target = 84B6E2FC1975A2130041C4E1 /* MultiViews */;
 			targetProxy = 84B6E3141975A2140041C4E1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -455,7 +459,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViewsiPad" */ = {
+		84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViews" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84B6E31E1975A2140041C4E1 /* Debug */,

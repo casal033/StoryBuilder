@@ -54,6 +54,9 @@ extension Dictionary {
                 // do something with data
             }
         }
+        
+        let json = JSON(data: dataFromNetworking)
+        
 //        if data == nil {
 //            println("Could not load data from file: \(url), error: \(error!)")
 //            return nil
