@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class WordList {
+public class WordList {
     //This is a comment we're testing
     var words: [String]!
     var contextIDs: Array<JSON>!
@@ -22,34 +22,6 @@ class WordList {
             if let wordsArray: AnyObject = dictionary["words"] {
                 words = wordsArray as! [String]
             }
-        }
-    }
-    
-    init(urlStudents: String){
-        let nsurl = NSURL(string: urlStudents)
-        var error: NSError?
-        
-        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
-        //println("The stduent data is: \(studentData)")
-        
-        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
-            options: NSJSONReadingOptions(), error: &error){
-                let jsonStudent = JSON(studentDictionary)
-                println("Some student stuff is: \(jsonStudent)")
-                var stucount = jsonStudent.count;
-                println("There are \(stucount) students available in this collection")
-                
-                for index in 0...stucount-1 {
-                    let StudentID = jsonStudent[index]["_id"].string
-                    if StudentID == "5511ab56117e23f0412fd08f" {
-                        contextIDs = jsonStudent[index]["contextTags"].arrayValue
-                        //println("The categoryID array: \(categoriesID)")
-                        looseTilesIDs = jsonStudent[index]["tileBucket"].arrayValue
-                        //println("The tileBucket array: \(looseTilesID)")
-                    }
-                }
-          } else {
-                println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
         }
     }
 
@@ -148,4 +120,57 @@ class WordList {
         wordsWithCategories = arr
     }
     
+    public func getStudentContextIDs(studentAPIurl: String) -> Array<JSON> {
+        let nsurl = NSURL(string: studentAPIurl)
+        var error: NSError?
+        
+        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
+        //println("The stduent data is: \(studentData)")
+        
+        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonStudent = JSON(studentDictionary)
+                println("Some student stuff is: \(jsonStudent)")
+                var stucount = jsonStudent.count;
+                println("There are \(stucount) students available in this collection")
+                
+                for index in 0...stucount-1 {
+                    let StudentID = jsonStudent[index]["_id"].string
+                    if StudentID == "5511ab56117e23f0412fd08f" {
+                        contextIDs = jsonStudent[index]["contextTags"].arrayValue
+                        return contextIDs
+                    }
+                }
+        } else {
+            println("The file at '\(studentAPIurl)' is not valid JSON, error: \(error!)")
+        }
+        return contextIDs
+    }
+    
+    func getStudentLooseTilesIDs(studentAPIurl: String) -> Array<JSON> {
+        let nsurl = NSURL(string: studentAPIurl)
+        var error: NSError?
+        
+        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
+        //println("The stduent data is: \(studentData)")
+        
+        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonStudent = JSON(studentDictionary)
+                println("Some student stuff is: \(jsonStudent)")
+                var stucount = jsonStudent.count;
+                println("There are \(stucount) students available in this collection")
+                
+                for index in 0...stucount-1 {
+                    let StudentID = jsonStudent[index]["_id"].string
+                    if StudentID == "5511ab56117e23f0412fd08f" {
+                        looseTilesIDs = jsonStudent[index]["tileBucket"].arrayValue
+                        println("The tileBucket array: \(looseTilesIDs)")
+                    }
+                }
+        } else {
+            println("The file at '\(studentAPIurl)' is not valid JSON, error: \(error!)")
+        }
+        return looseTilesIDs
+    }
 }
