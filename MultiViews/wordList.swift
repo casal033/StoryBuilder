@@ -57,29 +57,26 @@ class WordList {
         }
     }
 
-    init(urlStudents: String){
-        let nsurl = NSURL(string: urlStudents)
+    init(urlCategories: String){
+        let nsurl = NSURL(string: urlCategories)
         var error: NSError?
         
-        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
+        let categoryData: NSData = NSData(contentsOfURL: nsurl!)!
         //println("The stduent data is: \(studentData)")
         
-        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
+        if let categoryDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(categoryData,
             options: NSJSONReadingOptions(), error: &error){
-                let jsonStudent = JSON(studentDictionary)
-                println("Some student stuff is: \(jsonStudent)")
-                var stucount = jsonStudent.count;
-                println("There are \(stucount) students available in this collection")
+                let jsonCategory = JSON(categoryDictionary)
+                println("Some category stuff is: \(jsonStudent)")
+                var catcount = jsonCategory.count;
+                println("There are \(catcount) categories available in this collection")
                 
                 var categoriesID = Array<JSON>();
-                var looseTilesID = Array<JSON>();
-                for index in 0...stucount-1 {
-                    let StudentID = jsonStudent[index]["_id"].string
+                for index in 0...catcount-1 {
+                    let StudentID = jsonCategory[index]["_id"].string
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        categoriesID = jsonStudent[index]["contextTags"].arrayValue
+                        categoriesID = jsonCategory[index]["contextTags"].arrayValue
                         //println("The categoryID array: \(categoriesID)")
-                        looseTilesID = jsonStudent[index]["tileBucket"].arrayValue
-                        //println("The tileBucket array: \(looseTilesID)")
                     }
                 }
                 
