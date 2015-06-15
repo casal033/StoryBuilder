@@ -14,8 +14,7 @@ public class WordList {
     var contextIDs: Array<JSON>!
     var looseTilesIDs: Array<JSON>!
     var category: Dictionary<String, String>!
-    var tiles: Dictionary<String, Dictionary<String, AnyObject>>!
-    var categories: Dictionary<String, Array<JSON>>!
+    var tiles: Dictionary<String, Array<String>>!
     var wordsWithCategories: [[String]]!
     
     init(filename: String) {
