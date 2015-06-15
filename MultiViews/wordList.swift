@@ -13,6 +13,8 @@ class WordList {
     var words: [String]!
     var contexIDs: Array<JSON>!
     var looseTilesIDs: Array<JSON>!
+    var category: Dictionary<String, String>!
+    var tiles: Dictionary<String, Array<String>>!
     var wordsWithCategories: [[String]]!
     init(filename: String) {
         if let dictionary = Dictionary<String, AnyObject>.loadJSONFromBundle(filename) {
@@ -62,30 +64,58 @@ class WordList {
         var error: NSError?
         
         let categoryData: NSData = NSData(contentsOfURL: nsurl!)!
-        //println("The stduent data is: \(studentData)")
         
         if let categoryDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(categoryData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonCategory = JSON(categoryDictionary)
-                println("Some category stuff is: \(jsonStudent)")
+                println("Some category stuff is: \(jsonCategory)")
                 var catcount = jsonCategory.count;
                 println("There are \(catcount) categories available in this collection")
-                
-                var categoriesID = Array<JSON>();
+
+                var categoryHolder = Dictionary<String, String>();
                 for index in 0...catcount-1 {
-                    let StudentID = jsonCategory[index]["_id"].string
-                    if StudentID == "5511ab56117e23f0412fd08f" {
-                        categoriesID = jsonCategory[index]["contextTags"].arrayValue
-                        //println("The categoryID array: \(categoriesID)")
-                    }
+                    let categoryID = jsonCategory[index]["_id"].string
+                    //println("The categoryID: \(categoryID)")
+                    let categoryName = jsonCategory[index]["name"].string
+                    //println("The categoryName: \(categoryName)")
+                    categoryHolder[categoryID!] = categoryName
                 }
-                
-                contexIDs = categoriesID
-                looseTilesIDs = looseTilesID
+                println("The categoryHolder: \(categoryHolder)")
+                category = categoryHolder
         } else {
             //and our 4th json file is not valid json,
             //so this is a nice way to test that this error will be triggered in such a case
-            println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
+            println("The file at '\(urlCategories)' is not valid JSON, error: \(error!)")
+        }
+    }
+    
+    init(urlTiles: String){
+        let nsurl = NSURL(string: urlTiles)
+        var error: NSError?
+        
+        let tileData: NSData = NSData(contentsOfURL: nsurl!)!
+        
+        if let tileDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(tileData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonTile = JSON(tileDictionary)
+                println("Some tile stuff is: \(jsonTile)")
+                var tilecount = jsonTile.count;
+                println("There are \(tilecount) categories available in this collection")
+                
+                var theCategoryHolder = Dictionary<String, Array<String>>();
+                for index in 0...tilecount-1 {
+//                    let categoryID = jsonCategory[index]["_id"].string
+//                    //println("The categoryID: \(categoryID)")
+//                    let categoryName = jsonCategory[index]["name"].string
+//                    //println("The categoryName: \(categoryName)")
+//                    categoryHolder[categoryID!] = categoryName
+                }
+                println("The theCategoryHolder: \(theCategoryHolder)")
+                tiles = theCategoryHolder
+        } else {
+            //and our 4th json file is not valid json,
+            //so this is a nice way to test that this error will be triggered in such a case
+            println("The file at '\(urlTiles)' is not valid JSON, error: \(error!)")
         }
     }
     

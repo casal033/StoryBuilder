@@ -217,8 +217,8 @@ class GameViewController: UIViewController {
     var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words
     var _categoriesIDs:Array<JSON> = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contexIDs
     var _looseTilesIDs:Array<JSON> = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseTilesIDs
-    var _categories:[String] = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
-    //var _tiles:[String] = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").words
+    var _categories:Dictionary<String, String> = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
+    var _tiles:Dictionary<String, Array<String>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
     
     override func viewDidLoad() {
         super.viewDidLoad()
