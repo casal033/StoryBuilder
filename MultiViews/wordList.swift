@@ -11,8 +11,8 @@ import SpriteKit
 class WordList {
     //This is a comment we're testing
     var words: [String]!
-    var contexIDs: [String]!
-    var looseTilesIDs: [String]!
+    var contexIDs: Array<JSON>!
+    var looseTilesIDs: Array<JSON>!
     var wordsWithCategories: [[String]]!
     init(filename: String) {
         if let dictionary = Dictionary<String, AnyObject>.loadJSONFromBundle(filename) {
@@ -35,17 +35,19 @@ class WordList {
                 //println("Some student stuff is: \(jsonStudent)")
                 var stucount = jsonStudent.count;
                 println("There are \(stucount) students available in this collection")
-                let StudentID = jsonStudent[0]["_id"].string
+                let StudentID = jsonStudent["_id"].string
+                var categoriesID = Array<JSON>();
+                var looseTilesID = Array<JSON>();
                 for index in 0...stucount-1 {
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        let categoriesID = jsonStudent[index]["contexTags"].array
+                        categoriesID = jsonStudent[index]["contexTags"].arrayValue
                         println("The categoryID array: \(categoriesID)")
-                        let looseTilesID = jsonStudent[index]["tileBucket"].array
+                        looseTilesID = jsonStudent[index]["tileBucket"].arrayValue
                         println("The tileBucket array: \(looseTilesID)")
                     }
                 }
                 contexIDs = categoriesID
-                //looseTilesIDs = looseTilesID
+                looseTilesIDs = looseTilesID
         } else {
             //and our 4th json file is not valid json,
             //so this is a nice way to test that this error will be triggered in such a case
@@ -71,7 +73,7 @@ class WordList {
                 for index in 0...thecount-1 {
                     if let name = somestuff[index]["name"].string {
                         someWords.append(name)
-                        //println("The less safe way: \(name)")
+                        println("The WORDS: \(name)")
                     }
                 }
                 //println("There are \(thecount) tiles available in this collection")
