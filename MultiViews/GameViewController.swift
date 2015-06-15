@@ -210,9 +210,15 @@ class GameViewController: UIViewController {
     }
     
     //var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
-    var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words
+    //var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words
     //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
-    //var _words:[String] = WordList(url: "http://google").words
+    
+    //URLS for accessing apis
+    var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words
+    var _categoriesIDs:[String] = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contexIDs
+    //var _looseTilesIDs:[String] = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseTilesIDs
+    //var _categories:[String] = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").words
+    //var _tiles:[String] = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").words
     
     override func viewDidLoad() {
         super.viewDidLoad()
