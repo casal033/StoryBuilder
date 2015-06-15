@@ -197,6 +197,11 @@
 					84B6E2FC1975A2130041C4E1 = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = N6332JUVPX;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
 					};
 					84B6E3121975A2140041C4E1 = {
 						CreatedOnToolsVersion = 6.0;
