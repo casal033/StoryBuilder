@@ -11,11 +11,12 @@ import SpriteKit
 class WordList {
     //This is a comment we're testing
     var words: [String]!
-    var contexIDs: Array<JSON>!
+    var contextIDs: Array<JSON>!
     var looseTilesIDs: Array<JSON>!
     var category: Dictionary<String, String>!
     var tiles: Dictionary<String, Array<String>>!
     var wordsWithCategories: [[String]]!
+    
     init(filename: String) {
         if let dictionary = Dictionary<String, AnyObject>.loadJSONFromBundle(filename) {
             if let wordsArray: AnyObject = dictionary["words"] {
@@ -38,24 +39,17 @@ class WordList {
                 var stucount = jsonStudent.count;
                 println("There are \(stucount) students available in this collection")
                 
-                var categoriesID = Array<JSON>();
-                var looseTilesID = Array<JSON>();
                 for index in 0...stucount-1 {
                     let StudentID = jsonStudent[index]["_id"].string
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        categoriesID = jsonStudent[index]["contextTags"].arrayValue
+                        contextIDs = jsonStudent[index]["contextTags"].arrayValue
                         //println("The categoryID array: \(categoriesID)")
-                        looseTilesID = jsonStudent[index]["tileBucket"].arrayValue
+                        looseTilesIDs = jsonStudent[index]["tileBucket"].arrayValue
                         //println("The tileBucket array: \(looseTilesID)")
                     }
                 }
-
-                contexIDs = categoriesID
-                looseTilesIDs = looseTilesID
-        } else {
-            //and our 4th json file is not valid json,
-            //so this is a nice way to test that this error will be triggered in such a case
-            println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
+          } else {
+                println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
         }
     }
 

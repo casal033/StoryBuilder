@@ -119,7 +119,7 @@ class GameViewController: UIViewController {
             var wordLabel = UILabel()
                 
             wordLabel.text = word
-            wordLabel.font = UIFont(name: "MarkerFelt-Thin", size: 30)
+            wordLabel.font = UIFont(name: "Thonburi", size: 30)
             wordLabel.textAlignment = .Center
             wordLabel.frame = CGRectMake(0, 0, 100, 200)
             
@@ -215,7 +215,7 @@ class GameViewController: UIViewController {
     
     //URLS for accessing apis
     var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words
-    var _categoriesIDs:Array<JSON> = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contexIDs
+    var _categoriesIDs:Array<JSON> = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contextIDs
     var _looseTilesIDs:Array<JSON> = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseTilesIDs
     var _categories:Dictionary<String, String> = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
     var _tiles:Dictionary<String, Array<String>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
