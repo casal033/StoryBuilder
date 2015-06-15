@@ -9,7 +9,7 @@
 import SpriteKit
 
 class WordList {
-    
+    //This is a comment we're testing
     var words: [String]!
     var wordsWithCategories: [[String]]!
     init(filename: String) {
