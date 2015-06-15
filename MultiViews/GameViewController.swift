@@ -221,6 +221,8 @@ class GameViewController: UIViewController {
     var _tiles:Dictionary<String, Dictionary<String, AnyObject>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
     var _tileIDSWithCategoryIDS:Dictionary<String, Array<JSON>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
