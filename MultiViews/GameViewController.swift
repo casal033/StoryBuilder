@@ -214,12 +214,6 @@ class GameViewController: UIViewController {
     //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
     
     //URLS for accessing apis
-    var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words
-    var _categoriesIDs:Array<JSON> = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contextIDs
-    var _looseTilesIDs:Array<JSON> = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseTilesIDs
-    var _categories:Dictionary<String, String> = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
-    var _tiles:Dictionary<String, Dictionary<String, AnyObject>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
-    var _tileIDSWithCategoryIDS:Dictionary<String, Array<JSON>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -252,10 +246,12 @@ class GameViewController: UIViewController {
         skView.addGestureRecognizer(tapRec)
         skView.presentScene(scene)
     }
+    
     func pressed(sender: UIButton!) {
         let word = sender.subviews[0] as! UILabel
         scene.addTile([word.text!])
     }
+    
     func showTag(sender: UIBarButtonItem!) {
         let subViews: Array = scrollView.subviews
         for subview in subViews
