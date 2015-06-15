@@ -98,9 +98,9 @@ class WordList {
         if let tileDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(tileData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonTile = JSON(tileDictionary)
-                println("Some tile stuff is: \(jsonTile)")
+                //println("Some tile stuff is: \(jsonTile)")
                 var tilecount = jsonTile.count;
-                println("There are \(tilecount) categories available in this collection")
+                println("There are \(tilecount) tiles available in this collection")
                 
                 var theCategoryHolder = Dictionary<String, Array<String>>();
                 for index in 0...tilecount-1 {
