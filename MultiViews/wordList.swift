@@ -56,6 +56,41 @@ class WordList {
             println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
         }
     }
+
+    init(urlStudents: String){
+        let nsurl = NSURL(string: urlStudents)
+        var error: NSError?
+        
+        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
+        //println("The stduent data is: \(studentData)")
+        
+        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonStudent = JSON(studentDictionary)
+                println("Some student stuff is: \(jsonStudent)")
+                var stucount = jsonStudent.count;
+                println("There are \(stucount) students available in this collection")
+                
+                var categoriesID = Array<JSON>();
+                var looseTilesID = Array<JSON>();
+                for index in 0...stucount-1 {
+                    let StudentID = jsonStudent[index]["_id"].string
+                    if StudentID == "5511ab56117e23f0412fd08f" {
+                        categoriesID = jsonStudent[index]["contextTags"].arrayValue
+                        //println("The categoryID array: \(categoriesID)")
+                        looseTilesID = jsonStudent[index]["tileBucket"].arrayValue
+                        //println("The tileBucket array: \(looseTilesID)")
+                    }
+                }
+                
+                contexIDs = categoriesID
+                looseTilesIDs = looseTilesID
+        } else {
+            //and our 4th json file is not valid json,
+            //so this is a nice way to test that this error will be triggered in such a case
+            println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
+        }
+    }
     
     init(url: String){
         let nsurl = NSURL(string: url)
