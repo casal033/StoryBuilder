@@ -14,7 +14,8 @@ public class WordList {
     var contextIDs: Array<JSON>!
     var looseTilesIDs: Array<JSON>!
     var category: Dictionary<String, String>!
-    var tiles: Dictionary<String, Array<String>>!
+    var tiles: Dictionary<String, Dictionary<String, AnyObject>>!
+    var categories: Dictionary<String, Array<JSON>>!
     var wordsWithCategories: [[String]]!
     
     init(filename: String) {
@@ -34,7 +35,7 @@ public class WordList {
         if let categoryDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(categoryData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonCategory = JSON(categoryDictionary)
-                println("Some category stuff is: \(jsonCategory)")
+                //println("Some category stuff is: \(jsonCategory)")
                 var catcount = jsonCategory.count;
                 println("There are \(catcount) categories available in this collection")
 
@@ -46,7 +47,7 @@ public class WordList {
                     //println("The categoryName: \(categoryName)")
                     categoryHolder[categoryID!] = categoryName
                 }
-                println("The categoryHolder: \(categoryHolder)")
+                //println("The categoryHolder: \(categoryHolder)")
                 category = categoryHolder
         } else {
             //and our 4th json file is not valid json,
@@ -64,20 +65,29 @@ public class WordList {
         if let tileDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(tileData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonTile = JSON(tileDictionary)
-                println("Some tile stuff is: \(jsonTile)")
+                //println("Some tile stuff is: \(jsonTile)")
                 var tilecount = jsonTile.count;
-                println("There are \(tilecount) categories available in this collection")
+                println("There are \(tilecount) tiles available in this collection")
                 
-                var theCategoryHolder = Dictionary<String, Array<String>>();
+                var tileHolder = Dictionary<String, Dictionary<String, AnyObject>>();
+                var detailsHolder = Dictionary<String, AnyObject>();
+                var categoriesHolder = Dictionary<String, Array<JSON>>();
                 for index in 0...tilecount-1 {
-//                    let categoryID = jsonCategory[index]["_id"].string
-//                    //println("The categoryID: \(categoryID)")
-//                    let categoryName = jsonCategory[index]["name"].string
-//                    //println("The categoryName: \(categoryName)")
-//                    categoryHolder[categoryID!] = categoryName
+                    var tileID = jsonTile[index]["_id"].string
+                    var tileName = jsonTile[index]["name"].string
+                    var tileType = jsonTile[index]["wordType"].string
+                    var tileCategories = jsonTile[index]["contextTags"].arrayValue
+                    detailsHolder["name"] = tileName
+                    detailsHolder["type"] = tileType
+                    
+                    tileHolder[tileID!] = detailsHolder
+                    categoriesHolder[tileID!] = tileCategories
                 }
-                println("The theCategoryHolder: \(theCategoryHolder)")
-                tiles = theCategoryHolder
+                println("The tileHolder: \(tileHolder)")
+                println("")
+                println("The categoriesHolder: \(categoriesHolder)")
+                tiles = tileHolder
+                categories = categoriesHolder
         } else {
             //and our 4th json file is not valid json,
             //so this is a nice way to test that this error will be triggered in such a case
