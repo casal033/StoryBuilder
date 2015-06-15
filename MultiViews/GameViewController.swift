@@ -215,6 +215,18 @@ class GameViewController: UIViewController {
     
     //URLS for accessing apis
     
+    func getStudentWords(){
+        
+        let dataGrabber = WordList(url: "https://teacherwordriver.herokuapp.com/api/students");
+        let _categoriesIDs:Array<JSON> = dataGrabber.getStudentContextIDs("https://teacherwordriver.herokuapp.com/api/students");
+        var _looseTilesIDs:Array<JSON> = dataGrabber.getStudentLooseTilesIDs("https://teacherwordriver.herokuapp.com/api/students")
+        var _category:Dictionary<String, String> = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
+        var _tiles:Dictionary<String, Dictionary<String, AnyObject>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
+        var _categories: Dictionary<String, Array<JSON>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
+    }
+    
+    var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
