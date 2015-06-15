@@ -27,25 +27,27 @@ class WordList {
         var error: NSError?
         
         let studentData: NSData = NSData(contentsOfURL: nsurl!)!
-        println("The stduent data is: \(studentData)")
+        //println("The stduent data is: \(studentData)")
         
         if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonStudent = JSON(studentDictionary)
-                //println("Some student stuff is: \(jsonStudent)")
+                println("Some student stuff is: \(jsonStudent)")
                 var stucount = jsonStudent.count;
                 println("There are \(stucount) students available in this collection")
-                let StudentID = jsonStudent["_id"].string
+                
                 var categoriesID = Array<JSON>();
                 var looseTilesID = Array<JSON>();
                 for index in 0...stucount-1 {
+                    let StudentID = jsonStudent[index]["_id"].string
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        categoriesID = jsonStudent[index]["contexTags"].arrayValue
-                        println("The categoryID array: \(categoriesID)")
+                        categoriesID = jsonStudent[index]["contextTags"].arrayValue
+                        //println("The categoryID array: \(categoriesID)")
                         looseTilesID = jsonStudent[index]["tileBucket"].arrayValue
-                        println("The tileBucket array: \(looseTilesID)")
+                        //println("The tileBucket array: \(looseTilesID)")
                     }
                 }
+
                 contexIDs = categoriesID
                 looseTilesIDs = looseTilesID
         } else {
@@ -73,7 +75,7 @@ class WordList {
                 for index in 0...thecount-1 {
                     if let name = somestuff[index]["name"].string {
                         someWords.append(name)
-                        println("The WORDS: \(name)")
+                        //println("The WORDS: \(name)")
                     }
                 }
                 //println("There are \(thecount) tiles available in this collection")
@@ -82,7 +84,7 @@ class WordList {
         } else {
             //and our 4th json file is not valid json, 
             //so this is a nice way to test that this error will be triggered in such a case
-            //println("The file at '\(url)' is not valid JSON, error: \(error!)")
+            println("The file at '\(url)' is not valid JSON, error: \(error!)")
         }
     }
     
