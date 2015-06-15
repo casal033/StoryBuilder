@@ -82,7 +82,7 @@ class WordList {
         } else {
             //and our 4th json file is not valid json, 
             //so this is a nice way to test that this error will be triggered in such a case
-            //println("The file at '\(url)' is not valid JSON, error: \(error!)")
+            println("The file at '\(url)' is not valid JSON, error: \(error!)")
         }
     }
     
