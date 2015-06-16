@@ -74,23 +74,18 @@ public class WordList {
                     var tileID = jsonTile[index]["_id"].string
                     var tileName = jsonTile[index]["name"].string
                     var tileType = jsonTile[index]["wordType"].string
-                    var tileCategories = jsonTile[index]["contextTags"].arrayValue
-                    var someCats = [String]();
-                    for i in 0...tileCategories.count-1{
-                        if let holder = tileCategories[i].string{
-                            someCats.append(holder)
-                        }
-                    }
+                    var tileCategories = jsonTile[index]["contextTags"].arrayValue.map { $0.string!}
                     
                     detailsHolder["name"] = tileName
                     detailsHolder["type"] = tileType
+                    detailsHolder["categories"] = tileCategories
                     
                     tileHolder[tileID!] = detailsHolder
-                    categoriesHolder[tileID!] = someCats
+                    categoriesHolder[tileID!] = tileCategories
                 }
                 println("The tileHolder: \(tileHolder)")
-                println("")
-                println("The categoriesHolder: \(categoriesHolder)")
+                //println("")
+                //println("The categoriesHolder: \(categoriesHolder)")
                 tiles = tileHolder
                 categories = categoriesHolder
         } else {
@@ -148,13 +143,7 @@ public class WordList {
                 for index in 0...stucount-1 {
                     let StudentID = jsonStudent[index]["_id"].string
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        var someIDs = jsonStudent[index]["contextTags"].arrayValue
-                        var count = someIDs.count
-                        for i in 0...count-1 {
-                            if let hold = someIDs[i].string {
-                                contextIDs.append(hold)
-                            }
-                        }
+                        contextIDs = jsonStudent[index]["contextTags"].arrayValue.map { $0.string!}
                         return contextIDs
                     }
                 }
@@ -181,14 +170,8 @@ public class WordList {
                 for index in 0...stucount-1 {
                     let StudentID = jsonStudent[index]["_id"].string
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        var someIDs = jsonStudent[index]["tileBucket"].arrayValue
+                        looseTilesIDs = jsonStudent[index]["tileBucket"].arrayValue.map { $0.string!}
                         //println("The tileBucket array: \(looseTilesIDs)")
-                        var count = someIDs.count
-                        for i in 0...count-1 {
-                            if let hold = someIDs[i].string {
-                                looseTilesIDs.append(hold)
-                            }
-                        }
                         return looseTilesIDs
                     }
                 }

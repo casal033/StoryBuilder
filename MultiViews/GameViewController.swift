@@ -227,22 +227,44 @@ class GameViewController: UIViewController {
         //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
         var _tiles:Dictionary<String, Dictionary<String, AnyObject>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
         //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
-        var _categories: Dictionary<String, [String]> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
+        //var _categories: Dictionary<String, [String]> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
         
-//        var categoryDictionary:Dictionary<String, [String]>
-//        var catCount = _categoriesIDs.count
-//        
-//        for i in 0...catCount-1 {
-//            if let catID = _categoriesIDs[i].string{
-//                if let valueHolder = _category[catID]{
-//                    categoryDictionary[valueHolder] = ""
-//                }
+        var categoryDictionary:Dictionary<String, [String]>
+        var catCount = _categoriesIDs.count
+        var tileCount = _tiles.count
+        var tileHolder = [String]()
+        
+        for i in 0...catCount-1 {
+            //catID is the current category ID
+            let catID = _categoriesIDs[i]
+            //valueHolder is the name of the current category
+            if let valueHolder = _category[catID]{
+            }
+            for y in 0...tileCount-1 {
+                var holderDictionary:Dictionary<String, AnyObject>! = _tiles[catID]!
+                for (name, item) in holderDictionary {
+                    if name == "name" {
+                        var tileName = holderDictionary["name"]!.getValue
+                    } else if name == "categories" {
+                        var tileCategories = [String]()
+                        //tileCategories = holderDictionary["categories"]!.getArrayValue
+                    }
+                    
+                }
+                
+                
+                
+            }
+            
+//            for (bookid, title) in bookDict {
+//                println("Book ID: \(bookid) Title: \(title)")
 //            }
-//            
-//        }
+            
+        }
         
         
     }
+    
     
     var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words;
     
@@ -269,6 +291,8 @@ class GameViewController: UIViewController {
         panRec.addTarget(self, action: "draggedView")
         
         populateSelector()
+        //VVVVVVVVVVVVVVVVVVVVVVV
+        getStudentWords()
         
         let skView = self.view as! SKView
         scene = GameScene(size: skView.bounds.size)
