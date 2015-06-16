@@ -42,7 +42,7 @@ class GameViewController: UIViewController {
                 var wordLabel = UILabel()
             
                 wordLabel.text = word
-                wordLabel.font = UIFont(name: "MarkerFelt-Thin", size: 30)
+                wordLabel.font = UIFont(name: "MarkerFelt-Thin", size: 10)
                 //wordLabel.textColor = UIColor.blueColor()
                 wordLabel.textAlignment = .Center
                 wordLabel.frame = CGRectMake(0, 0, 100, 200)
@@ -119,7 +119,7 @@ class GameViewController: UIViewController {
             var wordLabel = UILabel()
                 
             wordLabel.text = word
-            wordLabel.font = UIFont(name: "Thonburi", size: 30)
+            wordLabel.font = UIFont(name: "Thonburi", size: 20)
             wordLabel.textAlignment = .Center
             wordLabel.frame = CGRectMake(0, 0, 100, 200)
             
@@ -225,6 +225,7 @@ class GameViewController: UIViewController {
         var _categories: Dictionary<String, Array<JSON>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
     }
     
+    //We are keeping the next line for now because the program expects to get a list of words - this is not the correct list
     var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words;
     
     override func viewDidLoad() {

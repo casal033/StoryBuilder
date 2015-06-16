@@ -14,17 +14,18 @@ import AVFoundation
         ["can","verb"],
         ["funny","adjective"],
         ["I", "pronoun"],
+        ["to", "article"],
         ["look", "verb"],
         ["a", "article"],
         ["three", "adjective", "number"],
         ["find", "verb"],
+        ["school", "noun"],
         ["go", "verb"],
         ["help", "verb"],
         ["away", "adjective"],
         ["dog", "noun", "animals"],
         ["bird", "noun", "animals"],
         ["cat", "noun", "animals"],
-        ["school", "noun"],
         ["come", "verb"],
         ["run","verb"],
         ["two", "adjective", "number"],
@@ -54,9 +55,6 @@ class GameScene: SKScene {
     
     let RIGHT_BOUNDS: CGFloat = 700
     let LEFT_BOUNDS: CGFloat = 50
-    
-    
- 
     
     var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
@@ -233,18 +231,24 @@ class GameScene: SKScene {
         speakWord(sentence)
     }
     
+    //func speakSentence(startTile: Tile){
+    //    var sentence = startTile.getPhrase().words
+    //    for tile in sentence{
+    //        speakTile(tile)
+    //    }
+   // }
+    
+    func speakTile(tile: Tile) {
+        speakWord(tile.word)
+        rotateTile(tile)
+    }
+    
     func selectTile(location: CGPoint) {
         var tile: Tile = findTileTouched(location)
         println("\tSELECTING \(tile.word)")
+        //speakTile(tile)
         speakSentence(tile)
         rotateTile(tile)
-        //speakWord(tile.word)
-        //let label = tile.sprite.children.first! as SKLabelNode
-        //let next: Tile = tile.nextTile!
-        //if next != nilTile {
-        //    let nextPosition = CGPoint(x: next.xPos, y: next.yPos)
-        //    selectNextTile(findTileTouched(nextPosition), sentence)
-        //}
     }
     
     func selectNextTile(tile: Tile, sentence: String) {
@@ -272,8 +276,8 @@ class GameScene: SKScene {
             }
             let myUtterance = AVSpeechUtterance(string: myString)
             myUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-            myUtterance.rate = (AVSpeechUtteranceMinimumSpeechRate + AVSpeechUtteranceDefaultSpeechRate) / 2
-            mySpeechSynthesizer .speakUtterance(myUtterance)
+            myUtterance.rate = (AVSpeechUtteranceMinimumSpeechRate + AVSpeechUtteranceDefaultSpeechRate) / 8
+            mySpeechSynthesizer .speakUtterance(myUtterance);
         }
     }
     
