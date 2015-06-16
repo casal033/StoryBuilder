@@ -218,11 +218,30 @@ class GameViewController: UIViewController {
     func getStudentWords(){
         
         let dataGrabber = WordList(url: "https://teacherwordriver.herokuapp.com/api/students");
-        let _categoriesIDs:Array<JSON> = dataGrabber.getStudentContextIDs("https://teacherwordriver.herokuapp.com/api/students");
-        var _looseTilesIDs:Array<JSON> = dataGrabber.getStudentLooseTilesIDs("https://teacherwordriver.herokuapp.com/api/students")
+        //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
+        let _categoriesIDs:[String] = dataGrabber.getStudentContextIDs("https://teacherwordriver.herokuapp.com/api/students");
+        //_looseTilesIDs has an array of the student's individually assigned words
+        var _looseTilesIDs:[String] = dataGrabber.getStudentLooseTilesIDs("https://teacherwordriver.herokuapp.com/api/students")
+        //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
         var _category:Dictionary<String, String> = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
+        //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
         var _tiles:Dictionary<String, Dictionary<String, AnyObject>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
-        var _categories: Dictionary<String, Array<JSON>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
+        //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
+        var _categories: Dictionary<String, [String]> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
+        
+//        var categoryDictionary:Dictionary<String, [String]>
+//        var catCount = _categoriesIDs.count
+//        
+//        for i in 0...catCount-1 {
+//            if let catID = _categoriesIDs[i].string{
+//                if let valueHolder = _category[catID]{
+//                    categoryDictionary[valueHolder] = ""
+//                }
+//            }
+//            
+//        }
+        
+        
     }
     
     //We are keeping the next line for now because the program expects to get a list of words - this is not the correct list

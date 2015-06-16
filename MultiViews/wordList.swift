@@ -11,11 +11,11 @@ import SpriteKit
 public class WordList {
     //This is a comment we're testing
     var words: [String]!
-    var contextIDs: Array<JSON>!
-    var looseTilesIDs: Array<JSON>!
+    var contextIDs: [String]!
+    var looseTilesIDs: [String]!
     var category: Dictionary<String, String>!
     var tiles: Dictionary<String, Dictionary<String, AnyObject>>!
-    var categories: Dictionary<String, Array<JSON>>!
+    var categories: Dictionary<String, [String]>!
     var wordsWithCategories: [[String]]!
     
     init(filename: String) {
@@ -50,8 +50,6 @@ public class WordList {
                 //println("The categoryHolder: \(categoryHolder)")
                 category = categoryHolder
         } else {
-            //and our 4th json file is not valid json,
-            //so this is a nice way to test that this error will be triggered in such a case
             println("The file at '\(urlCategories)' is not valid JSON, error: \(error!)")
         }
     }
@@ -71,17 +69,24 @@ public class WordList {
                 
                 var tileHolder = Dictionary<String, Dictionary<String, AnyObject>>();
                 var detailsHolder = Dictionary<String, AnyObject>();
-                var categoriesHolder = Dictionary<String, Array<JSON>>();
+                var categoriesHolder = Dictionary<String, [String]>();
                 for index in 0...tilecount-1 {
                     var tileID = jsonTile[index]["_id"].string
                     var tileName = jsonTile[index]["name"].string
                     var tileType = jsonTile[index]["wordType"].string
                     var tileCategories = jsonTile[index]["contextTags"].arrayValue
+                    var someCats = [String]();
+                    for i in 0...tileCategories.count-1{
+                        if let holder = tileCategories[i].string{
+                            someCats.append(holder)
+                        }
+                    }
+                    
                     detailsHolder["name"] = tileName
                     detailsHolder["type"] = tileType
                     
                     tileHolder[tileID!] = detailsHolder
-                    categoriesHolder[tileID!] = tileCategories
+                    categoriesHolder[tileID!] = someCats
                 }
                 println("The tileHolder: \(tileHolder)")
                 println("")
@@ -89,8 +94,6 @@ public class WordList {
                 tiles = tileHolder
                 categories = categoriesHolder
         } else {
-            //and our 4th json file is not valid json,
-            //so this is a nice way to test that this error will be triggered in such a case
             println("The file at '\(urlTiles)' is not valid JSON, error: \(error!)")
         }
     }
@@ -120,8 +123,6 @@ public class WordList {
                 words = someWords
                 
         } else {
-            //and our 4th json file is not valid json, 
-            //so this is a nice way to test that this error will be triggered in such a case
             println("The file at '\(url)' is not valid JSON, error: \(error!)")
         }
     }
@@ -130,7 +131,7 @@ public class WordList {
         wordsWithCategories = arr
     }
     
-    public func getStudentContextIDs(studentAPIurl: String) -> Array<JSON> {
+    public func getStudentContextIDs(studentAPIurl: String) -> [String] {
         let nsurl = NSURL(string: studentAPIurl)
         var error: NSError?
         
@@ -140,14 +141,20 @@ public class WordList {
         if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonStudent = JSON(studentDictionary)
-                println("Some student stuff is: \(jsonStudent)")
+                //println("Some student stuff is: \(jsonStudent)")
                 var stucount = jsonStudent.count;
-                println("There are \(stucount) students available in this collection")
+                //println("There are \(stucount) students available in this collection")
                 
                 for index in 0...stucount-1 {
                     let StudentID = jsonStudent[index]["_id"].string
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        contextIDs = jsonStudent[index]["contextTags"].arrayValue
+                        var someIDs = jsonStudent[index]["contextTags"].arrayValue
+                        var count = someIDs.count
+                        for i in 0...count-1 {
+                            if let hold = someIDs[i].string {
+                                contextIDs.append(hold)
+                            }
+                        }
                         return contextIDs
                     }
                 }
@@ -157,7 +164,7 @@ public class WordList {
         return contextIDs
     }
     
-    func getStudentLooseTilesIDs(studentAPIurl: String) -> Array<JSON> {
+    func getStudentLooseTilesIDs(studentAPIurl: String) -> [String] {
         let nsurl = NSURL(string: studentAPIurl)
         var error: NSError?
         
@@ -167,15 +174,22 @@ public class WordList {
         if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonStudent = JSON(studentDictionary)
-                println("Some student stuff is: \(jsonStudent)")
+                //println("Some student stuff is: \(jsonStudent)")
                 var stucount = jsonStudent.count;
-                println("There are \(stucount) students available in this collection")
+                //println("There are \(stucount) students available in this collection")
                 
                 for index in 0...stucount-1 {
                     let StudentID = jsonStudent[index]["_id"].string
                     if StudentID == "5511ab56117e23f0412fd08f" {
-                        looseTilesIDs = jsonStudent[index]["tileBucket"].arrayValue
-                        println("The tileBucket array: \(looseTilesIDs)")
+                        var someIDs = jsonStudent[index]["tileBucket"].arrayValue
+                        //println("The tileBucket array: \(looseTilesIDs)")
+                        var count = someIDs.count
+                        for i in 0...count-1 {
+                            if let hold = someIDs[i].string {
+                                looseTilesIDs.append(hold)
+                            }
+                        }
+                        return looseTilesIDs
                     }
                 }
         } else {
