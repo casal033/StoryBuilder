@@ -42,7 +42,7 @@ class GameViewController: UIViewController {
                 var wordLabel = UILabel()
             
                 wordLabel.text = word
-                wordLabel.font = UIFont(name: "MarkerFelt-Thin", size: 30)
+                wordLabel.font = UIFont(name: "MarkerFelt-Thin", size: 10)
                 //wordLabel.textColor = UIColor.blueColor()
                 wordLabel.textAlignment = .Center
                 wordLabel.frame = CGRectMake(0, 0, 100, 200)
@@ -119,7 +119,7 @@ class GameViewController: UIViewController {
             var wordLabel = UILabel()
                 
             wordLabel.text = word
-            wordLabel.font = UIFont(name: "Thonburi", size: 30)
+            wordLabel.font = UIFont(name: "Thonburi", size: 20)
             wordLabel.textAlignment = .Center
             wordLabel.frame = CGRectMake(0, 0, 100, 200)
             
