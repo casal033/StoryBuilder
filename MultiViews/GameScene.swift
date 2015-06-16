@@ -98,17 +98,19 @@ class GameScene: SKScene {
         mySpeechSynthesizer.stopSpeakingAtBoundary(AVSpeechBoundary.Word)
     }
     
-    
     func addTile(newWord: [String]) {
+        // where to put the tile in the scene
         tileX = CGFloat(arc4random_uniform(600) + 100)
         tileY = CGFloat(arc4random_uniform(500) + 100)
+        
+        var tile:Tile
+        // if there are multiple strings in the array, the second one will be the part of speech
         if newWord.count > 1 {
-            let tile = Tile(word: newWord[0], partOfSpeech: newWord[1], x: tileX, y: tileY)
+            tile = Tile(word: newWord[0], partOfSpeech: newWord[1], x: tileX, y: tileY)
+        } else {
+            tile = Tile(word: newWord[0], partOfSpeech: "", x: tileX, y: tileY)
         }
-        let tile = Tile(word: newWord[0], partOfSpeech: "", x: tileX, y: tileY)
-        tile.prevTile = nilTile
-        tile.nextTile = nilTile
-        speakWord(tile.word)
+        
         while (count(findTileOverlap(tile)) > 0) {
             if (tile.xPos + 50 > RIGHT_BOUNDS) {
                 tile.xPos = 100
@@ -120,8 +122,11 @@ class GameScene: SKScene {
         
         tilesArray.insert(tile, atIndex: 0)
         println(tilesArray)
+
         tile.sprite.position = CGPoint(x: tile.xPos, y: tile.yPos)
         tileLayer.addChild(tile.sprite)
+        
+        speakWord(tile.word)
     }
     
     func resetTiles() {
