@@ -265,7 +265,7 @@ class GameViewController: UIViewController {
         
     }
     
-    
+    //We are keeping the next line for now because the program expects to get a list of words - this is not the correct list
     var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words;
     
     override func viewDidLoad() {
