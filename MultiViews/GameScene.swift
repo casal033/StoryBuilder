@@ -66,7 +66,7 @@ class GameScene: SKScene {
     var tileX = CGFloat(200)
     var tileY = CGFloat(200)
     var extraWordCount = 0
-    let nilTile: Tile = Tile(word: "nil", partOfSpeech: "", x: 0, y: 0)
+    let nilTile: Tile = Tile()
     
     let tileLayer = SKNode()
     let gameLayer = SKNode()
@@ -98,17 +98,19 @@ class GameScene: SKScene {
         mySpeechSynthesizer.stopSpeakingAtBoundary(AVSpeechBoundary.Word)
     }
     
-    
     func addTile(newWord: [String]) {
+        // where to put the tile in the scene
         tileX = CGFloat(arc4random_uniform(600) + 100)
         tileY = CGFloat(arc4random_uniform(500) + 100)
+        
+        var tile:Tile
+        // if there are multiple strings in the array, the second one will be the part of speech
         if newWord.count > 1 {
-            let tile = Tile(word: newWord[0], partOfSpeech: newWord[1], x: tileX, y: tileY)
+            tile = Tile(word: newWord[0], partOfSpeech: newWord[1], x: tileX, y: tileY)
+        } else {
+            tile = Tile(word: newWord[0], partOfSpeech: "", x: tileX, y: tileY)
         }
-        let tile = Tile(word: newWord[0], partOfSpeech: "", x: tileX, y: tileY)
-        tile.prevTile = nilTile
-        tile.nextTile = nilTile
-        speakWord(tile.word)
+        
         while (count(findTileOverlap(tile)) > 0) {
             if (tile.xPos + 50 > RIGHT_BOUNDS) {
                 tile.xPos = 100
@@ -120,8 +122,11 @@ class GameScene: SKScene {
         
         tilesArray.insert(tile, atIndex: 0)
         println(tilesArray)
+
         tile.sprite.position = CGPoint(x: tile.xPos, y: tile.yPos)
         tileLayer.addChild(tile.sprite)
+        
+        speakWord(tile.word)
     }
     
     func resetTiles() {
@@ -149,12 +154,8 @@ class GameScene: SKScene {
     
     func findTileTouched(location: CGPoint) -> (Tile) {
         for tile in tilesArray {
-            let image = tile.sprite
-            if location.x > tile.xPos - image.size.width/2
-                && location.x < tile.xPos + image.size.width/2
-                && location.y > tile.yPos - image.size.height/2
-                && location.y < tile.yPos + image.size.height/2 {
-                    return (tile)
+            if tile.locationIsInBounds(location) {
+                return (tile)
             }
         }
         return nilTile
@@ -173,17 +174,9 @@ class GameScene: SKScene {
         
         for otherTile in tilesArray {
             if tile != otherTile {
-                let otherHalfWidth = otherTile.sprite.size.width/2
-                let otherHalfHeight = otherTile.sprite.size.height/2
-                let otherUpperLeft = CGPoint(x: otherTile.xPos - otherHalfWidth, y: otherTile.yPos - otherHalfHeight)
-                let otherLowerLeft = CGPoint(x: otherTile.xPos - otherHalfWidth, y: otherTile.yPos + otherHalfHeight)
-                let otherUpperRight = CGPoint(x: otherTile.xPos + otherHalfWidth, y: otherTile.yPos - otherHalfHeight)
-                let otherLowerRight = CGPoint(x: otherTile.xPos + otherHalfWidth, y: otherTile.yPos + otherHalfHeight)
-                let corners: [CGPoint] = [otherUpperLeft, otherUpperRight, otherLowerLeft, otherLowerRight]
+                let corners = otherTile.getCorners()
                 for corner in corners {
-                    let x = corner.x
-                    let y = corner.y
-                    if !contains(overlappingTiles, otherTile) && x > left && x < right && y > top && y < bottom {
+                    if !contains(overlappingTiles, otherTile) && tile.locationIsInBounds(corner) {
                         overlappingTiles.append(otherTile)
                     }
                 }
@@ -210,7 +203,6 @@ class GameScene: SKScene {
         }
         
         if count(tilesArray) > 0 {
-            var tempTile = nilTile
             for i in (0...(count(tilesArray) - 1)) {
                 if (tilesArray[i] == selection) {
                     tilesArray.insert(tilesArray[i], atIndex: 0)
@@ -317,37 +309,26 @@ class GameScene: SKScene {
         //if tile.xPos == tile.prevPos.x && tile.yPos == tile.prevPos.y {
             println("Hello!")
             selectTile(touch.locationInNode(tileLayer))
-        //}
-     //   if tile.prevTile != nilTile && (tile.distanceToPoint(STICKY_POINT) <= STICKINESS) {
-     //       tile.moveTileAnimated(STICKY_POINT)
-          //  selectTile(touch.locationInNode(tileLayer))
-     //   }
-       // else {
             println(tile.distanceToPoint(STICKY_POINT))
             let moveToPoint = CGPoint(x: tile.xPos + tile.momentum.x, y: tile.yPos + tile.momentum.y)
             tile.resetPrevPos()
         //}
         STICKY_POINT = DEFAULT_STICKY_POINT
-        let overlap = findTileOverlap(tile)
-        println("Overlaps: \(count(overlap))")
-        if (count(overlap) > 0) {
-            for i in (0...count(overlap) - 1) {
-                let other = overlap[i]
-                if count(tile.getPhrase().words) == 0 {
-                    if (tile.xPos < (other.xPos)) {
-                        tile.nextTile = other
-                        other.prevTile = tile
-                        other.moveTileAnimated(CGPoint(x: tile.xPos + (tile.sprite.size.width/2) + (other.sprite.size.width/2), y: tile.yPos))
-                    }
-                    else {
-                        tile.prevTile = other
-                        other.nextTile = tile
-                        tile.moveTileAnimated(CGPoint(x: other.xPos + (other.sprite.size.width/2) + (tile.sprite.size.width/2), y: other.yPos))
-                    }
+        let overlappingTiles = findTileOverlap(tile)
+        println("Overlaps: \(count(overlappingTiles))")
+        for othertile in overlappingTiles {
+            if count(tile.getPhrase().words) == 0 {
+                if (tile.xPos < (othertile.xPos)) {
+                    tile.nextTile = othertile
+                    othertile.prevTile = tile
+                    othertile.moveTileAnimated(CGPoint(x: tile.xPos + (tile.sprite.size.width/2) + (othertile.sprite.size.width/2), y: tile.yPos))
+                } else {
+                    tile.prevTile = othertile
+                    othertile.nextTile = tile
+                    tile.moveTileAnimated(CGPoint(x: othertile.xPos + (othertile.sprite.size.width/2) + (tile.sprite.size.width/2), y: othertile.yPos))
                 }
-                else {
-                    other.moveTileAnimated(CGPoint(x: other.xPos, y: other.yPos + tile.sprite.size.height))
-                }
+            } else {
+                othertile.moveTileAnimated(CGPoint(x: othertile.xPos, y: othertile.yPos + tile.sprite.size.height))
             }
         }
     }
