@@ -127,7 +127,7 @@ class Tile: Printable, Comparable {
         let lowerLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos + halfHeight)
         let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
         let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
-        let corners: [CGPoint] = [upperLeft, upperRight, lowerLeft, lowerRight]
+        let corners: [CGPoint] = [upperLeft, lowerLeft, upperRight, lowerRight]
         return corners
     }
     
