@@ -56,8 +56,8 @@ class Tile: Printable, Comparable {
         sprite.addChild(label)
         label.position = CGPoint(x: 0, y: -6)
         sprite.hidden = true
-        phrase = Phrase(words: [], x: x, y: y)
-        phrase.addWord(self)
+        phrase = Phrase(tiles: [], x: x, y: y)
+        phrase.addTile(self)
     }
     
     init(word: String, partOfSpeech: String, x: CGFloat, y: CGFloat) {//, tags: [String]) {
@@ -103,8 +103,8 @@ class Tile: Printable, Comparable {
         if (!moveable) {
             sprite.hidden = true
         }
-        phrase = Phrase(words: [], x: x, y: y)
-        phrase.addWord(self)
+        phrase = Phrase(tiles: [], x: x, y: y)
+        phrase.addTile(self)
     }
     
     func locationIsInBounds(location: CGPoint) -> Bool {

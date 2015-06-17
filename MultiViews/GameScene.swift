@@ -271,7 +271,7 @@ class GameScene: SKScene {
         current_x_offset = selection.xPos - positionInScene.x
         current_y_offset = selection.yPos - positionInScene.y
         
-        currentPhrase = Phrase(words: selection.getPhrase().tiles, x: selection.xPos, y: selection.yPos)
+        currentPhrase = Phrase(tiles: selection.getPhrase().tiles, x: selection.xPos, y: selection.yPos)
         
         //if (findTileTouched(positionInScene).prevTile != nilTile) {
         STICKY_POINT = CGPoint(x: selection.xPos, y: selection.yPos)
