@@ -58,17 +58,6 @@
                                     <action selector="AddExtraWord:" destination="BV1-FR-VrT" eventType="touchUpInside" id="hDC-ze-bWO"/>
                                 </connections>
                             </button>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="uJJ-Ep-Imy">
-                                <rect key="frame" x="0.0" y="32" width="1024" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem title="all" id="N0F-W6-vJv">
-                                        <connections>
-                                            <action selector="allButtonPressed:" destination="BV1-FR-VrT" id="7Ar-gL-dpf"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" id="z6J-lT-Y32">
                                 <rect key="frame" x="0.0" y="76" width="1024" height="97"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -82,7 +71,6 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
-                        <outlet property="TagView" destination="uJJ-Ep-Imy" id="ZR8-Gz-B9o"/>
                         <outlet property="Word1" destination="kwL-hh-vYg" id="1bV-ZG-QBZ"/>
                         <outlet property="scrollView" destination="z6J-lT-Y32" id="59O-Zm-hvx"/>
                         <outlet property="wordSelectionView" destination="2dy-FY-Gh9" id="NTi-SI-rbY"/>
