@@ -56,8 +56,8 @@ class Tile: Printable, Comparable {
         sprite.addChild(label)
         label.position = CGPoint(x: 0, y: -6)
         sprite.hidden = true
-        phrase = Phrase(words: [], x: x, y: y)
-        phrase.addWord(self)
+        phrase = Phrase(tiles: [], x: x, y: y)
+        phrase.addTile(self)
     }
     
     init(word: String, partOfSpeech: String, x: CGFloat, y: CGFloat) {//, tags: [String]) {
@@ -103,8 +103,8 @@ class Tile: Printable, Comparable {
         if (!moveable) {
             sprite.hidden = true
         }
-        phrase = Phrase(words: [], x: x, y: y)
-        phrase.addWord(self)
+        phrase = Phrase(tiles: [], x: x, y: y)
+        phrase.addTile(self)
     }
     
     func locationIsInBounds(location: CGPoint) -> Bool {
@@ -127,7 +127,7 @@ class Tile: Printable, Comparable {
         return corners
     }
     
-    func getPhrase() -> (words:[Tile], length: CGFloat) {
+    func getPhrase() -> (tiles:[Tile], length: CGFloat) {
         var phrase: [Tile] = []
         var current: Tile = self
         var length = sprite.size.width
@@ -158,8 +158,8 @@ class Tile: Printable, Comparable {
             sprite.position = newLocation
             let phrase = getPhrase()
             var thisX = xPos + (sprite.size.width/2)
-            if count(getPhrase().words) > 0 {
-                let i = getPhrase().words.first!
+            if count(getPhrase().tiles) > 0 {
+                let i = getPhrase().tiles.first!
                 thisX += i.sprite.size.width/2
                 i.moveTile(CGPoint(x: thisX, y: newLocation.y))
             }
@@ -176,9 +176,10 @@ class Tile: Printable, Comparable {
             let action = SKAction.moveTo(newLocation, duration: 0.3)
             sprite.runAction(action)
             
-            if count(getPhrase().words) > 0 {
+            if count(getPhrase().tiles) > 0 {
+                //if there is more than one tile, when you move this one, move its neighbor. recursive.
                 println("Phrase: \(getPhrase())")
-                let i = getPhrase().words.first!
+                let i = getPhrase().tiles.first!
                 i.moveTileAnimated(CGPoint(x: newLocation.x + sprite.size.width/2 + i.sprite.size.width/2, y: newLocation.y))
             }
         }

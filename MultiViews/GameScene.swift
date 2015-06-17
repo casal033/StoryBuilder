@@ -163,15 +163,6 @@ class GameScene: SKScene {
     
     func findTileOverlap(tile: Tile) -> ([Tile]) {
         var overlappingTiles: [Tile] = []
-        
-        let halfWidth = tile.sprite.size.width/2
-        let halfHeight = tile.sprite.size.height/2
-        
-        let left = tile.xPos - halfWidth
-        let right = tile.xPos + halfWidth
-        let top = tile.yPos - halfHeight
-        let bottom = tile.yPos + halfHeight
-        
         for otherTile in tilesArray {
             if tile != otherTile {
                 let corners = otherTile.getCorners()
@@ -197,9 +188,9 @@ class GameScene: SKScene {
         
         selection.sprite.removeFromParent()
         tileLayer.addChild(selection.sprite)
-        for word in selection.getPhrase().words {
-            word.sprite.removeFromParent()
-            tileLayer.addChild(word.sprite)
+        for tile in selection.getPhrase().tiles {
+            tile.sprite.removeFromParent()
+            tileLayer.addChild(tile.sprite)
         }
         
         if count(tilesArray) > 0 {
@@ -280,7 +271,7 @@ class GameScene: SKScene {
         current_x_offset = selection.xPos - positionInScene.x
         current_y_offset = selection.yPos - positionInScene.y
         
-        currentPhrase = Phrase(words: selection.getPhrase().words, x: selection.xPos, y: selection.yPos)
+        currentPhrase = Phrase(tiles: selection.getPhrase().tiles, x: selection.xPos, y: selection.yPos)
         
         //if (findTileTouched(positionInScene).prevTile != nilTile) {
         STICKY_POINT = CGPoint(x: selection.xPos, y: selection.yPos)
@@ -306,18 +297,18 @@ class GameScene: SKScene {
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         let touch = touches.first as! UITouch
         let tile = findTileTouched(touch.locationInNode(tileLayer))
-        //if tile.xPos == tile.prevPos.x && tile.yPos == tile.prevPos.y {
+        if tile.xPos == tile.prevPos.x && tile.yPos == tile.prevPos.y {
             println("Hello!")
             selectTile(touch.locationInNode(tileLayer))
             println(tile.distanceToPoint(STICKY_POINT))
             let moveToPoint = CGPoint(x: tile.xPos + tile.momentum.x, y: tile.yPos + tile.momentum.y)
             tile.resetPrevPos()
-        //}
+        }
         STICKY_POINT = DEFAULT_STICKY_POINT
         let overlappingTiles = findTileOverlap(tile)
         println("Overlaps: \(count(overlappingTiles))")
         for othertile in overlappingTiles {
-            if count(tile.getPhrase().words) == 0 {
+            if count(tile.getPhrase().tiles) == 0 {
                 if (tile.xPos < (othertile.xPos)) {
                     tile.nextTile = othertile
                     othertile.prevTile = tile
