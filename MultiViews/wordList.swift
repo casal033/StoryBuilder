@@ -16,7 +16,7 @@ public class WordList {
     //var category: Dictionary<String, String>!
     var category = [String: String]()
     //var tiles: Dictionary<String, Dictionary<String, String>>!
-    var tiles = [String: [String: String]]()
+    var tiles = [String: [String]]()
     //var categories: Dictionary<String, [String]>!
     var categories = [String: [String]]()
     var wordsWithCategories: [[String]]!
@@ -67,18 +67,16 @@ public class WordList {
     }
 
     
-    func getNestedDictionaryFromJSON(json: JSON, id: String, firstItem: String, secondItem: String) -> [String: [String: String]]{
-        var toReturn = [String: [String: String]]()
-        var toHelp = [String: String]()
+    func getNestedDictionaryFromJSON(json: JSON, id: String, firstItem: String, secondItem: String) -> [String: [String]]{
+        var toReturn = [String: [String]]()
         var thecount = json.count
         for index in 0...thecount-1 {
+            var toHelp = [String]()
             var tileID = json[index][id].stringValue
-            var tileName = json[index][firstItem].string
+            var tileName = json[index][firstItem].stringValue
             var tileType = json[index][secondItem].stringValue
-                
-            toHelp["name"] = tileName
-            toHelp["type"] = tileType
-            
+            toHelp.append(tileName)
+            toHelp.append(tileType)
             toReturn[tileID] = toHelp
         }
         return toReturn
@@ -108,7 +106,7 @@ public class WordList {
         if let tileDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(tileData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonTile = JSON(tileDictionary)
-                tiles = getNestedDictionaryFromJSON(jsonTile, id: "_id", firstItem: "name", secondItem: "type")
+                tiles = getNestedDictionaryFromJSON(jsonTile, id: "_id", firstItem: "name", secondItem: "wordType")
                 categories = getStringArrayDictionaryFromJSON(jsonTile, id: "_id", arrayname: "contextTags")
         } else {
             println("The file at '\(urlTiles)' is not valid JSON, error: \(error!)")
