@@ -36,6 +36,30 @@ class Tile: Printable, Comparable {
     var nextTile: Tile?
     var prevTile: Tile?
     
+    init(){
+        //nilTile
+        let x:CGFloat = 0
+        let y:CGFloat = 0
+        self.word = "nil"
+        self.moveable = false
+        self.prevPos = CGPoint(x: x, y: y)
+        self.partOfSpeech = ""
+        self.xPos = 0
+        self.yPos = 0
+        self.length = 0
+        
+        let spriteSize = CGSize(width: 0.0, height: 0.0)
+        sprite = SKSpriteNode(texture: SKTexture(imageNamed: ""), size: spriteSize)
+        sprite.name = word
+        let label = SKLabelNode()
+        label.text = word
+        sprite.addChild(label)
+        label.position = CGPoint(x: 0, y: -6)
+        sprite.hidden = true
+        phrase = Phrase(words: [], x: x, y: y)
+        phrase.addWord(self)
+    }
+    
     init(word: String, partOfSpeech: String, x: CGFloat, y: CGFloat) {//, tags: [String]) {
        // self.tags = tags
         self.word = word
@@ -43,6 +67,8 @@ class Tile: Printable, Comparable {
         self.partOfSpeech = partOfSpeech
         self.xPos = x
         self.yPos = y
+        self.nextTile = Tile()
+        self.prevTile = Tile()
         self.prevPos = CGPoint(x: x, y: y)
         if (word == "nil") { self.moveable = false }
         else { self.moveable = true }
@@ -79,6 +105,26 @@ class Tile: Printable, Comparable {
         }
         phrase = Phrase(words: [], x: x, y: y)
         phrase.addWord(self)
+    }
+    
+    func locationIsInBounds(location: CGPoint) -> Bool {
+        let image = self.sprite
+        return location.x > self.xPos - image.size.width/2
+            && location.x < self.xPos + image.size.width/2
+            && location.y > self.yPos - image.size.height/2
+            && location.y < self.yPos + image.size.height/2
+    }
+    
+    func getCorners() -> [CGPoint] {
+        // if we want to get named corners, might want to use a different return style
+        let halfWidth = self.sprite.size.width/2
+        let halfHeight = self.sprite.size.height/2
+        let upperLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos - halfHeight)
+        let lowerLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos + halfHeight)
+        let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
+        let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
+        let corners: [CGPoint] = [upperLeft, upperRight, lowerLeft, lowerRight]
+        return corners
     }
     
     func getPhrase() -> (words:[Tile], length: CGFloat) {
