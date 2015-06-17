@@ -108,7 +108,7 @@ class Tile: Printable, Comparable {
     }
     
     func isLastTile() -> Bool {
-        return !(self.nextTile!.word == "nil")
+        return self.nextTile!.word == "nil"
     }
     
     func locationIsInBounds(location: CGPoint) -> Bool {
@@ -135,7 +135,7 @@ class Tile: Printable, Comparable {
         var phrase: [Tile] = []
         var current: Tile = self
         var length = sprite.size.width
-        while(!self.isLastTile()) {
+        while(!current.isLastTile()) {
             phrase.append(current.nextTile!)
             length += current.nextTile!.sprite.size.width
             current = current.nextTile!
