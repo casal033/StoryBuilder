@@ -104,42 +104,8 @@
             timestampString = "456159095.422736"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "&lt;(_:_:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MultiViews.Tile.init (MultiViews.Tile.Type)(word : Swift.String, x : CoreGraphics.CGFloat, y : CoreGraphics.CGFloat) -&gt; MultiViews.Tile"
-                  moduleName = "MultiViews"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Dropbox/EmergentReaders/TryingSwift/MultiViews/MultiViews/Tile.swift"
-                  timestampString = "431925172.894062"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "628">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MultiViews.Tile.init (MultiViews.Tile.Type)(word : Swift.String, x : CoreGraphics.CGFloat, y : CoreGraphics.CGFloat) -&gt; MultiViews.Tile"
-                  moduleName = "MultiViews"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Dropbox/EmergentReaders/TryingSwift/MultiViews/MultiViews/Tile.swift"
-                  timestampString = "431925172.894803"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "770">
-               </Location>
-            </Locations>
+            startingLineNumber = "259"
+            endingLineNumber = "259">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
