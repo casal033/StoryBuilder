@@ -253,6 +253,15 @@ class GameViewController: UIViewController {
         return categoryDictionary
     }
     
+    func getCategoryNames(dict: [String: [String]]) -> [String]{
+        var toReturn = [String]()
+        for (key, value) in dict {
+            toReturn.append(key)
+        }
+        println(toReturn)
+        return toReturn
+    }
+    
     func parseDictionaryForLooseTiles(tiles: [String: [String]], looseTiles: [String]) {
         let thecount = tiles.count
         for (key, value) in tiles {

@@ -39,12 +39,59 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MultiViews/GameViewController.swift"
-            timestampString = "456159095.422736"
+            filePath = "MultiViews/AppDelegate.swift"
+            timestampString = "429560049.211084"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259">
+            startingLineNumber = "8"
+            endingLineNumber = "8">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultiViews.AppDelegate.__deallocating_deinit"
+                  moduleName = "MultiViews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Dropbox/EmergentReaders/TryingSwift/MultiViews/MultiViews/AppDelegate.swift"
+                  timestampString = "429643292.066015"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "31">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "@objc MultiViews.AppDelegate.__ivar_destroyer"
+                  moduleName = "MultiViews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Dropbox/EmergentReaders/TryingSwift/MultiViews/MultiViews/AppDelegate.swift"
+                  timestampString = "429643292.067449"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "15">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "top_level_code"
+                  moduleName = "MultiViews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Dropbox/EmergentReaders/TryingSwift/MultiViews/MultiViews/AppDelegate.swift"
+                  timestampString = "429643292.067706"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "3">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -59,8 +106,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "78"
             endingLineNumber = "78"
-            landmarkName = "&lt;(_:_:)"
-            landmarkType = "7">
+            landmarkName = "init(word:partOfSpeech:x:y:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -75,8 +122,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "83"
             endingLineNumber = "83"
-            landmarkName = "&lt;(_:_:)"
-            landmarkType = "7">
+            landmarkName = "init(word:partOfSpeech:x:y:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -91,8 +138,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "90"
             endingLineNumber = "90"
-            landmarkName = "&lt;(_:_:)"
-            landmarkType = "7">
+            landmarkName = "init(word:partOfSpeech:x:y:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -107,8 +154,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "86"
             endingLineNumber = "86"
-            landmarkName = "&lt;(_:_:)"
-            landmarkType = "7">
+            landmarkName = "init(word:partOfSpeech:x:y:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
