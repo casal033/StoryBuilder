@@ -163,15 +163,6 @@ class GameScene: SKScene {
     
     func findTileOverlap(tile: Tile) -> ([Tile]) {
         var overlappingTiles: [Tile] = []
-        
-        let halfWidth = tile.sprite.size.width/2
-        let halfHeight = tile.sprite.size.height/2
-        
-        let left = tile.xPos - halfWidth
-        let right = tile.xPos + halfWidth
-        let top = tile.yPos - halfHeight
-        let bottom = tile.yPos + halfHeight
-        
         for otherTile in tilesArray {
             if tile != otherTile {
                 let corners = otherTile.getCorners()
