@@ -106,33 +106,7 @@ class GameViewController: UIViewController {
         }
         wordBar.frame.origin.x = 0
     } */
-    
-    func getArrayToDisplay(category: String, dict: [String:[String]]) -> [String] {
-        var toReturn = [String]()
-        for (key, value) in dict {
-            if key == category {
-                toReturn = value
-            }
-        }
-        return toReturn
-    }
-    
-    func populateToolBar() {
-        //Find tags and put them in the toolbar:
-        var category = [AnyObject]()
-        var catDict:[String:[String]] = getStudentWords()
-        var name = String()
-        var arr = [String]()
-        for (key, value) in catDict {
-            name = key
-            arr = value
-        }
-        
-        //category += TagView.items!
-        category.append(UIBarButtonItem(title: name, style: .Plain, target: self, action: "categoryButtonPressed: :arr"))
-        //TagView.items = category
-        //self.Navigation.rightBarButtonItem = category
-    }
+
     
     func populateSelector(_words: [String]) {
         
@@ -217,12 +191,25 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func showCategories(sender: AnyObject) {
+        var holder:[String: [String]] = getStudentWords()
+        var categoryName = sender.title
         let subViews: Array = scrollView.subviews
         for subview in subViews
         {
             subview.removeFromSuperview()
         }
-        populateSelector(["categories"])
+        populateSelector(getArrayToDisplay(categoryName, dict: holder))
+    }
+    
+    
+    func getArrayToDisplay(category: String?!, dict: [String:[String]]) -> [String] {
+        var toReturn = [String]()
+        for (key, value) in dict {
+            if key == category {
+                toReturn = value
+            }
+        }
+        return toReturn
     }
 
     
@@ -346,16 +333,26 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Making a toolbar prgramatically
-        toolbar = UIToolbar()
-        toolbar.items = [
-            UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:"),
-            UIBarButtonItem(title: "Categories", style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"),
-        ]
-        self.view.addSubview(toolbar)
-        
         getStudentWords()
         var _words:[String] = allTiles
+        populateSelector(_words)
+        var categoryNames:[String] = getCategoryNames(getStudentWords())
+
+        
+        var items = [AnyObject]()
+        items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
+        for index in 0...categoryNames.count-1 {
+            items.append(UIBarButtonItem(title: categoryNames[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
+        }
+        
+        //Making a toolbar prgramatically
+        toolbar = UIToolbar()
+        toolbar.items = items
+        
+        
+        self.view.addSubview(toolbar)
+        
+        
         scrollView.addSubview(wordSelectionView)
         
         
@@ -376,7 +373,7 @@ class GameViewController: UIViewController {
         tapRec.addTarget(self, action: "tappedView")
         panRec.addTarget(self, action: "draggedView")
         
-        //populateSelector(_words)
+        
         
         let skView = self.view as! SKView
         scene = GameScene(size: skView.bounds.size)
@@ -386,14 +383,12 @@ class GameViewController: UIViewController {
         skView.presentScene(scene)
     }
     
-    /////////
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         // bounds is now correctly set
         toolbar.frame = CGRectMake(0, 44, view.bounds.width, 44)
     }
-    ///////
     
     func pressed(sender: UIButton!) {
         let word = sender.subviews[0] as! UILabel
