@@ -13,9 +13,12 @@ public class WordList {
     var words: [String]!
     var contextIDs: [String]!
     var looseTilesIDs: [String]!
-    var category: Dictionary<String, String>!
-    var tiles: Dictionary<String, Dictionary<String, AnyObject>>!
-    var categories: Dictionary<String, [String]>!
+    //var category: Dictionary<String, String>!
+    var category = [String: String]()
+    //var tiles: Dictionary<String, Dictionary<String, String>>!
+    var tiles = [String: [String: String]]()
+    //var categories: Dictionary<String, [String]>!
+    var categories = [String: [String]]()
     var wordsWithCategories: [[String]]!
     
     init(filename: String) {
@@ -26,6 +29,61 @@ public class WordList {
         }
     }
 
+    
+    func getStringArrayFromJSON(json: JSON, toGet: String) -> [String]{
+        var toReturn = [String]()
+        var thecount = json.count
+        for index in 0...thecount-1 {
+            if let name = json[index][toGet].string {
+                toReturn.append(name)
+            }
+        }
+        return toReturn
+    }
+
+    
+    func getStringStringDictionaryFromJSON(json: JSON, key: String, value: String) -> [String: String]{
+        var toReturn = [String: String]()
+        var thecount = json.count
+        for index in 0...thecount-1 {
+            if let wantKey = json[index][key].string {
+                if let wantValue = json[index][value].string {
+                    toReturn[wantKey] = wantValue
+                }
+            }
+        }
+        return toReturn
+    }
+    
+    func getStringArrayDictionaryFromJSON(json: JSON, id: String, arrayname: String) -> [String: [String]]{
+        var toReturn = [String: [String]]()
+        var thecount = json.count
+        for index in 0...thecount-1 {
+            var tileID = json[index][id].stringValue
+            var tileCategories = json[index][arrayname].arrayValue.map { $0.string!}
+            toReturn[tileID] = tileCategories
+        }
+        return toReturn
+    }
+
+    
+    func getNestedDictionaryFromJSON(json: JSON, id: String, firstItem: String, secondItem: String) -> [String: [String: String]]{
+        var toReturn = [String: [String: String]]()
+        var toHelp = [String: String]()
+        var thecount = json.count
+        for index in 0...thecount-1 {
+            var tileID = json[index][id].stringValue
+            var tileName = json[index][firstItem].string
+            var tileType = json[index][secondItem].stringValue
+                
+            toHelp["name"] = tileName
+            toHelp["type"] = tileType
+            
+            toReturn[tileID] = toHelp
+        }
+        return toReturn
+    }
+    
     init(urlCategories: String){
         let nsurl = NSURL(string: urlCategories)
         var error: NSError?
@@ -35,20 +93,7 @@ public class WordList {
         if let categoryDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(categoryData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonCategory = JSON(categoryDictionary)
-                //println("Some category stuff is: \(jsonCategory)")
-                var catcount = jsonCategory.count;
-                println("There are \(catcount) categories available in this collection")
-
-                var categoryHolder = Dictionary<String, String>();
-                for index in 0...catcount-1 {
-                    let categoryID = jsonCategory[index]["_id"].string
-                    //println("The categoryID: \(categoryID)")
-                    let categoryName = jsonCategory[index]["name"].string
-                    //println("The categoryName: \(categoryName)")
-                    categoryHolder[categoryID!] = categoryName
-                }
-                //println("The categoryHolder: \(categoryHolder)")
-                category = categoryHolder
+                category = getStringStringDictionaryFromJSON(jsonCategory, key: "_id", value: "name")
         } else {
             println("The file at '\(urlCategories)' is not valid JSON, error: \(error!)")
         }
@@ -63,31 +108,8 @@ public class WordList {
         if let tileDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(tileData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonTile = JSON(tileDictionary)
-                //println("Some tile stuff is: \(jsonTile)")
-                var tilecount = jsonTile.count;
-                println("There are \(tilecount) tiles available in this collection")
-                
-                var tileHolder = Dictionary<String, Dictionary<String, AnyObject>>();
-                var detailsHolder = Dictionary<String, AnyObject>();
-                var categoriesHolder = Dictionary<String, [String]>();
-                for index in 0...tilecount-1 {
-                    var tileID = jsonTile[index]["_id"].string
-                    var tileName = jsonTile[index]["name"].string
-                    var tileType = jsonTile[index]["wordType"].string
-                    var tileCategories = jsonTile[index]["contextTags"].arrayValue.map { $0.string!}
-                    
-                    detailsHolder["name"] = tileName
-                    detailsHolder["type"] = tileType
-                    detailsHolder["categories"] = tileCategories
-                    
-                    tileHolder[tileID!] = detailsHolder
-                    categoriesHolder[tileID!] = tileCategories
-                }
-                println("The tileHolder: \(tileHolder)")
-                //println("")
-                //println("The categoriesHolder: \(categoriesHolder)")
-                tiles = tileHolder
-                categories = categoriesHolder
+                tiles = getNestedDictionaryFromJSON(jsonTile, id: "_id", firstItem: "name", secondItem: "type")
+                categories = getStringArrayDictionaryFromJSON(jsonTile, id: "_id", arrayname: "contextTags")
         } else {
             println("The file at '\(urlTiles)' is not valid JSON, error: \(error!)")
         }
@@ -104,19 +126,9 @@ public class WordList {
         //but, we can make JSON out of the stuff that is returned when we ask for JSONSerialization on that data
         if let dictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(data,
             options: NSJSONReadingOptions(), error: &error){
-                let somestuff = JSON(dictionary)
-                //println("Some stuff is: \(somestuff)")
-                var someWords = [String]();
-                var thecount = somestuff.count;
-                for index in 0...thecount-1 {
-                    if let name = somestuff[index]["name"].string {
-                        someWords.append(name)
-                        //println("The WORDS: \(name)")
-                    }
-                }
-                //println("There are \(thecount) tiles available in this collection")
-                words = someWords
-                
+                let somestuff:JSON = JSON(dictionary)
+                let want:String = "name"
+                words = getStringArrayFromJSON(somestuff, toGet: want)
         } else {
             println("The file at '\(url)' is not valid JSON, error: \(error!)")
         }

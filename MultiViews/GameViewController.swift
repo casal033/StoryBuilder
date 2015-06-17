@@ -215,7 +215,7 @@ class GameViewController: UIViewController {
     
     //URLS for accessing apis
     
-    func getStudentWords(){
+    func getStudentWords() -> Dictionary<String, [String]> {
         
         let dataGrabber = WordList(url: "https://teacherwordriver.herokuapp.com/api/students");
         //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
@@ -225,45 +225,57 @@ class GameViewController: UIViewController {
         //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
         var _category:Dictionary<String, String> = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
         //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
-        var _tiles:Dictionary<String, Dictionary<String, AnyObject>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
+        var _tiles:Dictionary<String, Dictionary<String, String>> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
         //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
-        //var _categories: Dictionary<String, [String]> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
+        var _categories: Dictionary<String, [String]> = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
         
-        var categoryDictionary:Dictionary<String, [String]>
-        var catCount = _categoriesIDs.count
-        var tileCount = _tiles.count
+        var categoryDictionary:Dictionary<String, [String]>!
+        //var holderDictionary:Dictionary<String, String>!
+        let catCount = _categoriesIDs.count
+        let tileCount = _tiles.count
         var tileHolder = [String]()
+        //var tileCategories = [String]()
+        //var tileName: String!
+        var valueHolder: String!
         
+        //Loop through array of known assigned categories
         for i in 0...catCount-1 {
             //catID is the current category ID
             let catID = _categoriesIDs[i]
             //valueHolder is the name of the current category
-            if let valueHolder = _category[catID]{
-            }
+            valueHolder = _category[catID]
+            //Loop through dictionary of ALL tiles
             for y in 0...tileCount-1 {
-                var holderDictionary:Dictionary<String, AnyObject>! = _tiles[catID]!
-                for (name, item) in holderDictionary {
-                    if name == "name" {
-                        var tileName = holderDictionary["name"]!.getValue
-                    } else if name == "categories" {
-                        var tileCategories = [String]()
-                        //tileCategories = holderDictionary["categories"]!.getArrayValue
+                println("In for-loop")
+                //println("This is the cataegory ID \(catID)")
+                //if let holderDictionary:Dictionary<String, String> = _tiles[catID] {
+                //if let tileName = holderDictionary["name"] {
+                //if var tileName: String = _tiles[catID]!["name"] {
+                var tileName = _tiles[catID]!["name"]!
+                    println(tileName)
+                    println("got here after tileName")
+                    if let tileCategories = _categories[catID] {
+                        println("got here after tileCategories")
+                        let arrSize = tileCategories.count
+                        for z in 0...arrSize-1 {
+                            var catIDHold = tileCategories[z]
+                            if catIDHold == catID {
+                                println("There are these tiles so far \(tileName) in \(tileName)")
+                                tileHolder.append(tileName)
+                            }
+                            
+                        }
+                        
                     }
-                    
-                }
-                
-                
-                
+                //}
             }
-            
-//            for (bookid, title) in bookDict {
-//                println("Book ID: \(bookid) Title: \(title)")
-//            }
-            
+            println(tileHolder)
+            categoryDictionary[valueHolder] = tileHolder
         }
-        
-        
+        println(categoryDictionary)
+        return categoryDictionary
     }
+    
     
     //We are keeping the next line for now because the program expects to get a list of words - this is not the correct list
     var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words;
@@ -292,7 +304,7 @@ class GameViewController: UIViewController {
         
         populateSelector()
         //VVVVVVVVVVVVVVVVVVVVVVV
-        getStudentWords()
+        //getStudentWords()
         
         let skView = self.view as! SKView
         scene = GameScene(size: skView.bounds.size)
