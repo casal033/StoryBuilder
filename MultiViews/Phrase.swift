@@ -10,7 +10,7 @@ import Foundation
 import SpriteKit
 
 class Phrase: Printable {
-    var words: [Tile]
+    var tiles: [Tile]
     var xPos: CGFloat
     var yPos: CGFloat
     var length: Int
@@ -18,26 +18,26 @@ class Phrase: Printable {
     
     var description: String {
         var str = ""
-        for word in words {
-            str += word.word + " "
+        for tile in tiles {
+            str += tile.word + " "
         }
         return str
     }
     
-    init(words: [Tile], x: CGFloat, y: CGFloat) {
-        self.words = words
-        self.length = count(words)
+    init(tiles: [Tile], x: CGFloat, y: CGFloat) {
+        self.tiles = tiles
+        self.length = count(tiles)
         self.xPos = x
         self.yPos = y
         var i: CGFloat = 0.0
-        for word in words {
-            i += word.sprite.size.width
+        for tile in tiles {
+            i += tile.sprite.size.width
         }
         self.width = i
     }
     
-    func addWord(newWord: Tile) {
-        words.append(newWord)
+    func addTile(newTile: Tile) {
+        tiles.append(newTile)
     }
 
 }

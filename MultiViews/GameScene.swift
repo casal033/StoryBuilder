@@ -188,9 +188,9 @@ class GameScene: SKScene {
         
         selection.sprite.removeFromParent()
         tileLayer.addChild(selection.sprite)
-        for word in selection.getPhrase().words {
-            word.sprite.removeFromParent()
-            tileLayer.addChild(word.sprite)
+        for tile in selection.getPhrase().tiles {
+            tile.sprite.removeFromParent()
+            tileLayer.addChild(tile.sprite)
         }
         
         if count(tilesArray) > 0 {
@@ -271,7 +271,7 @@ class GameScene: SKScene {
         current_x_offset = selection.xPos - positionInScene.x
         current_y_offset = selection.yPos - positionInScene.y
         
-        currentPhrase = Phrase(words: selection.getPhrase().words, x: selection.xPos, y: selection.yPos)
+        currentPhrase = Phrase(words: selection.getPhrase().tiles, x: selection.xPos, y: selection.yPos)
         
         //if (findTileTouched(positionInScene).prevTile != nilTile) {
         STICKY_POINT = CGPoint(x: selection.xPos, y: selection.yPos)
@@ -308,7 +308,7 @@ class GameScene: SKScene {
         let overlappingTiles = findTileOverlap(tile)
         println("Overlaps: \(count(overlappingTiles))")
         for othertile in overlappingTiles {
-            if count(tile.getPhrase().words) == 0 {
+            if count(tile.getPhrase().tiles) == 0 {
                 if (tile.xPos < (othertile.xPos)) {
                     tile.nextTile = othertile
                     othertile.prevTile = tile
