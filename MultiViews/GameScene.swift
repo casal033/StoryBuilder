@@ -297,13 +297,13 @@ class GameScene: SKScene {
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         let touch = touches.first as! UITouch
         let tile = findTileTouched(touch.locationInNode(tileLayer))
-        //if tile.xPos == tile.prevPos.x && tile.yPos == tile.prevPos.y {
+        if tile.xPos == tile.prevPos.x && tile.yPos == tile.prevPos.y {
             println("Hello!")
             selectTile(touch.locationInNode(tileLayer))
             println(tile.distanceToPoint(STICKY_POINT))
             let moveToPoint = CGPoint(x: tile.xPos + tile.momentum.x, y: tile.yPos + tile.momentum.y)
             tile.resetPrevPos()
-        //}
+        }
         STICKY_POINT = DEFAULT_STICKY_POINT
         let overlappingTiles = findTileOverlap(tile)
         println("Overlaps: \(count(overlappingTiles))")
