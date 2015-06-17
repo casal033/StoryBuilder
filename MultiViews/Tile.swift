@@ -73,7 +73,7 @@ class Tile: Printable, Comparable {
         if (word == "nil") { self.moveable = false }
         else { self.moveable = true }
         
-        let spriteSize = CGSize(width: CGFloat(20 * length) + 10.0, height: 85.0)
+        let spriteSize = CGSize(width: max(CGFloat(20 * length), 50) + 10.0, height: 85.0)
         var tileImage = ""
         if partOfSpeech == "noun" {
             tileImage = "RedTile"
@@ -107,6 +107,10 @@ class Tile: Printable, Comparable {
         phrase.addTile(self)
     }
     
+    func isLastTile() -> Bool {
+        return !(self.nextTile!.word == "nil")
+    }
+    
     func locationIsInBounds(location: CGPoint) -> Bool {
         let image = self.sprite
         return location.x > self.xPos - image.size.width/2
@@ -131,7 +135,7 @@ class Tile: Printable, Comparable {
         var phrase: [Tile] = []
         var current: Tile = self
         var length = sprite.size.width
-        while(current.nextTile!.word != "nil") {
+        while(!self.isLastTile()) {
             phrase.append(current.nextTile!)
             length += current.nextTile!.sprite.size.width
             current = current.nextTile!

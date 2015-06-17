@@ -288,7 +288,9 @@ class GameScene: SKScene {
         if selection.word != "nil" {
             selection.moveTile(moveToPosition)
             if selection.prevTile != nilTile {
-               selection.prevTile!.nextTile = nilTile
+                //if the tile I am moving used to be "next" for something, update that previous tile to point at nilTile
+                selection.prevTile!.nextTile = nilTile
+                //and set the tile I'm moving to have nilTile as its previous tile (since it used to have something)
                 selection.prevTile = nilTile
             }
         }
