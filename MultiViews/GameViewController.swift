@@ -65,9 +65,8 @@ class GameViewController: UIViewController {
         
         view.addSubview(scrollView)
         
-        
         /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
-        populateSelector(allTiles)
+        populateSelector(sortArray(allTiles))
         
         //Add word view to scroll
         scrollView.addSubview(wordSelectionView)
@@ -169,7 +168,7 @@ class GameViewController: UIViewController {
         {
             subview.removeFromSuperview()
         }
-        populateSelector(allTiles)
+        populateSelector(sortArray(allTiles))
     }
     
     @IBAction func showCategories(sender: AnyObject) {
@@ -180,7 +179,7 @@ class GameViewController: UIViewController {
         {
             subview.removeFromSuperview()
         }
-        populateSelector(getArrayToDisplay(categoryName, dict: holder))
+        populateSelector(sortArray(getArrayToDisplay(categoryName, dict: holder)))
     }
     
     
@@ -193,7 +192,6 @@ class GameViewController: UIViewController {
         }
         return toReturn
     }
-
     
     var skView: SKView!
     var scene: GameScene!
@@ -218,7 +216,10 @@ class GameViewController: UIViewController {
     func tappedView() {
         
     }
-
+    
+    func sortArray(toSort: [String]) -> [String]{
+        return toSort.sorted { $0.localizedCaseInsensitiveCompare($1) == NSComparisonResult.OrderedAscending }
+    }
     
     func getStudentInfo() {
         //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
