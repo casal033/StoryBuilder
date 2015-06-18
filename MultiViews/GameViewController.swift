@@ -25,94 +25,13 @@ extension SKNode {
 }
 
 
-
 class GameViewController: UIViewController {
     
-    var x: CGFloat = 50
-    
-    func populateSelectorByLetter(letter: String) {
-        getStudentWords()
-        var _words:[String] = allTiles
-        
-        x = 50
-        
-        for word in _words
-        {
-            //if word[0][word[0].startIndex...word[0].startIndex] == letter {
-            if String(word[advance(word.startIndex, 1)] as Character) == letter {
-                var wordButton = UIButton()
-                var wordLabel = UILabel()
-            
-                wordLabel.text = word
-                wordLabel.font = UIFont(name: "MarkerFelt-Thin", size: 10)
-                //wordLabel.textColor = UIColor.blueColor()
-                wordLabel.textAlignment = .Center
-                wordLabel.frame = CGRectMake(0, 0, 100, 200)
-                
-                wordButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
-                wordButton.frame = CGRectMake(x - 50, -50, 300, 170)
-                wordButton.backgroundColor = UIColor(red: 0.7, green: 0.5, blue: 0.9, alpha: 1.0)
-            
-                let add: CGFloat = CGFloat(count(wordLabel.text!))
-                if add > 8 {
-                    x += (100 + (add * 15))
-                }
-                else {
-                    x += 150
-                }
-                
-                wordButton.addTarget(self, action: "pressed:", forControlEvents: .TouchUpInside)
-            
-                //self.view.addSubview(wordButton)
-                scrollView.addSubview(wordButton)
-                wordButton.addSubview(wordLabel)
-            }
-        }
-        wordBar.frame.origin.x = 0
-    }
-    
-  /*  func populateSelectorByTag(tag: String) {
-        
-        x = 50
-        
-        for word in _words
-        {
-            if contains(word[1...count(word) - 1], tag) {
-                var wordButton = UIButton()
-                var wordLabel = UILabel()
-                
-                wordLabel.text = word[0]
-                wordLabel.font = UIFont(name: "MarkerFelt-Thin", size: 30)
-                wordLabel.textAlignment = .Center
-                wordLabel.frame = CGRectMake(0, 0, 100, 200)
-                
-                wordButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
-                wordButton.frame = CGRectMake(x - 50, -50, 300, 170)
-                wordButton.backgroundColor = UIColor(red: 0.7, green: 0.5, blue: 0.9, alpha: 1.0)
-                
-                let add: CGFloat = CGFloat(count(wordLabel.text!))
-                if add > 8 {
-                    x += (100 + (add * 15))
-                }
-                else {
-                    x += 150
-                }
-                
-                wordButton.addTarget(self, action: "pressed:", forControlEvents: .TouchUpInside)
-                
-                scrollView.addSubview(wordButton)
-                wordButton.addSubview(wordLabel)
-            }
-        }
-        wordBar.frame.origin.x = 0
-    } */
-
+    var y: CGFloat = 50
     
     func populateSelector(_words: [String]) {
         
-        //let fillTags = Toolbar.items?.count <= 1
-        
-        x = 50
+        y = 80
         
         var listOfTags: [String] = []
         
@@ -123,21 +42,16 @@ class GameViewController: UIViewController {
                 
             wordLabel.text = word
             wordLabel.font = UIFont(name: "Thonburi", size: 20)
-            wordLabel.textAlignment = .Center
-            wordLabel.frame = CGRectMake(0, 0, 100, 200)
+            wordLabel.textAlignment = .Left
+            wordLabel.frame = CGRectMake(10, 0, 100, 25)
             
             wordButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
-            wordButton.frame = CGRectMake(x - 50, -50, 300, 170)
+            // 3rd is is width, 4th is height
+            wordButton.frame = CGRectMake(10, y, 120, 30)
             wordButton.backgroundColor = UIColor(red: 0.7, green: 0.5, blue: 0.9, alpha: 1.0)
-                
-            let add: CGFloat = CGFloat(count(wordLabel.text!))
             
-            if add > 8 {
-                x += (100 + (add * 15))
-            }
-            else {
-                x += 150
-            }
+            //adjust y position for the next word
+            y += 30
             
             wordButton.addTarget(self, action: "pressed:", forControlEvents: .TouchUpInside)
             
@@ -238,13 +152,6 @@ class GameViewController: UIViewController {
         
     }
     
-    //var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
-    //var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words
-    //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
-    
-    //URLS for accessing apis
-    
-    
     var allTiles = [String]()
     
     func getStudentWords() -> [String: [String]] {
@@ -327,9 +234,6 @@ class GameViewController: UIViewController {
         return toReturn
     }
     
-    //We are keeping the next line for now because the program expects to get a list of words - this is not the correct list
-    //var _words:[String] = WordList(url: "https://teacherwordriver.herokuapp.com/api/tile").words;
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -345,19 +249,17 @@ class GameViewController: UIViewController {
             items.append(UIBarButtonItem(title: categoryNames[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
         }
         
-        //Making a toolbar prgramatically
+        //Making a toolbar programatically
         toolbar = UIToolbar()
         toolbar.items = items
         
         
         self.view.addSubview(toolbar)
         
-        
         scrollView.addSubview(wordSelectionView)
         
-        
         // 2
-        scrollView.contentSize = CGSize(width: CGFloat(count(_words) * 150), height: wordBar.frame.size.height)
+        scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(_words) * 30))
         //scrollView.contentSize.width = count(WordList) * 10
         
         let scrollViewFrame = scrollView.frame

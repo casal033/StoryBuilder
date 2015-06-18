@@ -14,7 +14,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New word" minimumFontSize="17" id="kwL-hh-vYg">
-                                <rect key="frame" x="24" y="707" width="250" height="30"/>
+                                <rect key="frame" x="158" y="718" width="250" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="24"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -23,7 +23,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" id="cMJ-wh-d2F">
-                                <rect key="frame" x="633" y="683" width="251" height="65"/>
+                                <rect key="frame" x="633" y="707" width="251" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="40"/>
                                 <size key="titleShadowOffset" width="4" height="-4"/>
@@ -46,8 +46,16 @@
                                     <action selector="ResetButtonPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="GFt-5l-Rq2"/>
                                 </connections>
                             </button>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" id="z6J-lT-Y32">
+                                <rect key="frame" x="0.0" y="0.0" width="150" height="768"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </scrollView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="purpleRectangle" id="2dy-FY-Gh9">
+                                <rect key="frame" x="0.0" y="0.0" width="150" height="768"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" id="YY0-7E-G9Y">
-                                <rect key="frame" x="282" y="707" width="30" height="30"/>
+                                <rect key="frame" x="416" y="718" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
                                 <size key="titleShadowOffset" width="4" height="-4"/>
@@ -58,14 +66,6 @@
                                     <action selector="AddExtraWord:" destination="BV1-FR-VrT" eventType="touchUpInside" id="hDC-ze-bWO"/>
                                 </connections>
                             </button>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" id="z6J-lT-Y32">
-                                <rect key="frame" x="0.0" y="76" width="1024" height="97"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </scrollView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="purpleRectangle" id="2dy-FY-Gh9">
-                                <rect key="frame" x="-12" y="76" width="1049" height="97"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -78,7 +78,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1703" y="508"/>
+            <point key="canvasLocation" x="2045" y="446"/>
         </scene>
     </scenes>
     <resources>
