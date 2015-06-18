@@ -208,15 +208,15 @@ class GameViewController: UIViewController {
             for (key2, value2) in catDict {
                 if key == key2 {
                     let arrSize = value2.count
-                    var counter = 0
-                    for index in 0...arrSize-1 {
-                        var catIDHold = value2[counter]
-                        counter++
-                        if catIDHold == id {
-                            toReturn.append(tileName)
-                            addWordToAllTiles(tileName)
+                    if arrSize > 0 {
+                        for index in 0...arrSize-1 {
+                            var catIDHold = value2[index]
+                            if catIDHold == id {
+                                toReturn.append(tileName)
+                                addWordToAllTiles(tileName)
+                            }
                         }
-                    }
+                    } 
                 }
             }
         }
@@ -268,12 +268,12 @@ class GameViewController: UIViewController {
         scrollView.addSubview(wordSelectionView)
         
         //Parameters for content in scroll frame
-        scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(allTiles) * 30))
+        //scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(allTiles) * 32))
         
-        //scrollView.frame = CGRectMake(xOrigin,yOrigin,width,height);
-        //1024-by-768
-        let scrollViewFrame = CGRectMake(0, 64, 200, 768)
-        //let scrollViewFrame = scrollView.frame
+        scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
+
+        
+        let scrollViewFrame = scrollView.frame
         let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
         let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
         let minScale = min(scaleWidth, scaleHeight);
