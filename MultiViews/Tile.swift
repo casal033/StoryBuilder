@@ -94,6 +94,7 @@ class Tile: Printable, Comparable {
         sprite = SKSpriteNode(texture: SKTexture(imageNamed: tileImage), size: spriteSize)
         
         let label = SKLabelNode()
+        label.fontName = "Thonburi"
         label.text = word
         sprite.addChild(label)
         label.position = CGPoint(x: 0, y: -6)
