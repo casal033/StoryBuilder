@@ -26,12 +26,118 @@ extension SKNode {
 
 
 class GameViewController: UIViewController {
+    let panRec = UIPanGestureRecognizer()
+    let tapRec = UITapGestureRecognizer()
+    
+    var toolbar:UIToolbar!
+    var scrollView: UIScrollView!
+    var wordSelectionView: UIImageView!
+    var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
+    
+    var allTiles = [String]()
+    //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
+    var _categoriesIDs = [String]()
+    //_looseTilesIDs has an array of the student's individually assigned words
+    var _looseTilesIDs = [String]()
+    //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
+    var _category = [String: String]()
+    //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
+    var _tiles = [String: [String]]()
+    //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
+    var _categories = [String: [String]]()
+    var _categoryDictionary = [String: [String]]()
+    var categoryNames = [String]()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //Generate helpful objects of related student information
+        getStudentInfo()
+        
+        //Dictionary of categories and associated arrays
+        _categoryDictionary = getStudentWords()
+        
+        
+        
+        /////////* Section for Scroll View */////////
+        self.scrollView = UIScrollView()
+        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 30))
+        
+        view.addSubview(scrollView)
+        
+        
+        /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
+        populateSelector(allTiles)
+        
+        //Add word view to scroll
+        scrollView.addSubview(wordSelectionView)
+        
+        let scrollViewFrame = scrollView.frame
+        
+        //Scale/Zoom information
+        let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
+        let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
+        let minScale = min(scaleWidth, scaleHeight);
+        scrollView.minimumZoomScale = minScale;
+        
+        scrollView.maximumZoomScale = 1.0
+        scrollView.zoomScale = minScale;
+        
+        
+        
+        /////////* Section for Toolbar */////////
+        
+        //Array of category names assigned to student
+        categoryNames = getCategoryNames(_categoryDictionary)
+        
+        /*Array of buttons to add to toolbar
+        Currently includes "All" and each category the student is assigned */
+        var items = [AnyObject]()
+        items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
+        for index in 0...categoryNames.count-1 {
+            items.append(UIBarButtonItem(title: categoryNames[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
+        }
+        
+        //Making a toolbar programatically
+        toolbar = UIToolbar()
+        //Add buttons to toolbar
+        toolbar.items = items
+        //Add toolbat to view
+        view.addSubview(toolbar)
+        
+        tapRec.addTarget(self, action: "tappedView")
+        panRec.addTarget(self, action: "draggedView")
+        
+        
+        let skView = self.view as! SKView
+        scene = GameScene(size: skView.bounds.size)
+        scene.backgroundColor = UIColor.darkGrayColor()
+        
+        skView.addGestureRecognizer(tapRec)
+        skView.presentScene(scene)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        //Set scrollView bounds "size"
+        scrollView.frame = CGRectMake(0, 70, 150, view.bounds.height-97)
+        
+        //Set toolbar bounds "size"
+        toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
+    }
+    
+    func toBegining(scrollView: UIScrollView) {
+        scrollView.setContentOffset(CGPointMake(0, 0), animated: true)
+    }
     
     var y: CGFloat = 50
     
     func populateSelector(_words: [String]) {
-        
-        y = 80
+        //Should add catch to not scroll when category is short enough to fit on the page without scrolling
+        toBegining(scrollView)
+       
+        y = 0
         
         for word in _words {
             var wordButton = UIButton()
@@ -54,27 +160,8 @@ class GameViewController: UIViewController {
             
             scrollView.addSubview(wordButton)
             wordButton.addSubview(wordLabel)
-            
-            //Find tags and put them in the toolbar:
-            var items = [AnyObject]()
         }
-        wordBar.frame.origin.x = 0
     }
-    
-    
-    
-    let panRec = UIPanGestureRecognizer()
-    let tapRec = UITapGestureRecognizer()
-    
-    var toolbar:UIToolbar!
-    var scrollView: UIScrollView!
-    var wordSelectionView: UIImageView!
-    //var containerView = UIView()
-    
-    //@IBOutlet weak var wordSelectionView: UIImageView!
-    //@IBOutlet weak var scrollView: UIScrollView!
-    
-    var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
     
     @IBAction func allButtonPressed(sender: AnyObject) {
         let subViews: Array = scrollView.subviews
@@ -120,7 +207,6 @@ class GameViewController: UIViewController {
         }
     }
     
-    
     @IBAction func ResetButtonPressed(sender: AnyObject) {
         scene.resetTiles()
     }
@@ -132,20 +218,7 @@ class GameViewController: UIViewController {
     func tappedView() {
         
     }
-    
-    var allTiles = [String]()
-    //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
-    var _categoriesIDs = [String]()
-    //_looseTilesIDs has an array of the student's individually assigned words
-    var _looseTilesIDs = [String]()
-    //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
-    var _category = [String: String]()
-    //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
-    var _tiles = [String: [String]]()
-    //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
-    var _categories = [String: [String]]()
-    var _categoryDictionary = [String: [String]]()
-    var categoryNames = [String]()
+
     
     func getStudentInfo() {
         //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
@@ -227,89 +300,6 @@ class GameViewController: UIViewController {
         if contains(allTiles, toCheck) == false {
             allTiles.append(toCheck)
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        //Generate helpful objects of related student information
-        getStudentInfo()
-        
-        //Dictionary of categories and associated arrays
-        _categoryDictionary = getStudentWords()
-        
-        
-        
-        /////////* Section for Scroll View */////////
-        self.scrollView = UIScrollView()
-        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
-        
-        view.addSubview(scrollView)
-        
-        
-        /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
-        populateSelector(allTiles)
-        
-        scrollView.addSubview(wordSelectionView)
-        
-        //Parameters for content in scroll frame
-        //scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(allTiles) * 32))
-        
-        //scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
-
-        
-        let scrollViewFrame = scrollView.frame
-        let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
-        let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
-        let minScale = min(scaleWidth, scaleHeight);
-        scrollView.minimumZoomScale = minScale;
-        
-        scrollView.maximumZoomScale = 1.0
-        scrollView.zoomScale = minScale;
-        
-        
-        
-        /////////* Section for Toolbar */////////
-        
-        //Array of category names assigned to student
-        categoryNames = getCategoryNames(_categoryDictionary)
-        
-        /*Array of buttons to add to toolbar
-        Currently includes "All" and each category the student is assigned */
-        var items = [AnyObject]()
-        items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
-        for index in 0...categoryNames.count-1 {
-            items.append(UIBarButtonItem(title: categoryNames[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
-        }
-        
-        //Making a toolbar programatically
-        toolbar = UIToolbar()
-        //Add buttons to toolbar
-        toolbar.items = items
-        //Add toolbat to view
-        view.addSubview(toolbar)
-        
-        tapRec.addTarget(self, action: "tappedView")
-        panRec.addTarget(self, action: "draggedView")
-        
-        
-        let skView = self.view as! SKView
-        scene = GameScene(size: skView.bounds.size)
-        scene.backgroundColor = UIColor.darkGrayColor()
-        
-        skView.addGestureRecognizer(tapRec)
-        skView.presentScene(scene)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        //Set scrollView bounds "size"
-        scrollView.frame = view.bounds
-        wordSelectionView.frame = CGRectMake(0, 0, scrollView.contentSize.width, scrollView.contentSize.height)
-        
-        //Set toolbar bounds "size"
-        toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
     }
     
     func pressed(sender: UIButton!) {
