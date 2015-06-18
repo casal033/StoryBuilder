@@ -129,19 +129,12 @@ class Tile: Printable, Comparable {
         let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
         let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
         let corners: [CGPoint] = [upperLeft, lowerLeft, upperRight, lowerRight]
+        println("the tile corners are: \(corners)")
         return corners
     }
     
-    func getPhrase() -> (tiles:[Tile], length: CGFloat) {
-        var phrase: [Tile] = []
-        var current: Tile = self
-        var length = sprite.size.width
-        while(!current.isLastTile()) {
-            phrase.append(current.nextTile!)
-            length += current.nextTile!.sprite.size.width
-            current = current.nextTile!
-        }
-        return (phrase, length)
+    func getPhrase() -> Phrase {
+        return phrase
     }
     
     func resetPrevPos() {
@@ -161,18 +154,23 @@ class Tile: Printable, Comparable {
             momentum.y = yPos - prevPos.y
         
             sprite.position = newLocation
-            let phrase = getPhrase()
+            //let phrase = getPhrase()
             var thisX = xPos + (sprite.size.width/2)
-            if count(getPhrase().tiles) > 0 {
-                let i = getPhrase().tiles.first!
-                thisX += i.sprite.size.width/2
-                i.moveTile(CGPoint(x: thisX, y: newLocation.y))
+            if !isLastTile() {
+                //println("Phrase: \(getPhrase())")
+                let theNextTile = phrase.tiles[1]
+                if theNextTile.moveable {
+                    thisX += theNextTile.sprite.size.width/2
+                    theNextTile.moveTile(CGPoint(x: thisX, y: newLocation.y))
+                }
             }
         }
     }
+    
     func moveTileBy(toAdd: CGPoint) {
         moveTile(CGPoint(x: xPos + toAdd.x, y: yPos + toAdd.y))
     }
+    
     func moveTileAnimated(newLocation: CGPoint) {
         if moveable {
             xPos = newLocation.x
@@ -181,14 +179,15 @@ class Tile: Printable, Comparable {
             let action = SKAction.moveTo(newLocation, duration: 0.3)
             sprite.runAction(action)
             
-            if count(getPhrase().tiles) > 0 {
-                //if there is more than one tile, when you move this one, move its neighbor. recursive.
-                println("Phrase: \(getPhrase())")
-                let i = getPhrase().tiles.first!
-                i.moveTileAnimated(CGPoint(x: newLocation.x + sprite.size.width/2 + i.sprite.size.width/2, y: newLocation.y))
+            if !isLastTile(){
+                let theNextTile = phrase.tiles[1]
+                if theNextTile.moveable {
+                    theNextTile.moveTileAnimated(CGPoint(x: newLocation.x + sprite.size.width/2 + theNextTile.sprite.size.width/2, y: newLocation.y))
+                }
             }
         }
     }
+    
     func distanceToPoint(point: CGPoint) -> CGFloat {
         return (abs(xPos - point.x) + abs(yPos - point.y))
     }

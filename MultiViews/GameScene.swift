@@ -205,13 +205,18 @@ class GameScene: SKScene {
     }
     
     func speakSentence(speakFromHere: Tile) {
-        var sentence = speakFromHere.word
-        var nextTile = speakFromHere.nextTile!
-        while nextTile != nilTile {
-           sentence += " " + nextTile.word
-           nextTile = nextTile.nextTile!
+        let phrase: [Tile] = speakFromHere.getPhrase().tiles
+        for tile in phrase {
+            speakTile(tile)
         }
-        speakWord(sentence)
+        
+        //var sentence = speakFromHere.word
+        //var nextTile = speakFromHere.nextTile!
+        //while nextTile != nilTile {
+        //   sentence += " " + nextTile.word
+        //   nextTile = nextTile.nextTile!
+        //}
+        //speakWord(sentence)
     }
     
     //func speakSentence(startTile: Tile){
@@ -310,15 +315,21 @@ class GameScene: SKScene {
         let overlappingTiles = findTileOverlap(tile)
         println("Overlaps: \(count(overlappingTiles))")
         for othertile in overlappingTiles {
-            if count(tile.getPhrase().tiles) == 0 {
+            if count(tile.getPhrase().tiles) == 1 {
                 if (tile.xPos < (othertile.xPos)) {
                     tile.nextTile = othertile
                     othertile.prevTile = tile
                     othertile.moveTileAnimated(CGPoint(x: tile.xPos + (tile.sprite.size.width/2) + (othertile.sprite.size.width/2), y: tile.yPos))
+                    for phraseTile in othertile.phrase.tiles {
+                        tile.phrase.addTile(phraseTile)
+                    }
                 } else {
                     tile.prevTile = othertile
                     othertile.nextTile = tile
                     tile.moveTileAnimated(CGPoint(x: othertile.xPos + (othertile.sprite.size.width/2) + (tile.sprite.size.width/2), y: othertile.yPos))
+                    for phraseTile in tile.phrase.tiles {
+                        othertile.phrase.addTile(phraseTile)
+                    }
                 }
             } else {
                 othertile.moveTileAnimated(CGPoint(x: othertile.xPos, y: othertile.yPos + tile.sprite.size.height))
