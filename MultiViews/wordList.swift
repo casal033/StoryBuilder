@@ -13,11 +13,8 @@ public class WordList {
     var words: [String]!
     var contextIDs: [String]!
     var looseTilesIDs: [String]!
-    //var category: Dictionary<String, String>!
     var category = [String: String]()
-    //var tiles: Dictionary<String, Dictionary<String, String>>!
     var tiles = [String: [String]]()
-    //var categories: Dictionary<String, [String]>!
     var categories = [String: [String]]()
     var wordsWithCategories: [[String]]!
     
@@ -29,7 +26,7 @@ public class WordList {
         }
     }
 
-    
+    //Helper functions for initializers
     func getStringArrayFromJSON(json: JSON, toGet: String) -> [String]{
         var toReturn = [String]()
         var thecount = json.count
@@ -82,6 +79,37 @@ public class WordList {
         return toReturn
     }
     
+    func getArrayFromStudent(jsonStudent: JSON, id: String, arrToGet: String) -> [String]{
+        var toReturn = [String]()
+        var stucount = jsonStudent.count;
+        
+        for index in 0...stucount-1 {
+            let StudentID = jsonStudent[index]["_id"].string
+            if StudentID == id {
+                toReturn = jsonStudent[index][arrToGet].arrayValue.map { $0.string!}
+            }
+        }
+        return toReturn
+    }
+    
+    //initializer for getting student information
+    init(urlStudents: String){
+        let nsurl = NSURL(string: urlStudents)
+        var error: NSError?
+        
+        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
+        
+        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonStudent = JSON(studentDictionary)
+                contextIDs = getArrayFromStudent(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "contextTags")
+                looseTilesIDs = getArrayFromStudent(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "tileBucket")
+        } else {
+            println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
+        }
+    }
+    
+    //initializer for getting all of the category information
     init(urlCategories: String){
         let nsurl = NSURL(string: urlCategories)
         var error: NSError?
@@ -97,6 +125,7 @@ public class WordList {
         }
     }
     
+    //initializer for getting tile information
     init(urlTiles: String){
         let nsurl = NSURL(string: urlTiles)
         var error: NSError?
@@ -113,6 +142,7 @@ public class WordList {
         }
     }
     
+    //Gets ALL of the words from word river database
     init(url: String){
         let nsurl = NSURL(string: url)
         var error: NSError?
@@ -132,62 +162,8 @@ public class WordList {
         }
     }
     
+    //Deals with the nested array Default Word List
     init(arr: [[String]]!) {
         wordsWithCategories = arr
-    }
-    
-    public func getStudentContextIDs(studentAPIurl: String) -> [String] {
-        let nsurl = NSURL(string: studentAPIurl)
-        var error: NSError?
-        
-        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
-        //println("The stduent data is: \(studentData)")
-        
-        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
-            options: NSJSONReadingOptions(), error: &error){
-                let jsonStudent = JSON(studentDictionary)
-                //println("Some student stuff is: \(jsonStudent)")
-                var stucount = jsonStudent.count;
-                //println("There are \(stucount) students available in this collection")
-                
-                for index in 0...stucount-1 {
-                    let StudentID = jsonStudent[index]["_id"].string
-                    if StudentID == "5511ab56117e23f0412fd08f" {
-                        contextIDs = jsonStudent[index]["contextTags"].arrayValue.map { $0.string!}
-                        return contextIDs
-                    }
-                }
-        } else {
-            println("The file at '\(studentAPIurl)' is not valid JSON, error: \(error!)")
-        }
-        return contextIDs
-    }
-    
-    func getStudentLooseTilesIDs(studentAPIurl: String) -> [String] {
-        let nsurl = NSURL(string: studentAPIurl)
-        var error: NSError?
-        
-        let studentData: NSData = NSData(contentsOfURL: nsurl!)!
-        //println("The stduent data is: \(studentData)")
-        
-        if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
-            options: NSJSONReadingOptions(), error: &error){
-                let jsonStudent = JSON(studentDictionary)
-                //println("Some student stuff is: \(jsonStudent)")
-                var stucount = jsonStudent.count;
-                //println("There are \(stucount) students available in this collection")
-                
-                for index in 0...stucount-1 {
-                    let StudentID = jsonStudent[index]["_id"].string
-                    if StudentID == "5511ab56117e23f0412fd08f" {
-                        looseTilesIDs = jsonStudent[index]["tileBucket"].arrayValue.map { $0.string!}
-                        //println("The tileBucket array: \(looseTilesIDs)")
-                        return looseTilesIDs
-                    }
-                }
-        } else {
-            println("The file at '\(studentAPIurl)' is not valid JSON, error: \(error!)")
-        }
-        return looseTilesIDs
     }
 }
