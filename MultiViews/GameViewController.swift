@@ -33,10 +33,7 @@ class GameViewController: UIViewController {
         
         y = 80
         
-        var listOfTags: [String] = []
-        
-        for word in _words
-        {
+        for word in _words {
             var wordButton = UIButton()
             var wordLabel = UILabel()
                 
@@ -69,10 +66,13 @@ class GameViewController: UIViewController {
     let panRec = UIPanGestureRecognizer()
     let tapRec = UITapGestureRecognizer()
     
-    //@IBOutlet weak var Toolbar: UIToolbar!
     var toolbar:UIToolbar!
-    @IBOutlet weak var wordSelectionView: UIImageView!
-    @IBOutlet weak var scrollView: UIScrollView!
+    var scrollView: UIScrollView!
+    var wordSelectionView: UIImageView!
+    //var containerView = UIView()
+    
+    //@IBOutlet weak var wordSelectionView: UIImageView!
+    //@IBOutlet weak var scrollView: UIScrollView!
     
     var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
     
@@ -216,7 +216,7 @@ class GameViewController: UIViewController {
                                 addWordToAllTiles(tileName)
                             }
                         }
-                    } 
+                    }
                 }
             }
         }
@@ -239,8 +239,38 @@ class GameViewController: UIViewController {
         _categoryDictionary = getStudentWords()
         
         
-        /////////* Section for Toolbar */////////
+        
+        /////////* Section for Scroll View */////////
+        self.scrollView = UIScrollView()
+        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
+        
+        view.addSubview(scrollView)
+        
+        
+        /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
+        populateSelector(allTiles)
+        
+        scrollView.addSubview(wordSelectionView)
+        
+        //Parameters for content in scroll frame
+        //scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(allTiles) * 32))
+        
+        //scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
 
+        
+        let scrollViewFrame = scrollView.frame
+        let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
+        let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
+        let minScale = min(scaleWidth, scaleHeight);
+        scrollView.minimumZoomScale = minScale;
+        
+        scrollView.maximumZoomScale = 1.0
+        scrollView.zoomScale = minScale;
+        
+        
+        
+        /////////* Section for Toolbar */////////
+        
         //Array of category names assigned to student
         categoryNames = getCategoryNames(_categoryDictionary)
         
@@ -257,30 +287,7 @@ class GameViewController: UIViewController {
         //Add buttons to toolbar
         toolbar.items = items
         //Add toolbat to view
-        self.view.addSubview(toolbar)
-        
-        /////////* Section for Scroll View */////////
-        
-        /* Populate the scroll bar with all of the words related to the student
-        (Their assigned category words and inidviudally assigned words) */
-        populateSelector(allTiles)
-        
-        scrollView.addSubview(wordSelectionView)
-        
-        //Parameters for content in scroll frame
-        //scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(allTiles) * 32))
-        
-        scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
-
-        
-        let scrollViewFrame = scrollView.frame
-        let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
-        let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
-        let minScale = min(scaleWidth, scaleHeight);
-        scrollView.minimumZoomScale = minScale;
-        
-        scrollView.maximumZoomScale = 1.0
-        scrollView.zoomScale = minScale;
+        view.addSubview(toolbar)
         
         tapRec.addTarget(self, action: "tappedView")
         panRec.addTarget(self, action: "draggedView")
@@ -296,6 +303,10 @@ class GameViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        //Set scrollView bounds "size"
+        scrollView.frame = view.bounds
+        wordSelectionView.frame = CGRectMake(0, 0, scrollView.contentSize.width, scrollView.contentSize.height)
         
         //Set toolbar bounds "size"
         toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
