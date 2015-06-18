@@ -60,23 +60,6 @@ class GameViewController: UIViewController {
             
             //Find tags and put them in the toolbar:
             var items = [AnyObject]()
-            //items.append(UIBarButtonItem(title: "all", style: .Plain, target: self, action: "allButtonPressed:"))
-            
-//            if fillTags {
-//                
-//            
-//            items += Toolbar.items!
-//            
-//        /*    for tag in word[1...count(word) - 1] {
-//                if !contains(listOfTags, tag) {
-//                    listOfTags.append(tag)
-//                    
-//                    items.append(UIBarButtonItem(title: tag, style: .Plain, target: self, action: "showTag:"))
-//                    
-//                }
-//            }
-//            TagView.items = items*/
-//            }
         }
         wordBar.frame.origin.x = 0
     }
@@ -99,9 +82,7 @@ class GameViewController: UIViewController {
         {
             subview.removeFromSuperview()
         }
-        getStudentWords()
-        var _words:[String] = allTiles
-        populateSelector(_words)
+        populateSelector(allTiles)
     }
     
     @IBAction func showCategories(sender: AnyObject) {
@@ -153,21 +134,33 @@ class GameViewController: UIViewController {
     }
     
     var allTiles = [String]()
+    //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
+    var _categoriesIDs = [String]()
+    //_looseTilesIDs has an array of the student's individually assigned words
+    var _looseTilesIDs = [String]()
+    //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
+    var _category = [String: String]()
+    //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
+    var _tiles = [String: [String]]()
+    //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
+    var _categories = [String: [String]]()
+    var _categoryDictionary = [String: [String]]()
+    var categoryNames = [String]()
+    
+    func getStudentInfo() {
+        //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
+        _categoriesIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contextIDs
+        //_looseTilesIDs has an array of the student's individually assigned words
+        _looseTilesIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseTilesIDs
+        //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
+        _category = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
+        //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
+        _tiles = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
+        //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
+        _categories = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
+    }
     
     func getStudentWords() -> [String: [String]] {
-        
-        let dataGrabber = WordList(url: "https://teacherwordriver.herokuapp.com/api/students");
-        //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
-        let _categoriesIDs:[String] = dataGrabber.getStudentContextIDs("https://teacherwordriver.herokuapp.com/api/students");
-        //_looseTilesIDs has an array of the student's individually assigned words
-        var _looseTilesIDs:[String] = dataGrabber.getStudentLooseTilesIDs("https://teacherwordriver.herokuapp.com/api/students")
-        //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
-        var _category:[String: String] = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
-        //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
-        var _tiles:[String: [String]] = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
-        //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
-        var _categories: [String: [String]] = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
-        
         var categoryDictionary = [String: [String]]()
         var valueHolder = String()
         
@@ -178,7 +171,8 @@ class GameViewController: UIViewController {
             let catID = _categoriesIDs[i]
             //valueHolder is the name of the current category
             let valueHolder:String? = _category[catID]
-            categoryDictionary[valueHolder!] = parseDictionaryForArray(_tiles, catDict: _categories, id: catID)
+            var arrHolder:[String] = parseDictionaryForArray(_tiles, catDict: _categories, id: catID)
+            categoryDictionary[valueHolder!] = arrHolder
         }
         parseDictionaryForLooseTiles(_tiles, looseTiles: _looseTilesIDs)
         return categoryDictionary
@@ -189,7 +183,6 @@ class GameViewController: UIViewController {
         for (key, value) in dict {
             toReturn.append(key)
         }
-        println(toReturn)
         return toReturn
     }
     
@@ -202,9 +195,7 @@ class GameViewController: UIViewController {
             for index in 0...tilecount-1 {
                 let looseID = looseTiles[index]
                 if key == looseID {
-                    if contains(allTiles, tileName) == false {
-                        allTiles.append(tileName)
-                    }
+                    addWordToAllTiles(tileName)
                 }
             }
         }
@@ -212,37 +203,49 @@ class GameViewController: UIViewController {
     
     func parseDictionaryForArray(dictionary: [String: [String]], catDict: [String: [String]], id: String!) -> [String]{
         var toReturn = [String]()
-        let thecount = dictionary.count
         for (key, value) in dictionary {
-            let holder = value
-            let tileName:String = holder[0]
+            let tileName:String = value[0]
             for (key2, value2) in catDict {
                 if key == key2 {
                     let arrSize = value2.count
-                    for z in 0...arrSize-1 {
-                        var catIDHold = value2[z]
-                        if catIDHold == id {
-                            toReturn.append(tileName)
-                            if contains(allTiles, tileName) == false {
-                                allTiles.append(tileName)
+                    if arrSize > 0 {
+                        for index in 0...arrSize-1 {
+                            var catIDHold = value2[index]
+                            if catIDHold == id {
+                                toReturn.append(tileName)
+                                addWordToAllTiles(tileName)
                             }
                         }
-                    }
+                    } 
                 }
             }
         }
         return toReturn
     }
     
+    func addWordToAllTiles(toCheck: String) {
+        if contains(allTiles, toCheck) == false {
+            allTiles.append(toCheck)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getStudentWords()
-        var _words:[String] = allTiles
-        populateSelector(_words)
-        var categoryNames:[String] = getCategoryNames(getStudentWords())
-
+        //Generate helpful objects of related student information
+        getStudentInfo()
         
+        //Dictionary of categories and associated arrays
+        _categoryDictionary = getStudentWords()
+        
+        
+        /////////* Section for Toolbar */////////
+
+        //Array of category names assigned to student
+        categoryNames = getCategoryNames(_categoryDictionary)
+        
+        /*Array of buttons to add to toolbar
+        Currently includes "All" and each category the student is assigned */
         var items = [AnyObject]()
         items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
         for index in 0...categoryNames.count-1 {
@@ -251,16 +254,24 @@ class GameViewController: UIViewController {
         
         //Making a toolbar programatically
         toolbar = UIToolbar()
+        //Add buttons to toolbar
         toolbar.items = items
-        
-        
+        //Add toolbat to view
         self.view.addSubview(toolbar)
+        
+        /////////* Section for Scroll View */////////
+        
+        /* Populate the scroll bar with all of the words related to the student
+        (Their assigned category words and inidviudally assigned words) */
+        populateSelector(allTiles)
         
         scrollView.addSubview(wordSelectionView)
         
-        // 2
-        scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(_words) * 30))
-        //scrollView.contentSize.width = count(WordList) * 10
+        //Parameters for content in scroll frame
+        //scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(allTiles) * 32))
+        
+        scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
+
         
         let scrollViewFrame = scrollView.frame
         let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
@@ -268,13 +279,11 @@ class GameViewController: UIViewController {
         let minScale = min(scaleWidth, scaleHeight);
         scrollView.minimumZoomScale = minScale;
         
-        // 5
         scrollView.maximumZoomScale = 1.0
         scrollView.zoomScale = minScale;
         
         tapRec.addTarget(self, action: "tappedView")
         panRec.addTarget(self, action: "draggedView")
-        
         
         
         let skView = self.view as! SKView
@@ -288,8 +297,8 @@ class GameViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // bounds is now correctly set
-        toolbar.frame = CGRectMake(0, 44, view.bounds.width, 44)
+        //Set toolbar bounds "size"
+        toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
     }
     
     func pressed(sender: UIButton!) {
@@ -304,7 +313,6 @@ class GameViewController: UIViewController {
             subview.removeFromSuperview()
         }
         let tag = sender.title
-       // populateSelectorByTag(tag!)
     }
 
     override func shouldAutorotate() -> Bool {
