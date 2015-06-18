@@ -162,6 +162,24 @@ class GameViewController: UIViewController {
         }
     }
     
+    //Function adds words from populateSelector() into the game scene
+    func pressed(sender: UIButton!) {
+        let word = sender.subviews[0] as! UILabel
+        scene.addTile([word.text!, getWordType(word.text!)])
+    }
+    
+    func getWordType(word: String) -> String {
+        var toReturn = String()
+        for (key, value) in _tiles {
+            let tileName:String = value[0]
+            let tileType:String = value[1]
+            if tileName == word {
+                toReturn = tileType
+            }
+        }
+        return toReturn
+    }
+    
     @IBAction func allButtonPressed(sender: AnyObject) {
         let subViews: Array = scrollView.subviews
         for subview in subViews
@@ -191,30 +209,6 @@ class GameViewController: UIViewController {
             }
         }
         return toReturn
-    }
-    
-    var skView: SKView!
-    var scene: GameScene!
-    
-    @IBOutlet var Word1: UITextField?
-    
-    @IBAction func AddExtraWord(sender: AnyObject) {
-        if (Word1!.text != "" && count(Word1!.text.utf16) < 10) {
-            scene.addExtraTile(Word1!.text)
-            Word1!.text = ""
-        }
-    }
-    
-    @IBAction func ResetButtonPressed(sender: AnyObject) {
-        scene.resetTiles()
-    }
-    
-    @IBAction func NextButtonPressed(sender: AnyObject) {
-        scene.addTileFromWordList()
-    }
-    
-    func tappedView() {
-        
     }
     
     func sortArray(toSort: [String]) -> [String]{
@@ -303,9 +297,29 @@ class GameViewController: UIViewController {
         }
     }
     
-    func pressed(sender: UIButton!) {
-        let word = sender.subviews[0] as! UILabel
-        scene.addTile([word.text!])
+    
+    var skView: SKView!
+    var scene: GameScene!
+    
+    @IBOutlet var Word1: UITextField?
+    
+    @IBAction func AddExtraWord(sender: AnyObject) {
+        if (Word1!.text != "" && count(Word1!.text.utf16) < 10) {
+            scene.addExtraTile(Word1!.text)
+            Word1!.text = ""
+        }
+    }
+    
+    @IBAction func ResetButtonPressed(sender: AnyObject) {
+        scene.resetTiles()
+    }
+    
+    @IBAction func NextButtonPressed(sender: AnyObject) {
+        scene.addTileFromWordList()
+    }
+    
+    func tappedView() {
+        
     }
     
     func showTag(sender: UIBarButtonItem!) {
