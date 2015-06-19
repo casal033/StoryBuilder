@@ -74,13 +74,13 @@ class Tile: Printable, Comparable {
         
         let spriteSize = CGSize(width: max(CGFloat(20 * length), 50) + 10.0, height: 85.0)
         var tileImage = ""
-        if partOfSpeech == "Noun" {
+        if partOfSpeech == "Noun" || partOfSpeech == "Pronoun" {
             tileImage = "RedTile"
         }
         else if partOfSpeech == "Verb" {
             tileImage = "GreenTile"
         }
-        else if partOfSpeech == "Article" || partOfSpeech == "Pronoun" || partOfSpeech == "Conjunction" {
+        else if partOfSpeech == "Article" || partOfSpeech == "Conjunction" {
             tileImage = "YellowTile"
         }
         else if partOfSpeech == "Adjective" || partOfSpeech == "Preposition" || partOfSpeech == "Adverb" {
@@ -112,10 +112,10 @@ class Tile: Printable, Comparable {
     
     func containsPoint(location: CGPoint) -> Bool {
         let mySprite = self.sprite
-        return location.x >= self.xPos - mySprite.size.width/2 - 2
-            && location.x <= self.xPos + mySprite.size.width/2 + 2
-            && location.y >= self.yPos - mySprite.size.height/2 - 2
-            && location.y <= self.yPos + mySprite.size.height/2 + 2
+        return location.x > self.xPos - mySprite.size.width/2
+            && location.x < self.xPos + mySprite.size.width/2
+            && location.y > self.yPos - mySprite.size.height/2
+            && location.y < self.yPos + mySprite.size.height/2
     }
     
     func getLeftCorners() -> [CGPoint] {
@@ -124,8 +124,6 @@ class Tile: Printable, Comparable {
         let halfHeight = self.sprite.size.height/2
         let upperLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos - halfHeight)
         let lowerLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos + halfHeight)
-        //let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
-        //let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
         let corners: [CGPoint] = [upperLeft, lowerLeft]
         println("the left tile corners are: \(corners)")
         return corners
@@ -167,8 +165,6 @@ class Tile: Printable, Comparable {
         // if we want to get named corners, might want to use a different return style
         let halfWidth = self.sprite.size.width/2
         let halfHeight = self.sprite.size.height/2
-        //let upperLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos - halfHeight)
-        //let lowerLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos + halfHeight)
         let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
         let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
         let corners: [CGPoint] = [upperRight, lowerRight]
@@ -272,8 +268,7 @@ class Tile: Printable, Comparable {
     
 }
 func == (lhs: Tile, rhs: Tile) -> Bool {
-    return (lhs.word == rhs.word)
-    //&& (lhs.sprite.position == rhs.sprite.position)
+    return (lhs.word == rhs.word) && (lhs.sprite.position == rhs.sprite.position)
 }
 
 func < (lhs: Tile, rhs: Tile) -> Bool {
