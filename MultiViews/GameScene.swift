@@ -54,7 +54,7 @@ class GameScene: SKScene {
     var current_y_offset: CGFloat = 0
     
     let RIGHT_BOUNDS: CGFloat = 700
-    let LEFT_BOUNDS: CGFloat = 50
+    let LEFT_BOUNDS: CGFloat = 200
     
     var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
@@ -66,14 +66,13 @@ class GameScene: SKScene {
     var tileX = CGFloat(200)
     var tileY = CGFloat(200)
     var extraWordCount = 0
-    let nilTile: Tile = Tile()
     
     let tileLayer = SKNode()
     let gameLayer = SKNode()
     let wordBankLayer = SKNode()
     let sentenceLayer = SKNode()
     
-    var selection: Tile = Tile(word: "nil", partOfSpeech: "", x: 0, y: 0)
+    var selection: Tile = Tile.nilTile
     
     var tilesArray: [Tile] = []
     var selectedNode: SKSpriteNode?
@@ -89,8 +88,8 @@ class GameScene: SKScene {
         gameLayer.addChild(tileLayer)
         gameLayer.addChild(wordBankLayer)
         
-        nilTile.nextTile = nilTile
-        nilTile.prevTile = nilTile
+        Tile.nilTile.nextTile = Tile.nilTile
+        Tile.nilTile.prevTile = Tile.nilTile
     }
     
     override func didMoveToView(view: SKView) {
@@ -113,7 +112,7 @@ class GameScene: SKScene {
         
         while (count(findTileOverlap(tile)) > 0) {
             if (tile.xPos + 50 > RIGHT_BOUNDS) {
-                tile.xPos = 100
+                tile.xPos = 200
             }
             else {
                 tile.xPos += 50
@@ -158,7 +157,7 @@ class GameScene: SKScene {
                 return (tile)
             }
         }
-        return nilTile
+        return Tile.nilTile
     }
     
     func findTileOverlap(tile: Tile) -> ([Tile]) {
@@ -166,6 +165,7 @@ class GameScene: SKScene {
         for otherTile in tilesArray {
             if tile != otherTile {
                 let corners = otherTile.getCorners()
+                println("I care about corners")
                 for corner in corners {
                     if !contains(overlappingTiles, otherTile) && tile.locationIsInBounds(corner) {
                         overlappingTiles.append(otherTile)
@@ -179,7 +179,7 @@ class GameScene: SKScene {
     func selectNodeForTouch(location: CGPoint) {
         let tile: Tile = findTileTouched(location)
         let touchedNode: SKSpriteNode = tile.sprite
-        if (tile != nilTile) {
+        if (tile != Tile.nilTile) {
             println("Touched Node: \(tile.word) Next Node: \(tile.nextTile!.word), Prev Node: \(tile.prevTile!.word)")
         }
         selection.sprite.removeAllActions()
@@ -188,7 +188,7 @@ class GameScene: SKScene {
         
         selection.sprite.removeFromParent()
         tileLayer.addChild(selection.sprite)
-        for tile in selection.getPhrase().tiles {
+        for tile in selection.getPhraseTiles() {
             tile.sprite.removeFromParent()
             tileLayer.addChild(tile.sprite)
         }
@@ -205,21 +205,19 @@ class GameScene: SKScene {
     }
     
     func speakSentence(speakFromHere: Tile) {
+        let phrase: [Tile] = speakFromHere.getPhraseTiles()
+        println("The phrase is: \(phrase)")
+        
         var sentence = speakFromHere.word
         var nextTile = speakFromHere.nextTile!
-        while nextTile != nilTile {
-           sentence += " " + nextTile.word
-           nextTile = nextTile.nextTile!
+        while nextTile != Tile.nilTile {
+            sentence += " " + nextTile.word
+            nextTile = nextTile.nextTile!
         }
         speakWord(sentence)
     }
     
-    //func speakSentence(startTile: Tile){
-    //    var sentence = startTile.getPhrase().words
-    //    for tile in sentence{
-    //        speakTile(tile)
-    //    }
-   // }
+
     
     func speakTile(tile: Tile) {
         speakWord(tile.word)
@@ -271,7 +269,7 @@ class GameScene: SKScene {
         current_x_offset = selection.xPos - positionInScene.x
         current_y_offset = selection.yPos - positionInScene.y
         
-        currentPhrase = Phrase(tiles: selection.getPhrase().tiles, x: selection.xPos, y: selection.yPos)
+        currentPhrase = Phrase(root: selection, x: selection.xPos, y: selection.yPos)
         
         //if (findTileTouched(positionInScene).prevTile != nilTile) {
         STICKY_POINT = CGPoint(x: selection.xPos, y: selection.yPos)
@@ -287,11 +285,11 @@ class GameScene: SKScene {
         let moveToPosition: CGPoint = CGPoint(x: positionInScene.x + current_x_offset, y: positionInScene.y + current_y_offset)
         if selection.word != "nil" {
             selection.moveTile(moveToPosition)
-            if selection.prevTile != nilTile {
+            if selection.prevTile != Tile.nilTile {
                 //if the tile I am moving used to be "next" for something, update that previous tile to point at nilTile
-                selection.prevTile!.nextTile = nilTile
+                selection.prevTile!.nextTile = Tile.nilTile
                 //and set the tile I'm moving to have nilTile as its previous tile (since it used to have something)
-                selection.prevTile = nilTile
+                selection.prevTile = Tile.nilTile
             }
         }
     }
@@ -310,19 +308,25 @@ class GameScene: SKScene {
         let overlappingTiles = findTileOverlap(tile)
         println("Overlaps: \(count(overlappingTiles))")
         for othertile in overlappingTiles {
-            if count(tile.getPhrase().tiles) == 0 {
+            //if count(tile.getPhraseTiles()) == 1 {
                 if (tile.xPos < (othertile.xPos)) {
                     tile.nextTile = othertile
+                    if othertile.prevTile! != Tile.nilTile{
+                        othertile.prevTile!.nextTile = tile
+                        tile.prevTile = othertile.prevTile
+                    }
                     othertile.prevTile = tile
                     othertile.moveTileAnimated(CGPoint(x: tile.xPos + (tile.sprite.size.width/2) + (othertile.sprite.size.width/2), y: tile.yPos))
                 } else {
+                    tile.phrase.last().nextTile = othertile.nextTile
                     tile.prevTile = othertile
                     othertile.nextTile = tile
                     tile.moveTileAnimated(CGPoint(x: othertile.xPos + (othertile.sprite.size.width/2) + (tile.sprite.size.width/2), y: othertile.yPos))
                 }
-            } else {
-                othertile.moveTileAnimated(CGPoint(x: othertile.xPos, y: othertile.yPos + tile.sprite.size.height))
-            }
+            //} else {
+            //    othertile.moveTileAnimated(CGPoint(x: othertile.xPos, y: othertile.yPos + tile.sprite.size.height))
+            //    println("Hey, that tile \(tile) was on top of me!")
+            //}
         }
     }
    
