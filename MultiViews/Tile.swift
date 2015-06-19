@@ -146,6 +146,26 @@ class Tile: Printable, Comparable {
         prevPos.y = yPos
     }
     
+    func makePrevOf(otherTile: Tile) {
+        println("LAST TILE IN ADDED PHRASE: \(self.phrase.last())")
+        if otherTile.prevTile! != Tile.nilTile {
+            otherTile.prevTile!.nextTile = self
+        }
+        self.prevTile = otherTile.prevTile
+        self.phrase.last().nextTile = otherTile
+        otherTile.prevTile = self.phrase.last()
+    }
+    
+    func makeNextOf(otherTile: Tile) {
+        println("the last tile in the added phrase is: \(self.phrase.last())")
+        self.phrase.last().nextTile = otherTile.nextTile
+        if otherTile.nextTile! != Tile.nilTile {
+            otherTile.nextTile!.prevTile = self.phrase.last()
+        }
+        otherTile.nextTile = self
+        self.prevTile = otherTile
+    }
+    
     func moveTile(newLocation: CGPoint) {
         if moveable {
             prevPos.x = xPos
