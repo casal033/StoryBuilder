@@ -18,7 +18,7 @@ class Phrase: Printable {
         var int: Int = 0
         while (tile != Tile.nilTile) {
             int += 1
-            tile = tile.nextTile!
+            tile = tile.nextTile
         }
         return int
     }
@@ -27,7 +27,7 @@ class Phrase: Printable {
         var tile = root
         while (tile != Tile.nilTile) {
             w += tile.sprite.size.width
-            tile = tile.nextTile!
+            tile = tile.nextTile
         }
         return w
     }
@@ -37,7 +37,7 @@ class Phrase: Printable {
         var tile = root
         while (tile != Tile.nilTile) {
             str += tile.word + " "
-            tile = tile.nextTile!
+            tile = tile.nextTile
         }
         return str
     }
@@ -55,7 +55,7 @@ class Phrase: Printable {
     func last() -> Tile {
         var tile = root
         while (tile.nextTile != Tile.nilTile) {
-            tile = tile.nextTile!
+            tile = tile.nextTile
         }
         return tile
     }

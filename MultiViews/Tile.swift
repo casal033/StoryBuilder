@@ -35,8 +35,8 @@ class Tile: Printable, Comparable {
     let colors = ["Red","Green","Yellow","Blue"]
     let tags: [String] = []
     
-    var nextTile: Tile?
-    var prevTile: Tile?
+    lazy var nextTile: Tile = Tile.nilTile
+    lazy var prevTile: Tile = Tile.nilTile
     
     static let nilTile = Tile()
     
@@ -66,8 +66,8 @@ class Tile: Printable, Comparable {
         self.partOfSpeech = partOfSpeech
         self.xPos = x
         self.yPos = y
-        self.nextTile = Tile.nilTile
-        self.prevTile = Tile.nilTile
+        //self.nextTile = Tile.nilTile
+        //self.prevTile = Tile.nilTile
         self.prevPos = CGPoint(x: x, y: y)
         if (word == "nil") { self.moveable = false }
         else { self.moveable = true }
@@ -181,7 +181,7 @@ class Tile: Printable, Comparable {
         var tiles: [Tile] = []
         while(current != Tile.nilTile) {
             tiles.append(current)
-            current = current.nextTile!
+            current = current.nextTile
         }
         return tiles
     }
@@ -226,7 +226,7 @@ class Tile: Printable, Comparable {
             
             var thisX = xPos + sprite.size.width/2
             if !(nextTile == Tile.nilTile) {
-                let theNextTile = nextTile!
+                let theNextTile = nextTile
                 thisX += theNextTile.sprite.size.width/2
                 theNextTile.moveTile(CGPoint(x: thisX, y: newLocation.y))
             }
@@ -246,7 +246,7 @@ class Tile: Printable, Comparable {
             sprite.runAction(action)
             
             if !(nextTile == Tile.nilTile){
-                let theNextTile = nextTile!
+                let theNextTile = nextTile
                 theNextTile.moveTileAnimated(CGPoint(x: newLocation.x + sprite.size.width/2 + theNextTile.sprite.size.width/2, y: newLocation.y))
             }
         }

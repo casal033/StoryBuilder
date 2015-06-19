@@ -159,10 +159,10 @@ class GameScene: SKScene {
         println("The phrase is: \(phrase)")
         
         var sentence = speakFromHere.word
-        var nextTile = speakFromHere.nextTile!
+        var nextTile = speakFromHere.nextTile
         while nextTile != Tile.nilTile {
             sentence += " " + nextTile.word
-            nextTile = nextTile.nextTile!
+            nextTile = nextTile.nextTile
         }
         speakWord(sentence)
     }
@@ -180,10 +180,9 @@ class GameScene: SKScene {
         rotateTile(tile)
     }
 
-    func findTileTouched(location: CGPoint) -> (Tile) {
-        println("found touched tile")
+    func findTileTouched(touchLocation: CGPoint) -> (Tile) {
         for tile in tilesArray {
-            if tile.locationIsInBounds(location) {
+            if tile.containsPoint(touchLocation) {
                 return (tile)
             }
         }
@@ -304,7 +303,6 @@ class GameScene: SKScene {
                     y: othertile.yPos))
                 return
             }
-            //    othertile.moveTileAnimated(CGPoint(x: othertile.xPos, y: othertile.yPos
         }
     }
    
