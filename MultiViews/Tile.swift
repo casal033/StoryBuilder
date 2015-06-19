@@ -80,10 +80,10 @@ class Tile: Printable, Comparable {
         else if partOfSpeech == "Verb" {
             tileImage = "GreenTile"
         }
-        else if partOfSpeech == "Article" || partOfSpeech == "Pronoun" {
+        else if partOfSpeech == "Article" || partOfSpeech == "Pronoun" || partOfSpeech == "Conjunction" {
             tileImage = "YellowTile"
         }
-        else if partOfSpeech == "Adjective" || partOfSpeech == "Preposition" {
+        else if partOfSpeech == "Adjective" || partOfSpeech == "Preposition" || partOfSpeech == "Adverb" {
             tileImage = "BlueTile"
         }
         else {
