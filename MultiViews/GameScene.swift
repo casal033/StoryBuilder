@@ -162,12 +162,12 @@ class GameScene: SKScene {
     
     func findTileOverlap(tile: Tile) -> ([Tile]) {
         var overlappingTiles: [Tile] = []
+        println("I care about corners")
+        let corners = tile.getCorners()
         for otherTile in tilesArray {
             if tile != otherTile {
-                let corners = otherTile.getCorners()
-                println("I care about corners")
                 for corner in corners {
-                    if !contains(overlappingTiles, otherTile) && tile.locationIsInBounds(corner) {
+                    if !contains(overlappingTiles, otherTile) && otherTile.locationIsInBounds(corner) {
                         overlappingTiles.append(otherTile)
                     }
                 }
