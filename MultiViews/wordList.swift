@@ -77,8 +77,8 @@ public class WordList {
             var idReturn = json[index][id].stringValue
             var itemReturn1 = json[index][firstItem].stringValue
             var itemReturn2 = json[index][secondItem].stringValue
-            toHelp.append(itemReturn1)
-            toHelp.append(itemReturn2)
+            result.append(itemReturn1)
+            result.append(itemReturn2)
             toReturn[idReturn] = result
         }
         return toReturn
@@ -89,9 +89,9 @@ public class WordList {
         var toReturn = [String]()
         var thecount = json.count;
         for index in 0...thecount-1 {
-            let StudentID = jsonStudent[index]["_id"].string
+            let StudentID = json[index]["_id"].string
             if StudentID == id {
-                toReturn = jsonStudent[index][arrToGet].arrayValue.map { $0.string!}
+                toReturn = json[index][arrToGet].arrayValue.map { $0.string!}
             }
         }
         return toReturn
@@ -142,7 +142,7 @@ public class WordList {
             options: NSJSONReadingOptions(), error: &error){
                 let jsonTile = JSON(tileDictionary)
                 tiles = getNestedDictionaryFromJSON(jsonTile, id: "_id", firstItem: "name", secondItem: "wordType")
-                categories = getStringArrayDictionaryFromJSON(jsonTile, id: "_id", arrayname: "contextTags")
+                categories = getStringArrayDictionaryFromJSON(jsonTile, id: "_id", array: "contextTags")
         } else {
             println("The file at '\(urlTiles)' is not valid JSON, error: \(error!)")
         }
