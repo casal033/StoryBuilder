@@ -46,10 +46,6 @@
                                     <action selector="ResetButtonPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="GFt-5l-Rq2"/>
                                 </connections>
                             </button>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" id="z6J-lT-Y32">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="768"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </scrollView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="purpleRectangle" id="2dy-FY-Gh9">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -72,7 +68,6 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="Word1" destination="kwL-hh-vYg" id="1bV-ZG-QBZ"/>
-                        <outlet property="scrollView" destination="z6J-lT-Y32" id="59O-Zm-hvx"/>
                         <outlet property="wordSelectionView" destination="2dy-FY-Gh9" id="NTi-SI-rbY"/>
                     </connections>
                 </viewController>
