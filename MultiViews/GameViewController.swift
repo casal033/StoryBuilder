@@ -33,8 +33,12 @@ class GameViewController: UIViewController {
     var scrollView: UIScrollView!
     var wordSelectionView: UIImageView!
     var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
-    
+    //allTiles contains all of the words related to the current student
     var allTiles = [String]()
+    //Max word length in allTiles used to set Scrol Width
+    var maxWordLength = Int()
+    //Max word length in allTiles used to set tile width
+    var maxWordLengthTile = Int()
     //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
     var _categoriesIDs = [String]()
     //_looseTilesIDs has an array of the student's individually assigned words
@@ -50,15 +54,15 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         //Generate helpful objects of related student information
         getStudentInfo()
         
         //Dictionary of categories and associated arrays
         _categoryDictionary = getStudentWords()
         
-        
-        
+        setWidth(maxWordLength)
+        setTileWidth(maxWordLengthTile)
+
         /////////* Section for Scroll View */////////
         self.scrollView = UIScrollView()
         self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 30))
@@ -116,11 +120,16 @@ class GameViewController: UIViewController {
         skView.presentScene(scene)
     }
     
+    var setScrollWidth = CGFloat()
+    var setScrollWidthText = CGFloat()
+    var setScrollWidthButton = CGFloat()
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         //Set scrollView bounds "size"
-        scrollView.frame = CGRectMake(0, 70, 150, view.bounds.height-97)
+        //If scroll width is breaking use 150
+        scrollView.frame = CGRectMake(0, 70, setScrollWidth, view.bounds.height-100)
         
         //Set toolbar bounds "size"
         toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
@@ -145,11 +154,12 @@ class GameViewController: UIViewController {
             wordLabel.text = word
             wordLabel.font = UIFont(name: "Thonburi", size: 20)
             wordLabel.textAlignment = .Left
-            wordLabel.frame = CGRectMake(10, 0, 100, 25)
-            
+            wordLabel.frame = CGRectMake(10, 0, setScrollWidthText, 25)
+            //If scroll width is breaking use 100
             wordButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
             // 3rd is is width, 4th is height
-            wordButton.frame = CGRectMake(10, y, 120, 30)
+            //If scroll width is breaking use 120
+            wordButton.frame = CGRectMake(10, y, setScrollWidthButton, 30)
             wordButton.backgroundColor = UIColor(red: 0.7, green: 0.5, blue: 0.9, alpha: 1.0)
             
             //adjust y position for the next word
@@ -200,6 +210,34 @@ class GameViewController: UIViewController {
         populateSelector(sortArray(getArrayToDisplay(categoryName, dict: holder)))
     }
     
+    func setWidth(int:Int) {
+        var hold = Int()
+        //println("Count check: \(int > 18)")
+        if int > 18 {
+            hold = 18
+        } else {
+            hold = int
+        }
+        for index in 0...hold {
+            setScrollWidth += 13
+        }
+        //println(setScrollWidth)
+    }
+
+    func setTileWidth(int:Int) {
+        var hold = Int()
+        //println("Count check tile: \(int > 18)")
+        if int > 18 {
+            hold = 18
+        } else {
+            hold = int
+        }
+        for index in 0...hold {
+            setScrollWidthText += 11
+            setScrollWidthButton += 12
+        }
+        //println(setScrollWidthButton)
+    }
     
     func getArrayToDisplay(category: String?!, dict: [String:[String]]) -> [String] {
         var toReturn = [String]()
@@ -294,6 +332,17 @@ class GameViewController: UIViewController {
     func addWordToAllTiles(toCheck: String) {
         if contains(allTiles, toCheck) == false {
             allTiles.append(toCheck)
+            //Used to get default word list in gamescene
+            //println("[\(toCheck), \(getWordType(toCheck))],")
+            var wordLength = count(toCheck)
+            checkMaxWord(wordLength)
+        }
+    }
+    
+    func checkMaxWord(int: Int) {
+        if int > maxWordLength {
+            maxWordLength = int
+            maxWordLengthTile = maxWordLength
         }
     }
     

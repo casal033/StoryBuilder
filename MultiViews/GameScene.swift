@@ -10,36 +10,68 @@ import Foundation
 import SpriteKit
 import AVFoundation
 
-   let DEFAULT_WORD_LIST:[[String]] = [
-        ["can", "Verb"],
-        ["funny", "Adjective"],
-        ["I", "Pronoun"],
-        ["to", "Article"],
-        ["look", "Verb"],
-        ["a", "Article"],
-        ["three", "Adjective"],
-        ["find", "Verb"],
-        ["school", "Noun"],
-        ["go", "Verb"],
-        ["help", "Verb"],
-        ["away", "Adjective"],
-        ["dog", "Noun"],
-        ["bird", "Noun"],
-        ["cat", "Noun"],
-        ["come", "Verb"],
-        ["run","Verb"],
-        ["two", "Adjective"],
-        ["blue", "Adjective"],
-        ["red", "Adjective"],
-        ["yellow", "Adjective"],
-        ["ten", "Adjective"],
-        ["fifty", "Adjective"],
-        ["fourteen", "Adjective"],
-        ["brother", "Noun"],
-        ["mother", "Noun"],
-        ["sister", "Noun"],
-        ["horse", "Noun"]
-    ]
+var Adverb = "Adverb"
+var Noun = "Noun"
+var Verb = "Verb"
+var Preposition = "Preposition"
+var Pronoun = "Pronoun"
+var Adjective = "Adjective"
+var Conjunction = "Conjunction"
+var Article = "Article"
+
+let DEFAULT_WORD_LIST:[[String]] = [
+    ["catch", Verb],
+    ["ball", Noun],
+    ["fast", Adjective],
+    ["Batman", Noun],
+    ["Iron Man", Noun],
+    ["fly", Verb],
+    ["bear", Noun],
+    ["cat", Noun],
+    ["dog", Noun],
+    ["giraffe", Noun],
+    ["here", Adverb],
+    ["for", Preposition],
+    ["me", Pronoun],
+    ["and", Conjunction],
+    ["play", Verb],
+    ["see", Verb],
+    ["it", Pronoun],
+    ["down", Adverb],
+    ["the", Article],
+    ["is", Verb],
+    ["blue", Adjective],
+    ["house", Noun],
+    ["you", Pronoun],
+    ["in", Preposition],
+    ["go", Verb],
+    ["yellow", Adjective],
+    ["big", Adjective],
+    ["I", Pronoun],
+    ["said", Verb],
+    ["come", Verb],
+    ["up", Adverb],
+    ["not", Adverb],
+    ["away", Adverb],
+    ["find", Verb],
+    ["run", Verb],
+    ["red", Adjective],
+    ["jump", Verb],
+    ["can", Verb],
+    ["we", Pronoun],
+    ["help", Verb],
+    ["two", Adjective],
+    ["funny", Adjective],
+    ["look", Verb],
+    ["where", Adverb],
+    ["a", Article],
+    ["one", Adjective],
+    ["to", Preposition],
+    ["make", Verb],
+    ["little", Adjective],
+    ["my", Adjective],
+    ["three", Adjective]
+]
 
 
 class GameScene: SKScene {
