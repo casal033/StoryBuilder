@@ -175,7 +175,6 @@ class GameScene: SKScene {
     func selectTile(location: CGPoint) {
         var tile: Tile = findTileTouched(location)
         println("\tSELECTING \(tile.word)")
-        //speakTile(tile)
         speakSentence(tile)
         rotateTile(tile)
     }
@@ -193,7 +192,7 @@ class GameScene: SKScene {
         let tile: Tile = findTileTouched(location)
         let touchedNode: SKSpriteNode = tile.sprite
         if (tile != Tile.nilTile) {
-            println("Touched Node: \(tile.word) Next Node: \(tile.nextTile!.word), Prev Node: \(tile.prevTile!.word)")
+            println("\nprevTile is: [\(tile.prevTile.word)]=>[[\(tile.word)]]=> nextTile is [\(tile.nextTile.word)]")
         }
         selection.sprite.removeAllActions()
         selection.sprite.runAction(SKAction.rotateToAngle(0.0, duration: 0.1))
@@ -247,6 +246,9 @@ class GameScene: SKScene {
         let touch: UITouch = touches.first as! UITouch
         let positionInScene: CGPoint = touch.locationInNode(self)
         selectNodeForTouch(positionInScene)
+        //println("selection previous after touch: \(selection.prevTile)")
+        //selection.detachFromPrev()
+        //println("selection previous after detach: \(selection.prevTile)")
         current_x_offset = selection.xPos - positionInScene.x
         current_y_offset = selection.yPos - positionInScene.y
         
@@ -264,39 +266,41 @@ class GameScene: SKScene {
         let positionInScene: CGPoint = touch.locationInNode(self)
         let moveToPosition: CGPoint = CGPoint(x: positionInScene.x + current_x_offset, y: positionInScene.y + current_y_offset)
         if selection != Tile.nilTile {
+            //println("selection previous before detach: \(selection.prevTile)")
+            //selection.detachFromPrev()
+            //println("selection previous after detach: \(selection.prevTile)")
             selection.moveTile(moveToPosition)
-            if selection.prevTile != Tile.nilTile {
-                //if the tile I am moving used to be "next" for something, update that previous tile to point at nilTile
-                selection.prevTile!.nextTile = Tile.nilTile
-                //and set the tile I'm moving to have nilTile as its previous tile (since it used to have something)
-                selection.prevTile = Tile.nilTile
-            }
         }
     }
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         let touch = touches.first as! UITouch
         let tile = findTileTouched(touch.locationInNode(tileLayer))
-        if tile.xPos == tile.prevPos.x && tile.yPos == tile.prevPos.y {
+        if !tile.didMove() {
             println("Hello!")
             selectTile(touch.locationInNode(tileLayer))
-            println(tile.distanceToPoint(STICKY_POINT))
+            println("\tthe sticky point is this far from tile: \(tile.distanceToPoint(STICKY_POINT))")
             let moveToPoint = CGPoint(x: tile.xPos + tile.momentum.x, y: tile.yPos + tile.momentum.y)
             tile.resetPrevPos()
-        }
-        STICKY_POINT = DEFAULT_STICKY_POINT
-        let tilesThisTileOverlaps = findTileOverlap(tile)
-        println("The selected tile overlaps \(count(tilesThisTileOverlaps)) tiles")
-        for othertile in tilesThisTileOverlaps {
-            if (tile.xPos > (othertile.xPos)) {
+        } else {
+            if tile.prevTile != Tile.nilTile {
+                tile.detachFromPrev()
+            }
+            STICKY_POINT = DEFAULT_STICKY_POINT
+            let tilesUnderLeftCorners = tile.leftCornersInside(tilesArray)
+            println("The selected tile overlaps \(count(tilesUnderLeftCorners)) tiles")
+            for othertile in tilesUnderLeftCorners {
                 println("adding \(tile.getPhraseTiles()) after \(othertile)")
                 tile.makeNextOf(othertile)
                 tile.moveTileAnimated(CGPoint(
                     x: othertile.xPos + (othertile.sprite.size.width/2) + (tile.sprite.size.width/2),
                     y: othertile.yPos))
-                break
-            } else {
-                println("adding \(tile.getPhraseTiles()) before \(othertile)")
+                return
+            }
+            let tilesUnderRightCorners = tile.rightCornersInside(tilesArray)
+            println("The selected tile overlaps \(count(tilesUnderRightCorners)) tiles")
+            for othertile in tilesUnderRightCorners {
+                println("ADDING \(tile.getPhraseTiles()) BEFORE \(othertile)")
                 tile.makePrevOf(othertile)
                 tile.moveTileAnimated(CGPoint(
                     x: othertile.xPos - (othertile.sprite.size.width/2) + (tile.sprite.size.width/2),

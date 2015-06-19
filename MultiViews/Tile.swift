@@ -191,22 +191,36 @@ class Tile: Printable, Comparable {
         prevPos.y = yPos
     }
     
+    func didMove() -> Bool {
+        return !(xPos == prevPos.x && yPos == prevPos.y)
+    }
+    
+    func detachFromPrev() {
+        //if the tile I am moving used to be "next" for something, update that previous tile to point at nilTile
+        prevTile.nextTile = Tile.nilTile
+        //and set the tile I'm moving to have nilTile as its previous tile (since it used to have something)
+        prevTile = Tile.nilTile
+    }
+    
     func makePrevOf(otherTile: Tile) {
         println("LAST TILE IN ADDED PHRASE: \(self.phrase.last())")
-        if otherTile.prevTile! != Tile.nilTile {
-            otherTile.prevTile!.nextTile = self
+        detachFromPrev()
+        if otherTile.prevTile != Tile.nilTile {
+            otherTile.prevTile.nextTile = self
         }
         self.prevTile = otherTile.prevTile
-        self.phrase.last().nextTile = otherTile
         otherTile.prevTile = self.phrase.last()
+        self.phrase.last().nextTile = otherTile
+        
     }
     
     func makeNextOf(otherTile: Tile) {
         println("the last tile in the added phrase is: \(self.phrase.last())")
-        self.phrase.last().nextTile = otherTile.nextTile
-        if otherTile.nextTile! != Tile.nilTile {
-            otherTile.nextTile!.prevTile = self.phrase.last()
+        detachFromPrev()
+        if otherTile.nextTile != Tile.nilTile {
+            otherTile.nextTile.prevTile = self.phrase.last()
         }
+        self.phrase.last().nextTile = otherTile.nextTile
         otherTile.nextTile = self
         self.prevTile = otherTile
     }
