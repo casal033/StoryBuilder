@@ -110,13 +110,17 @@ class GameScene: SKScene {
             tile = Tile(word: newWord[0], partOfSpeech: "", x: tileX, y: tileY)
         }
         
-        while (count(findTileOverlap(tile)) > 0) {
+        var numberOfTilesUnderLeftCorners: Int = count(tile.leftCornersInside(tilesArray))
+        var numberOfTries: Int = 0
+        while (numberOfTilesUnderLeftCorners > 0) && (numberOfTries < 4) {
             if (tile.xPos + 50 > RIGHT_BOUNDS) {
-                tile.xPos = 200
+                tile.xPos = CGFloat(arc4random_uniform(300) + 150)
             }
             else {
                 tile.xPos += 50
             }
+            numberOfTilesUnderLeftCorners = count(tile.leftCornersInside(tilesArray))
+            numberOfTries += 1
         }
         
         tilesArray.insert(tile, atIndex: 0)
@@ -314,7 +318,7 @@ class GameScene: SKScene {
                 tile.moveTileAnimated(CGPoint(
                     x: othertile.xPos - (othertile.sprite.size.width/2) + (tile.sprite.size.width/2),
                     y: othertile.yPos))
-                break
+                return
             }
             //    othertile.moveTileAnimated(CGPoint(x: othertile.xPos, y: othertile.yPos
         }
