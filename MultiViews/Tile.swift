@@ -74,16 +74,16 @@ class Tile: Printable, Comparable {
         
         let spriteSize = CGSize(width: max(CGFloat(20 * length), 50) + 10.0, height: 85.0)
         var tileImage = ""
-        if partOfSpeech == "noun" {
+        if partOfSpeech == "Noun" {
             tileImage = "RedTile"
         }
-        else if partOfSpeech == "verb" {
+        else if partOfSpeech == "Verb" {
             tileImage = "GreenTile"
         }
-        else if partOfSpeech == "article" || partOfSpeech == "pronoun" {
+        else if partOfSpeech == "Article" || partOfSpeech == "Pronoun" {
             tileImage = "YellowTile"
         }
-        else if partOfSpeech == "adjective" {
+        else if partOfSpeech == "Adjective" || partOfSpeech == "Preposition" {
             tileImage = "BlueTile"
         }
         else {

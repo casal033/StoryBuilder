@@ -26,17 +26,119 @@ extension SKNode {
 
 
 class GameViewController: UIViewController {
+    let panRec = UIPanGestureRecognizer()
+    let tapRec = UITapGestureRecognizer()
+    
+    var toolbar:UIToolbar!
+    var scrollView: UIScrollView!
+    var wordSelectionView: UIImageView!
+    var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
+    
+    var allTiles = [String]()
+    //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
+    var _categoriesIDs = [String]()
+    //_looseTilesIDs has an array of the student's individually assigned words
+    var _looseTilesIDs = [String]()
+    //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
+    var _category = [String: String]()
+    //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
+    var _tiles = [String: [String]]()
+    //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
+    var _categories = [String: [String]]()
+    var _categoryDictionary = [String: [String]]()
+    var categoryNames = [String]()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //Generate helpful objects of related student information
+        getStudentInfo()
+        
+        //Dictionary of categories and associated arrays
+        _categoryDictionary = getStudentWords()
+        
+        
+        
+        /////////* Section for Scroll View */////////
+        self.scrollView = UIScrollView()
+        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 30))
+        
+        view.addSubview(scrollView)
+        
+        /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
+        populateSelector(sortArray(allTiles))
+        
+        //Add word view to scroll
+        scrollView.addSubview(wordSelectionView)
+        
+        let scrollViewFrame = scrollView.frame
+        
+        //Scale/Zoom information
+        let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
+        let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
+        let minScale = min(scaleWidth, scaleHeight);
+        scrollView.minimumZoomScale = minScale;
+        
+        scrollView.maximumZoomScale = 1.0
+        scrollView.zoomScale = minScale;
+        
+        
+        
+        /////////* Section for Toolbar */////////
+        
+        //Array of category names assigned to student
+        categoryNames = getCategoryNames(_categoryDictionary)
+        
+        /*Array of buttons to add to toolbar
+        Currently includes "All" and each category the student is assigned */
+        var items = [AnyObject]()
+        items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
+        for index in 0...categoryNames.count-1 {
+            items.append(UIBarButtonItem(title: categoryNames[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
+        }
+        
+        //Making a toolbar programatically
+        toolbar = UIToolbar()
+        //Add buttons to toolbar
+        toolbar.items = items
+        //Add toolbat to view
+        view.addSubview(toolbar)
+        
+        tapRec.addTarget(self, action: "tappedView")
+        panRec.addTarget(self, action: "draggedView")
+        
+        
+        let skView = self.view as! SKView
+        scene = GameScene(size: skView.bounds.size)
+        scene.backgroundColor = UIColor.darkGrayColor()
+        
+        skView.addGestureRecognizer(tapRec)
+        skView.presentScene(scene)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        //Set scrollView bounds "size"
+        scrollView.frame = CGRectMake(0, 70, 150, view.bounds.height-97)
+        
+        //Set toolbar bounds "size"
+        toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
+    }
+    
+    func toBegining(scrollView: UIScrollView) {
+        scrollView.setContentOffset(CGPointMake(0, 0), animated: true)
+    }
     
     var y: CGFloat = 50
     
     func populateSelector(_words: [String]) {
+        //Should add catch to not scroll when category is short enough to fit on the page without scrolling
+        toBegining(scrollView)
+       
+        y = 0
         
-        y = 80
-        
-        var listOfTags: [String] = []
-        
-        for word in _words
-        {
+        for word in _words {
             var wordButton = UIButton()
             var wordLabel = UILabel()
                 
@@ -57,24 +159,26 @@ class GameViewController: UIViewController {
             
             scrollView.addSubview(wordButton)
             wordButton.addSubview(wordLabel)
-            
-            //Find tags and put them in the toolbar:
-            var items = [AnyObject]()
         }
-        wordBar.frame.origin.x = 0
     }
     
+    //Function adds words from populateSelector() into the game scene
+    func pressed(sender: UIButton!) {
+        let word = sender.subviews[0] as! UILabel
+        scene.addTile([word.text!, getWordType(word.text!)])
+    }
     
-    
-    let panRec = UIPanGestureRecognizer()
-    let tapRec = UITapGestureRecognizer()
-    
-    //@IBOutlet weak var Toolbar: UIToolbar!
-    var toolbar:UIToolbar!
-    @IBOutlet weak var wordSelectionView: UIImageView!
-    @IBOutlet weak var scrollView: UIScrollView!
-    
-    var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
+    func getWordType(word: String) -> String {
+        var toReturn = String()
+        for (key, value) in _tiles {
+            let tileName:String = value[0]
+            let tileType:String = value[1]
+            if tileName == word {
+                toReturn = tileType
+            }
+        }
+        return toReturn
+    }
     
     @IBAction func allButtonPressed(sender: AnyObject) {
         let subViews: Array = scrollView.subviews
@@ -82,7 +186,7 @@ class GameViewController: UIViewController {
         {
             subview.removeFromSuperview()
         }
-        populateSelector(allTiles)
+        populateSelector(sortArray(allTiles))
     }
     
     @IBAction func showCategories(sender: AnyObject) {
@@ -93,7 +197,7 @@ class GameViewController: UIViewController {
         {
             subview.removeFromSuperview()
         }
-        populateSelector(getArrayToDisplay(categoryName, dict: holder))
+        populateSelector(sortArray(getArrayToDisplay(categoryName, dict: holder)))
     }
     
     
@@ -106,46 +210,10 @@ class GameViewController: UIViewController {
         }
         return toReturn
     }
-
     
-    var skView: SKView!
-    var scene: GameScene!
-    
-    @IBOutlet var Word1: UITextField?
-    
-    @IBAction func AddExtraWord(sender: AnyObject) {
-        if (Word1!.text != "" && count(Word1!.text.utf16) < 10) {
-            scene.addExtraTile(Word1!.text)
-            Word1!.text = ""
-        }
+    func sortArray(toSort: [String]) -> [String]{
+        return toSort.sorted { $0.localizedCaseInsensitiveCompare($1) == NSComparisonResult.OrderedAscending }
     }
-    
-    
-    @IBAction func ResetButtonPressed(sender: AnyObject) {
-        scene.resetTiles()
-    }
-    
-    @IBAction func NextButtonPressed(sender: AnyObject) {
-        scene.addTileFromWordList()
-    }
-    
-    func tappedView() {
-        
-    }
-    
-    var allTiles = [String]()
-    //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
-    var _categoriesIDs = [String]()
-    //_looseTilesIDs has an array of the student's individually assigned words
-    var _looseTilesIDs = [String]()
-    //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
-    var _category = [String: String]()
-    //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
-    var _tiles = [String: [String]]()
-    //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
-    var _categories = [String: [String]]()
-    var _categoryDictionary = [String: [String]]()
-    var categoryNames = [String]()
     
     func getStudentInfo() {
         //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
@@ -216,7 +284,7 @@ class GameViewController: UIViewController {
                                 addWordToAllTiles(tileName)
                             }
                         }
-                    } 
+                    }
                 }
             }
         }
@@ -229,81 +297,29 @@ class GameViewController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        //Generate helpful objects of related student information
-        getStudentInfo()
-        
-        //Dictionary of categories and associated arrays
-        _categoryDictionary = getStudentWords()
-        
-        
-        /////////* Section for Toolbar */////////
-
-        //Array of category names assigned to student
-        categoryNames = getCategoryNames(_categoryDictionary)
-        
-        /*Array of buttons to add to toolbar
-        Currently includes "All" and each category the student is assigned */
-        var items = [AnyObject]()
-        items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
-        for index in 0...categoryNames.count-1 {
-            items.append(UIBarButtonItem(title: categoryNames[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
+    
+    var skView: SKView!
+    var scene: GameScene!
+    
+    @IBOutlet var Word1: UITextField?
+    
+    @IBAction func AddExtraWord(sender: AnyObject) {
+        if (Word1!.text != "" && count(Word1!.text.utf16) < 10) {
+            scene.addExtraTile(Word1!.text)
+            Word1!.text = ""
         }
-        
-        //Making a toolbar programatically
-        toolbar = UIToolbar()
-        //Add buttons to toolbar
-        toolbar.items = items
-        //Add toolbat to view
-        self.view.addSubview(toolbar)
-        
-        /////////* Section for Scroll View */////////
-        
-        /* Populate the scroll bar with all of the words related to the student
-        (Their assigned category words and inidviudally assigned words) */
-        populateSelector(allTiles)
-        
-        scrollView.addSubview(wordSelectionView)
-        
-        //Parameters for content in scroll frame
-        //scrollView.contentSize = CGSize(width: wordBar.frame.size.width , height: CGFloat(count(allTiles) * 32))
-        
-        scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 32))
-
-        
-        let scrollViewFrame = scrollView.frame
-        let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
-        let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
-        let minScale = min(scaleWidth, scaleHeight);
-        scrollView.minimumZoomScale = minScale;
-        
-        scrollView.maximumZoomScale = 1.0
-        scrollView.zoomScale = minScale;
-        
-        tapRec.addTarget(self, action: "tappedView")
-        panRec.addTarget(self, action: "draggedView")
-        
-        
-        let skView = self.view as! SKView
-        scene = GameScene(size: skView.bounds.size)
-        scene.backgroundColor = UIColor.darkGrayColor()
-        
-        skView.addGestureRecognizer(tapRec)
-        skView.presentScene(scene)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        //Set toolbar bounds "size"
-        toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
+    @IBAction func ResetButtonPressed(sender: AnyObject) {
+        scene.resetTiles()
     }
     
-    func pressed(sender: UIButton!) {
-        let word = sender.subviews[0] as! UILabel
-        scene.addTile([word.text!])
+    @IBAction func NextButtonPressed(sender: AnyObject) {
+        scene.addTileFromWordList()
+    }
+    
+    func tappedView() {
+        
     }
     
     func showTag(sender: UIBarButtonItem!) {
