@@ -131,7 +131,7 @@ class GameScene: SKScene {
     
     func addTile(newWord: [String]) {
         // where to put the tile in the scene
-        tileX = CGFloat(arc4random_uniform(600) + 100)
+        tileX = CGFloat(arc4random_uniform(600) + 200)
         tileY = CGFloat(arc4random_uniform(500) + 100)
         
         var tile:Tile
@@ -146,7 +146,7 @@ class GameScene: SKScene {
         var numberOfTries: Int = 0
         while (numberOfTilesUnderLeftCorners > 0) && (numberOfTries < 4) {
             if (tile.xPos + 50 > RIGHT_BOUNDS) {
-                tile.xPos = CGFloat(arc4random_uniform(300) + 150)
+                tile.xPos = CGFloat(arc4random_uniform(300) + 200)
             }
             else {
                 tile.xPos += 50
@@ -156,7 +156,7 @@ class GameScene: SKScene {
         }
         
         tilesArray.insert(tile, atIndex: 0)
-        println(tilesArray)
+        println("the current tiles are: \(tilesArray)")
 
         tile.sprite.position = CGPoint(x: tile.xPos, y: tile.yPos)
         tileLayer.addChild(tile.sprite)

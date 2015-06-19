@@ -112,10 +112,10 @@ class Tile: Printable, Comparable {
     
     func containsPoint(location: CGPoint) -> Bool {
         let mySprite = self.sprite
-        return location.x >= self.xPos + 2 - mySprite.size.width/2
-            && location.x <= self.xPos + 2 + mySprite.size.width/2
-            && location.y >= self.yPos + 2 - mySprite.size.height/2
-            && location.y <= self.yPos + 2 + mySprite.size.height/2
+        return location.x >= self.xPos - mySprite.size.width/2 - 2
+            && location.x <= self.xPos + mySprite.size.width/2 + 2
+            && location.y >= self.yPos - mySprite.size.height/2 - 2
+            && location.y <= self.yPos + mySprite.size.height/2 + 2
     }
     
     func getLeftCorners() -> [CGPoint] {
@@ -272,7 +272,8 @@ class Tile: Printable, Comparable {
     
 }
 func == (lhs: Tile, rhs: Tile) -> Bool {
-    return lhs.word == rhs.word
+    return (lhs.word == rhs.word)
+    //&& (lhs.sprite.position == rhs.sprite.position)
 }
 
 func < (lhs: Tile, rhs: Tile) -> Bool {
