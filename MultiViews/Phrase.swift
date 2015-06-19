@@ -10,52 +10,55 @@ import Foundation
 import SpriteKit
 
 class Phrase: Printable {
-    var tiles: [Tile]
+    var root: Tile
     var xPos: CGFloat
     var yPos: CGFloat
-    var length: Int
-    var width: CGFloat {var i: CGFloat = 0.0
-        for tile in tiles {
-            i += tile.sprite.size.width
+    var count: Int {
+        var tile = root
+        var int: Int = 0
+        while (tile != Tile.nilTile) {
+            int += 1
+            tile = tile.nextTile!
         }
-        return i}
+        return int
+    }
+    var width: CGFloat {
+        var w: CGFloat = 0.0
+        var tile = root
+        while (tile != Tile.nilTile) {
+            w += tile.sprite.size.width
+            tile = tile.nextTile!
+        }
+        return w
+    }
 
-    
+
     var description: String {
         var str = ""
-        for tile in tiles {
+        var tile = root
+        while (tile != Tile.nilTile) {
             str += tile.word + " "
+            tile = tile.nextTile!
         }
         return str
     }
     
-    init(tiles: [Tile], x: CGFloat, y: CGFloat) {
-        self.tiles = tiles
-        self.length = count(tiles)
+    init(root: Tile, x: CGFloat, y: CGFloat) {
+        self.root = root
         self.xPos = x
         self.yPos = y
     }
     
-    func addTile(newTile: Tile) {
-        tiles.append(newTile)
-    }
-    
-    //was getPhrase in Tile
-    //var current: Tile = self
-    //var length = sprite.size.width
-    //while(!current.isLastTile()) {
-    //phrase.addTile(current.nextTile!)
-    //length += current.nextTile!.sprite.size.width
-    //current = current.nextTile!
-    //}
-    //return (phrase, length)
-    
     func first() -> Tile {
-        return self.tiles[0]
+        return root
     }
     
     func last() -> Tile {
-        return self.tiles[tiles.count-1]
+        var tile = root
+        while (tile != Tile.nilTile) {
+            tile = tile.nextTile!
+        }
+        return tile
     }
     
     //func getCorners() -> [CGPoint] {

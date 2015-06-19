@@ -25,7 +25,9 @@ class Tile: Printable, Comparable {
     var prevPos: CGPoint
     var momentum = CGPoint(x: 0, y: 0)
     
-    var phrase: Phrase
+    var phrase: Phrase {
+        return Phrase(root: self, x: xPos, y: yPos)
+    }
     
     var sprite: SKSpriteNode
     var moveable: Bool
@@ -36,7 +38,9 @@ class Tile: Printable, Comparable {
     var nextTile: Tile?
     var prevTile: Tile?
     
-    init(){
+    static let nilTile = Tile()
+    
+    private init(){
         //nilTile
         let x:CGFloat = 0
         let y:CGFloat = 0
@@ -50,14 +54,9 @@ class Tile: Printable, Comparable {
         
         let spriteSize = CGSize(width: 0.0, height: 0.0)
         sprite = SKSpriteNode(texture: SKTexture(imageNamed: ""), size: spriteSize)
-        sprite.name = word
-        let label = SKLabelNode()
-        label.text = word
-        sprite.addChild(label)
-        label.position = CGPoint(x: 0, y: -6)
         sprite.hidden = true
-        phrase = Phrase(tiles: [], x: x, y: y)
-        phrase.addTile(self)
+        //phrase = Phrase(root: self, x: x, y: y)
+        //phrase.addTile(self)
     }
     
     init(word: String, partOfSpeech: String, x: CGFloat, y: CGFloat) {//, tags: [String]) {
@@ -67,8 +66,8 @@ class Tile: Printable, Comparable {
         self.partOfSpeech = partOfSpeech
         self.xPos = x
         self.yPos = y
-        self.nextTile = Tile()
-        self.prevTile = Tile()
+        self.nextTile = Tile.nilTile
+        self.prevTile = Tile.nilTile
         self.prevPos = CGPoint(x: x, y: y)
         if (word == "nil") { self.moveable = false }
         else { self.moveable = true }
@@ -104,12 +103,11 @@ class Tile: Printable, Comparable {
         if (!moveable) {
             sprite.hidden = true
         }
-        phrase = Phrase(tiles: [], x: x, y: y)
-        phrase.addTile(self)
+        //phrase = Phrase(root: self, x: x, y: y)
     }
     
     func isLastTile() -> Bool {
-        return self.nextTile!.word == "nil"
+        return self.nextTile! == Tile.nilTile
     }
     
     func locationIsInBounds(location: CGPoint) -> Bool {
@@ -133,8 +131,14 @@ class Tile: Printable, Comparable {
         return corners
     }
     
-    func getPhrase() -> Phrase {
-        return phrase
+    func getPhraseTiles() -> [Tile] {
+        var current: Tile = self
+        var tiles: [Tile] = []
+        while(current != Tile.nilTile) {
+            tiles.append(current)
+            current = current.nextTile!
+        }
+        return tiles
     }
     
     func resetPrevPos() {
@@ -154,15 +158,12 @@ class Tile: Printable, Comparable {
             momentum.y = yPos - prevPos.y
         
             sprite.position = newLocation
-            //let phrase = getPhrase()
-            var thisX = xPos + (sprite.size.width/2)
-            if !isLastTile() {
-                //println("Phrase: \(getPhrase())")
-                let theNextTile = phrase.tiles[1]
-                if theNextTile.moveable {
-                    thisX += theNextTile.sprite.size.width/2
-                    theNextTile.moveTile(CGPoint(x: thisX, y: newLocation.y))
-                }
+            
+            var thisX = xPos + sprite.size.width/2
+            if !(nextTile == Tile.nilTile) {
+                let theNextTile = nextTile!
+                thisX += theNextTile.sprite.size.width/2
+                theNextTile.moveTile(CGPoint(x: thisX, y: newLocation.y))
             }
         }
     }
@@ -179,11 +180,9 @@ class Tile: Printable, Comparable {
             let action = SKAction.moveTo(newLocation, duration: 0.3)
             sprite.runAction(action)
             
-            if !isLastTile(){
-                let theNextTile = phrase.tiles[1]
-                if theNextTile.moveable {
-                    theNextTile.moveTileAnimated(CGPoint(x: newLocation.x + sprite.size.width/2 + theNextTile.sprite.size.width/2, y: newLocation.y))
-                }
+            if !(nextTile == Tile.nilTile){
+                let theNextTile = nextTile!
+                theNextTile.moveTileAnimated(CGPoint(x: newLocation.x + sprite.size.width/2 + theNextTile.sprite.size.width/2, y: newLocation.y))
             }
         }
     }
