@@ -212,7 +212,7 @@ class GameViewController: UIViewController {
     
     func setWidth(int:Int) {
         var hold = Int()
-        println("Count check: \(int > 18)")
+        //println("Count check: \(int > 18)")
         if int > 18 {
             hold = 18
         } else {
@@ -221,12 +221,12 @@ class GameViewController: UIViewController {
         for index in 0...hold {
             setScrollWidth += 13
         }
-        println(setScrollWidth)
+        //println(setScrollWidth)
     }
 
     func setTileWidth(int:Int) {
         var hold = Int()
-        println("Count check tile: \(int > 18)")
+        //println("Count check tile: \(int > 18)")
         if int > 18 {
             hold = 18
         } else {
@@ -236,7 +236,7 @@ class GameViewController: UIViewController {
             setScrollWidthText += 11
             setScrollWidthButton += 12
         }
-        println(setScrollWidthButton)
+        //println(setScrollWidthButton)
     }
     
     func getArrayToDisplay(category: String?!, dict: [String:[String]]) -> [String] {
@@ -332,11 +332,17 @@ class GameViewController: UIViewController {
     func addWordToAllTiles(toCheck: String) {
         if contains(allTiles, toCheck) == false {
             allTiles.append(toCheck)
+            //Used to get default word list in gamescene
+            //println("[\(toCheck), \(getWordType(toCheck))],")
             var wordLength = count(toCheck)
-            if wordLength > maxWordLength {
-                maxWordLength = wordLength
-                maxWordLengthTile = maxWordLength
-            }
+            checkMaxWord(wordLength)
+        }
+    }
+    
+    func checkMaxWord(int: Int) {
+        if int > maxWordLength {
+            maxWordLength = int
+            maxWordLengthTile = maxWordLength
         }
     }
     
