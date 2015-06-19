@@ -107,27 +107,72 @@ class Tile: Printable, Comparable {
     }
     
     func isLastTile() -> Bool {
-        return self.nextTile! == Tile.nilTile
+        return self.nextTile == Tile.nilTile
     }
     
-    func locationIsInBounds(location: CGPoint) -> Bool {
-        let image = self.sprite
-        return location.x > self.xPos - image.size.width/2
-            && location.x < self.xPos + image.size.width/2
-            && location.y > self.yPos - image.size.height/2
-            && location.y < self.yPos + image.size.height/2
+    func containsPoint(location: CGPoint) -> Bool {
+        let mySprite = self.sprite
+        return location.x >= self.xPos + 2 - mySprite.size.width/2
+            && location.x <= self.xPos + 2 + mySprite.size.width/2
+            && location.y >= self.yPos + 2 - mySprite.size.height/2
+            && location.y <= self.yPos + 2 + mySprite.size.height/2
     }
     
-    func getCorners() -> [CGPoint] {
+    func getLeftCorners() -> [CGPoint] {
         // if we want to get named corners, might want to use a different return style
         let halfWidth = self.sprite.size.width/2
         let halfHeight = self.sprite.size.height/2
         let upperLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos - halfHeight)
         let lowerLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos + halfHeight)
+        //let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
+        //let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
+        let corners: [CGPoint] = [upperLeft, lowerLeft]
+        println("the left tile corners are: \(corners)")
+        return corners
+    }
+    
+    func leftCornersInside(tilesArray: [Tile]) -> ([Tile]) {
+        var overlappingTiles: [Tile] = []
+        let corners = getLeftCorners()
+        for tile in tilesArray {
+            if self != tile {
+                for corner in corners {
+                    if !contains(overlappingTiles, tile) && tile.containsPoint(corner) {
+                        overlappingTiles.append(tile)
+                        //could probably return just one tile and could return it as soon as you find it
+                    }
+                }
+            }
+        }
+        return overlappingTiles
+    }
+    
+    func rightCornersInside(tilesArray: [Tile]) -> ([Tile]) {
+        var overlappingTiles: [Tile] = []
+        let corners = getRightCorners()
+        for tile in tilesArray {
+            if self != tile {
+                for corner in corners {
+                    if !contains(overlappingTiles, tile) && tile.containsPoint(corner) {
+                        overlappingTiles.append(tile)
+                        //could probably return just one tile and could return it as soon as you find it
+                    }
+                }
+            }
+        }
+        return overlappingTiles
+    }
+    
+    func getRightCorners() -> [CGPoint] {
+        // if we want to get named corners, might want to use a different return style
+        let halfWidth = self.sprite.size.width/2
+        let halfHeight = self.sprite.size.height/2
+        //let upperLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos - halfHeight)
+        //let lowerLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos + halfHeight)
         let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
         let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
-        let corners: [CGPoint] = [upperLeft, lowerLeft, upperRight, lowerRight]
-        println("the tile corners are: \(corners)")
+        let corners: [CGPoint] = [upperRight, lowerRight]
+        println("the right tile corners are: \(corners)")
         return corners
     }
     

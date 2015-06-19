@@ -154,22 +154,6 @@ class GameScene: SKScene {
         extraWordCount++
     }
     
-    func findTileOverlap(tile: Tile) -> ([Tile]) {
-        var overlappingTiles: [Tile] = []
-        println("I care about corners")
-        let corners = tile.getCorners()
-        for otherTile in tilesArray {
-            if tile != otherTile {
-                for corner in corners {
-                    if !contains(overlappingTiles, otherTile) && otherTile.locationIsInBounds(corner) {
-                        overlappingTiles.append(otherTile)
-                    }
-                }
-            }
-        }
-        return overlappingTiles
-    }
-    
     func speakSentence(speakFromHere: Tile) {
         let phrase: [Tile] = speakFromHere.getPhraseTiles()
         println("The phrase is: \(phrase)")
