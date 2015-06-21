@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:MultiViews.xcodeproj">
+      location = "self:/Users/admin/Documents/GitHubProjects/StoryBuilder/Story Builder.xcodeproj">
    </FileRef>
 </Workspace>

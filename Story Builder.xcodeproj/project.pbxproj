@@ -41,7 +41,7 @@
 		8467B77C19BE934200B8E06A /* Untitled drawing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Untitled drawing.png"; sourceTree = "<group>"; };
 		848566B81B2E0FEF00747016 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		84B500E51977126B0082FCFD /* Tile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
-		84B6E2FD1975A2130041C4E1 /* MultiViews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiViews.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		84B6E2FD1975A2130041C4E1 /* Story Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Story Builder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B6E3011975A2130041C4E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84B6E3021975A2130041C4E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84B6E3041975A2130041C4E1 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -49,7 +49,7 @@
 		84B6E3081975A2140041C4E1 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		84B6E30B1975A2140041C4E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		84B6E30D1975A2140041C4E1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		84B6E3131975A2140041C4E1 /* MultiViewsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiViewsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		84B6E3131975A2140041C4E1 /* Story BuilderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Story BuilderTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B6E3181975A2140041C4E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84B6E3191975A2140041C4E1 /* MultiViewsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiViewsTests.swift; sourceTree = "<group>"; };
 		84B6E3231975A2C30041C4E1 /* Button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Button@2x.png"; sourceTree = "<group>"; };
@@ -87,8 +87,8 @@
 		84B6E2FE1975A2130041C4E1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				84B6E2FD1975A2130041C4E1 /* MultiViews.app */,
-				84B6E3131975A2140041C4E1 /* MultiViewsTests.xctest */,
+				84B6E2FD1975A2130041C4E1 /* Story Builder.app */,
+				84B6E3131975A2140041C4E1 /* Story BuilderTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -150,9 +150,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		84B6E2FC1975A2130041C4E1 /* MultiViews */ = {
+		84B6E2FC1975A2130041C4E1 /* Story Builder */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViews" */;
+			buildConfigurationList = 84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "Story Builder" */;
 			buildPhases = (
 				84B6E2F91975A2130041C4E1 /* Sources */,
 				84B6E2FA1975A2130041C4E1 /* Frameworks */,
@@ -162,14 +162,14 @@
 			);
 			dependencies = (
 			);
-			name = MultiViews;
+			name = "Story Builder";
 			productName = MultiViews;
-			productReference = 84B6E2FD1975A2130041C4E1 /* MultiViews.app */;
+			productReference = 84B6E2FD1975A2130041C4E1 /* Story Builder.app */;
 			productType = "com.apple.product-type.application";
 		};
-		84B6E3121975A2140041C4E1 /* MultiViewsTests */ = {
+		84B6E3121975A2140041C4E1 /* Story BuilderTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84B6E3201975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViewsTests" */;
+			buildConfigurationList = 84B6E3201975A2140041C4E1 /* Build configuration list for PBXNativeTarget "Story BuilderTests" */;
 			buildPhases = (
 				84B6E30F1975A2140041C4E1 /* Sources */,
 				84B6E3101975A2140041C4E1 /* Frameworks */,
@@ -180,9 +180,9 @@
 			dependencies = (
 				84B6E3151975A2140041C4E1 /* PBXTargetDependency */,
 			);
-			name = MultiViewsTests;
+			name = "Story BuilderTests";
 			productName = MultiViewsTests;
-			productReference = 84B6E3131975A2140041C4E1 /* MultiViewsTests.xctest */;
+			productReference = 84B6E3131975A2140041C4E1 /* Story BuilderTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -209,7 +209,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 84B6E2F81975A2120041C4E1 /* Build configuration list for PBXProject "MultiViews" */;
+			buildConfigurationList = 84B6E2F81975A2120041C4E1 /* Build configuration list for PBXProject "Story Builder" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -222,8 +222,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				84B6E2FC1975A2130041C4E1 /* MultiViews */,
-				84B6E3121975A2140041C4E1 /* MultiViewsTests */,
+				84B6E2FC1975A2130041C4E1 /* Story Builder */,
+				84B6E3121975A2140041C4E1 /* Story BuilderTests */,
 			);
 		};
 /* End PBXProject section */
@@ -280,7 +280,7 @@
 /* Begin PBXTargetDependency section */
 		84B6E3151975A2140041C4E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 84B6E2FC1975A2130041C4E1 /* MultiViews */;
+			target = 84B6E2FC1975A2130041C4E1 /* Story Builder */;
 			targetProxy = 84B6E3141975A2140041C4E1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -387,7 +387,7 @@
 				INFOPLIST_FILE = MultiViews/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Story Builder";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -406,7 +406,7 @@
 				INFOPLIST_FILE = MultiViews/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Story Builder";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -430,7 +430,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Story BuilderTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -447,7 +447,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Story BuilderTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
@@ -455,7 +455,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		84B6E2F81975A2120041C4E1 /* Build configuration list for PBXProject "MultiViews" */ = {
+		84B6E2F81975A2120041C4E1 /* Build configuration list for PBXProject "Story Builder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84B6E31B1975A2140041C4E1 /* Debug */,
@@ -464,7 +464,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViews" */ = {
+		84B6E31D1975A2140041C4E1 /* Build configuration list for PBXNativeTarget "Story Builder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84B6E31E1975A2140041C4E1 /* Debug */,
@@ -473,7 +473,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84B6E3201975A2140041C4E1 /* Build configuration list for PBXNativeTarget "MultiViewsTests" */ = {
+		84B6E3201975A2140041C4E1 /* Build configuration list for PBXNativeTarget "Story BuilderTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84B6E3211975A2140041C4E1 /* Debug */,

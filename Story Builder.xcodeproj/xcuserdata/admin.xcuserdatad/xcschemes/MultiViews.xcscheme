@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-               BuildableName = "MultiViews.app"
-               BlueprintName = "MultiViews"
-               ReferencedContainer = "container:MultiViews.xcodeproj">
+               BuildableName = "Story Builder.app"
+               BlueprintName = "Story Builder"
+               ReferencedContainer = "container:Story Builder.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "84B6E3121975A2140041C4E1"
-               BuildableName = "MultiViewsTests.xctest"
-               BlueprintName = "MultiViewsTests"
-               ReferencedContainer = "container:MultiViews.xcodeproj">
+               BuildableName = "Story BuilderTests.xctest"
+               BlueprintName = "Story BuilderTests"
+               ReferencedContainer = "container:Story Builder.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-            BuildableName = "MultiViews.app"
-            BlueprintName = "MultiViews"
-            ReferencedContainer = "container:MultiViews.xcodeproj">
+            BuildableName = "Story Builder.app"
+            BlueprintName = "Story Builder"
+            ReferencedContainer = "container:Story Builder.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -63,9 +63,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-            BuildableName = "MultiViews.app"
-            BlueprintName = "MultiViews"
-            ReferencedContainer = "container:MultiViews.xcodeproj">
+            BuildableName = "Story Builder.app"
+            BlueprintName = "Story Builder"
+            ReferencedContainer = "container:Story Builder.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -86,9 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "84B6E2FC1975A2130041C4E1"
-            BuildableName = "MultiViews.app"
-            BlueprintName = "MultiViews"
-            ReferencedContainer = "container:MultiViews.xcodeproj">
+            BuildableName = "Story Builder.app"
+            BlueprintName = "Story Builder"
+            ReferencedContainer = "container:Story Builder.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
