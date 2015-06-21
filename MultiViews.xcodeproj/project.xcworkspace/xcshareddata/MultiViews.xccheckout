@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>FA255230-B731-43E2-A61F-A8C9DE7D5AFB</string>
 	<key>IDESourceControlProjectName</key>
-	<string>MultiViews</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>6AEFEE84D50DFA54284A4C930939846812DA4AA8</key>
 		<string>https://github.com/casal033/StoryBuilder.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>MultiViews.xcodeproj</string>
+	<string>MultiViews.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>6AEFEE84D50DFA54284A4C930939846812DA4AA8</key>

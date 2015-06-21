@@ -219,7 +219,7 @@ class GameViewController: UIViewController {
             hold = int
         }
         for index in 0...hold {
-            setScrollWidth += 13
+            setScrollWidth += 12
         }
         //println(setScrollWidth)
     }
@@ -233,8 +233,8 @@ class GameViewController: UIViewController {
             hold = int
         }
         for index in 0...hold {
-            setScrollWidthText += 11
-            setScrollWidthButton += 12
+            setScrollWidthText += 10
+            setScrollWidthButton += 11
         }
         //println(setScrollWidthButton)
     }
