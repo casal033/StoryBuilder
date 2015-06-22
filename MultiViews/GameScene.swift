@@ -86,7 +86,8 @@ class GameScene: SKScene {
     var current_y_offset: CGFloat = 0
     
     let RIGHT_BOUNDS: CGFloat = 700
-    let LEFT_BOUNDS: CGFloat = 200
+    //let LEFT_BOUNDS: CGFloat = 200
+    let LEFT_BOUNDS: CGFloat = 250
     
     var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
@@ -103,6 +104,8 @@ class GameScene: SKScene {
     let gameLayer = SKNode()
     let wordBankLayer = SKNode()
     let sentenceLayer = SKNode()
+    var wordIndex = Int()
+
     
     var selection: Tile = Tile.nilTile
     
@@ -131,7 +134,8 @@ class GameScene: SKScene {
     
     func addTile(newWord: [String]) {
         // where to put the tile in the scene
-        tileX = CGFloat(arc4random_uniform(600) + 200)
+        //tileX = CGFloat(arc4random_uniform(600) + 200)
+        tileX = CGFloat(arc4random_uniform(600) + 250)
         tileY = CGFloat(arc4random_uniform(500) + 100)
         
         var tile:Tile
@@ -146,7 +150,8 @@ class GameScene: SKScene {
         var numberOfTries: Int = 0
         while (numberOfTilesUnderLeftCorners > 0) && (numberOfTries < 4) {
             if (tile.xPos + 50 > RIGHT_BOUNDS) {
-                tile.xPos = CGFloat(arc4random_uniform(300) + 200)
+//                tile.xPos = CGFloat(arc4random_uniform(300) + 200)
+                tile.xPos = CGFloat(arc4random_uniform(300) + 250)
             }
             else {
                 tile.xPos += 50
@@ -172,12 +177,24 @@ class GameScene: SKScene {
         _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     }
     
+    //    func addTileFromWordList() {
+    //        if (tilesArray.count - extraWordCount < _words.count) {
+    //            //addTile(_words[tilesArray.count - extraWordCount])
+    //            let newPosition = Int(arc4random_uniform(UInt32(tilesArray.count)))
+    //            addTile(_words[newPosition])
+    //            _words.removeAtIndex(newPosition)
+    //        }
+    //    }
+    
     func addTileFromWordList() {
-        if (tilesArray.count - extraWordCount < _words.count) {
-            //addTile(_words[tilesArray.count - extraWordCount])
-            let newPosition = Int(arc4random_uniform(UInt32(tilesArray.count)))
-            addTile(_words[newPosition])
-            _words.removeAtIndex(newPosition)
+        if wordIndex == 0 {
+            addTile(_words[wordIndex])
+            wordIndex++
+        } else if (wordIndex <= 51) {
+            addTile(_words[wordIndex])
+            wordIndex++
+        } else {
+            wordIndex = 0
         }
     }
     
