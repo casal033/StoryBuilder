@@ -176,7 +176,8 @@ class GameScene: SKScene {
     func resetTiles() {
         tileLayer.removeAllChildren()
         tilesArray = []
-        extraWordCount = 0
+        wordIndex = 0
+        //_words = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
         _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     }
     
