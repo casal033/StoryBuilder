@@ -20,27 +20,34 @@ var Conjunction = "Conjunction"
 var Article = "Article"
 
 let DEFAULT_WORD_LIST:[[String]] = [
-    ["catch", Verb],
-    ["ball", Noun],
-    ["fast", Adjective],
-    ["Batman", Noun],
-    ["Iron Man", Noun],
-    ["fly", Verb],
-    ["bear", Noun],
-    ["cat", Noun],
+    ["children", Noun],
+    ["can", Verb],
+    ["learn", Verb],
+    ["to", Preposition],
+    ["tell", Verb],
+    ["stories", Noun],
+    ["my", Adjective],
+    ["funny", Adjective],
     ["dog", Noun],
+    ["catch", Verb],
+    ["the", Article],
+    ["ball", Noun],
+    ["play", Verb],
+    ["with", Preposition],
+    ["cat", Noun],
+    ["fast", Adjective],
+    ["see", Verb],
+    ["it", Pronoun],
+    ["bear", Noun],
     ["giraffe", Noun],
     ["here", Adverb],
+    ["is", Verb],
+    ["Batman", Noun],
+    ["fly", Verb],
     ["for", Preposition],
     ["me", Pronoun],
     ["and", Conjunction],
-    ["play", Verb],
-    ["see", Verb],
-    ["it", Pronoun],
-    ["down", Adverb],
     ["the", Article],
-    ["is", Verb],
-    ["blue", Adjective],
     ["house", Noun],
     ["you", Pronoun],
     ["in", Preposition],
@@ -61,16 +68,13 @@ let DEFAULT_WORD_LIST:[[String]] = [
     ["we", Pronoun],
     ["help", Verb],
     ["two", Adjective],
-    ["funny", Adjective],
     ["look", Verb],
     ["where", Adverb],
     ["a", Article],
     ["one", Adjective],
-    ["to", Preposition],
     ["make", Verb],
     ["little", Adjective],
     ["my", Adjective],
-    ["three", Adjective]
 ]
 
 
@@ -172,7 +176,7 @@ class GameScene: SKScene {
     func resetTiles() {
         tileLayer.removeAllChildren()
         tilesArray = []
-        extraWordCount = 0
+        wordIndex = 0
         //_words = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
         _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     }
