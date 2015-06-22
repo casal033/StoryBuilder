@@ -173,7 +173,6 @@ class GameScene: SKScene {
         tileLayer.removeAllChildren()
         tilesArray = []
         extraWordCount = 0
-        //_words = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
         _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     }
     
@@ -196,7 +195,6 @@ class GameScene: SKScene {
         } else {
             wordIndex = 0
         }
-        println(wordIndex)
     }
     
     func addExtraTile(newWord: String) {
