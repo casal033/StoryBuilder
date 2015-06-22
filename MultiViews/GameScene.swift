@@ -161,7 +161,7 @@ class GameScene: SKScene {
         }
         
         tilesArray.insert(tile, atIndex: 0)
-        println("the current tiles are: \(tilesArray)")
+        //println("the current tiles are: \(tilesArray)")
 
         tile.sprite.position = CGPoint(x: tile.xPos, y: tile.yPos)
         tileLayer.addChild(tile.sprite)
@@ -190,12 +190,13 @@ class GameScene: SKScene {
         if wordIndex == 0 {
             addTile(_words[wordIndex])
             wordIndex++
-        } else if (wordIndex <= 51) {
+        } else if (wordIndex < 51) {
             addTile(_words[wordIndex])
             wordIndex++
         } else {
             wordIndex = 0
         }
+        println(wordIndex)
     }
     
     func addExtraTile(newWord: String) {
@@ -279,7 +280,7 @@ class GameScene: SKScene {
     
     func speakWord(str: String) {
         if (str != "nil") {
-            println("Speaking!")
+            //println("Speaking!")
             var myString = str
             if (myString == "I") {
                 myString = "i"
