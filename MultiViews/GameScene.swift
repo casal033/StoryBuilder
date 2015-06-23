@@ -200,7 +200,6 @@ class GameScene: SKScene {
         } else {
             wordIndex = 0
         }
-        println(wordIndex)
     }
     
     func addExtraTile(newWord: String) {

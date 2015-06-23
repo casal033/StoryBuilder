@@ -92,13 +92,13 @@ class GameViewController: UIViewController {
         
         //Array of category names assigned to student
         categoryNames = getCategoryNames(_categoryDictionary)
-        
+        var sorted:[String] = sortArray(categoryNames)
         /*Array of buttons to add to toolbar
         Currently includes "All" and each category the student is assigned */
         var items = [AnyObject]()
         items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
-        for index in 0...categoryNames.count-1 {
-            items.append(UIBarButtonItem(title: categoryNames[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
+        for index in 0...sorted.count-1 {
+            items.append(UIBarButtonItem(title: sorted[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
         }
         
         //Making a toolbar programatically
