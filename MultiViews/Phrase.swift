@@ -26,7 +26,7 @@ class Phrase: Printable {
         var w: CGFloat = 0.0
         var tile = root
         while (tile != Tile.nilTile) {
-            w += tile.sprite.size.width
+            w += tile.size.width
             tile = tile.nextTile
         }
         return w
