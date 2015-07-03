@@ -8,7 +8,7 @@
         <!--View1-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController storyboardIdentifier="View1" title="View1" modalTransitionStyle="partialCurl" id="BV1-FR-VrT" customClass="GameViewController" customModule="MultiViews" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="View1" title="View1" modalTransitionStyle="partialCurl" id="BV1-FR-VrT" customClass="GameViewController" customModule="Story_Builder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -41,33 +41,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add New Word" minimumFontSize="17" id="kwL-hh-vYg">
-                                <rect key="frame" x="269" y="709" width="250" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Thonburi" family="Thonburi" pointSize="24"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="Word1Entered:" destination="BV1-FR-VrT" eventType="editingDidEnd" id="6ts-K5-v39"/>
-                                </connections>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" id="YY0-7E-G9Y">
-                                <rect key="frame" x="527" y="709" width="30" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
-                                <size key="titleShadowOffset" width="4" height="-4"/>
-                                <state key="normal" title="+" backgroundImage="Button.png">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="AddExtraWord:" destination="BV1-FR-VrT" eventType="touchUpInside" id="hDC-ze-bWO"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
-                        <outlet property="Word1" destination="kwL-hh-vYg" id="1bV-ZG-QBZ"/>
                         <outlet property="wordSelectionView" destination="2dy-FY-Gh9" id="NTi-SI-rbY"/>
                     </connections>
                 </viewController>
