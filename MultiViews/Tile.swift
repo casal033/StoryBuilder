@@ -9,14 +9,14 @@
 import Foundation
 import SpriteKit
 
-class Tile: Printable, Comparable {
+class Tile: SKSpriteNode, Printable, Comparable {
     var word: String
     var partOfSpeech: String
     var firstLetter: String {
         return word[word.startIndex...word.startIndex]
     }
     var length: Int
-    var description: String {
+    override var description: String {
         return "\(word): [\(xPos),\(yPos)]"
     }
     var xPos: CGFloat
@@ -29,7 +29,7 @@ class Tile: Printable, Comparable {
         return Phrase(root: self, x: xPos, y: yPos)
     }
     
-    var sprite: SKSpriteNode
+    //var sprite: SKSpriteNode
     var moveable: Bool
     
     let colors = ["Red","Green","Yellow","Blue"]
@@ -39,6 +39,10 @@ class Tile: Printable, Comparable {
     lazy var prevTile: Tile = Tile.nilTile
     
     static let nilTile = Tile()
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("NSCoding not supported")
+    }
     
     private init(){
         //nilTile
@@ -53,10 +57,11 @@ class Tile: Printable, Comparable {
         self.length = 0
         
         let spriteSize = CGSize(width: 0.0, height: 0.0)
-        sprite = SKSpriteNode(texture: SKTexture(imageNamed: ""), size: spriteSize)
-        sprite.hidden = true
-        //phrase = Phrase(root: self, x: x, y: y)
-        //phrase.addTile(self)
+        //sprite = SKSpriteNode(texture: SKTexture(imageNamed: ""), size: spriteSize)
+        super.init(texture: nil, color: nil, size: spriteSize)
+        hidden = true
+
+        
     }
     
     init(word: String, partOfSpeech: String, x: CGFloat, y: CGFloat) {//, tags: [String]) {
@@ -75,7 +80,7 @@ class Tile: Printable, Comparable {
         let spriteSize = CGSize(width: max(CGFloat(20 * length), 50) + 10.0, height: 85.0)
         var tileImage = ""
         if partOfSpeech == "Noun" || partOfSpeech == "Pronoun" {
-            tileImage = "RedTile"
+            tileImage = "red1"
         }
         else if partOfSpeech == "Verb" {
             tileImage = "GreenTile"
@@ -90,18 +95,18 @@ class Tile: Printable, Comparable {
             let selectionNumber = Int(arc4random_uniform(UInt32(count(colors))))
             tileImage = colors[selectionNumber] + "Tile"
         }
-        sprite = SKSpriteNode(texture: SKTexture(imageNamed: tileImage), size: spriteSize)
-        
+        //sprite = SKSpriteNode(texture: , size: spriteSize)
+        super.init(texture: SKTexture(imageNamed: tileImage), color: nil, size: spriteSize)
         let label = SKLabelNode()
         label.fontName = "Thonburi"
         label.text = word
-        sprite.addChild(label)
+        addChild(label)
         label.position = CGPoint(x: 0, y: -6)
         
-        sprite.name = word
+        name = word
         
         if (!moveable) {
-            sprite.hidden = true
+            hidden = true
         }
         //phrase = Phrase(root: self, x: x, y: y)
     }
@@ -110,18 +115,17 @@ class Tile: Printable, Comparable {
         return self.nextTile == Tile.nilTile
     }
     
-    func containsPoint(location: CGPoint) -> Bool {
-        let mySprite = self.sprite
-        return location.x > self.xPos - mySprite.size.width/2
-            && location.x < self.xPos + mySprite.size.width/2
-            && location.y > self.yPos - mySprite.size.height/2
-            && location.y < self.yPos + mySprite.size.height/2
+    override func containsPoint(location: CGPoint) -> Bool {
+        return location.x > self.xPos - size.width/2
+            && location.x < self.xPos + size.width/2
+            && location.y > self.yPos - size.height/2
+            && location.y < self.yPos + size.height/2
     }
     
     func getLeftCorners() -> [CGPoint] {
         // if we want to get named corners, might want to use a different return style
-        let halfWidth = self.sprite.size.width/2
-        let halfHeight = self.sprite.size.height/2
+        let halfWidth = self.size.width/2
+        let halfHeight = self.size.height/2
         let upperLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos - halfHeight)
         let lowerLeft = CGPoint(x: self.xPos - halfWidth, y: self.yPos + halfHeight)
         let corners: [CGPoint] = [upperLeft, lowerLeft]
@@ -163,8 +167,8 @@ class Tile: Printable, Comparable {
     
     func getRightCorners() -> [CGPoint] {
         // if we want to get named corners, might want to use a different return style
-        let halfWidth = self.sprite.size.width/2
-        let halfHeight = self.sprite.size.height/2
+        let halfWidth = self.size.width/2
+        let halfHeight = self.size.height/2
         let upperRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos - halfHeight)
         let lowerRight = CGPoint(x: self.xPos + halfWidth, y: self.yPos + halfHeight)
         let corners: [CGPoint] = [upperRight, lowerRight]
@@ -221,6 +225,18 @@ class Tile: Printable, Comparable {
         self.prevTile = otherTile
     }
     
+    func rotate() {
+        if (moveable) {
+            println("Rotating!")
+            let sequence: SKAction = SKAction.sequence([SKAction.rotateByAngle(degToRad(Float(-60.0)), duration: 0.3), SKAction.rotateByAngle(degToRad(0.0), duration: 0.2), SKAction.rotateToAngle(0.0, duration: 0.3)])
+            runAction(SKAction.repeatAction(sequence,count: 1))
+        }
+    }
+    
+    func degToRad(degree: Float) -> (CGFloat) {
+        return CGFloat(Float(degree) / Float(180.0 * M_PI));
+    }
+    
     func moveTile(newLocation: CGPoint) {
         if moveable {
             prevPos.x = xPos
@@ -232,12 +248,12 @@ class Tile: Printable, Comparable {
             momentum.x = xPos - prevPos.x
             momentum.y = yPos - prevPos.y
         
-            sprite.position = newLocation
+            position = newLocation
             
-            var thisX = xPos + sprite.size.width/2
+            var thisX = xPos + size.width/2
             if !(nextTile == Tile.nilTile) {
                 let theNextTile = nextTile
-                thisX += theNextTile.sprite.size.width/2
+                thisX += theNextTile.size.width/2
                 theNextTile.moveTile(CGPoint(x: thisX, y: newLocation.y))
             }
         }
@@ -253,11 +269,11 @@ class Tile: Printable, Comparable {
             yPos = newLocation.y
         
             let action = SKAction.moveTo(newLocation, duration: 0.3)
-            sprite.runAction(action)
+            runAction(action)
             
             if !(nextTile == Tile.nilTile){
                 let theNextTile = nextTile
-                theNextTile.moveTileAnimated(CGPoint(x: newLocation.x + sprite.size.width/2 + theNextTile.sprite.size.width/2, y: newLocation.y))
+                theNextTile.moveTileAnimated(CGPoint(x: newLocation.x + size.width/2 + theNextTile.size.width/2, y: newLocation.y))
             }
         }
     }
@@ -268,7 +284,7 @@ class Tile: Printable, Comparable {
     
 }
 func == (lhs: Tile, rhs: Tile) -> Bool {
-    return (lhs.word == rhs.word) && (lhs.sprite.position == rhs.sprite.position)
+    return (lhs.word == rhs.word) && (lhs.position == rhs.position)
 }
 
 func < (lhs: Tile, rhs: Tile) -> Bool {
