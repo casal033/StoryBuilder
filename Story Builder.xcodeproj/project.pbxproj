@@ -12,6 +12,7 @@
 		84142B61199402DD00EFC78F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84142B60199402DD00EFC78F /* Extensions.swift */; };
 		8467B77D19BE934200B8E06A /* Untitled drawing.png in Resources */ = {isa = PBXBuildFile; fileRef = 8467B77C19BE934200B8E06A /* Untitled drawing.png */; };
 		848566B91B2E0FEF00747016 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848566B81B2E0FEF00747016 /* SwiftyJSON.swift */; };
+		8499C1001B45E0A6001E59A6 /* redTile.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 8499C0FF1B45E0A6001E59A6 /* redTile.atlas */; };
 		84B500E61977126B0082FCFD /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B500E51977126B0082FCFD /* Tile.swift */; };
 		84B6E3031975A2130041C4E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B6E3021975A2130041C4E1 /* AppDelegate.swift */; };
 		84B6E3051975A2130041C4E1 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 84B6E3041975A2130041C4E1 /* GameScene.sks */; };
@@ -40,6 +41,7 @@
 		84142B60199402DD00EFC78F /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8467B77C19BE934200B8E06A /* Untitled drawing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Untitled drawing.png"; sourceTree = "<group>"; };
 		848566B81B2E0FEF00747016 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		8499C0FF1B45E0A6001E59A6 /* redTile.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = redTile.atlas; sourceTree = "<group>"; };
 		84B500E51977126B0082FCFD /* Tile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		84B6E2FD1975A2130041C4E1 /* Story Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Story Builder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B6E3011975A2130041C4E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 		84B6E2FF1975A2130041C4E1 /* MultiViews */ = {
 			isa = PBXGroup;
 			children = (
+				8499C0FF1B45E0A6001E59A6 /* redTile.atlas */,
 				84BEB1F21976E7F300B8F183 /* iPad */,
 				84B6E3231975A2C30041C4E1 /* Button@2x.png */,
 				84B6E3021975A2130041C4E1 /* AppDelegate.swift */,
@@ -238,6 +241,7 @@
 				84B6E3241975A2C30041C4E1 /* Button@2x.png in Resources */,
 				84B6E30C1975A2140041C4E1 /* Main.storyboard in Resources */,
 				8467B77D19BE934200B8E06A /* Untitled drawing.png in Resources */,
+				8499C1001B45E0A6001E59A6 /* redTile.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
