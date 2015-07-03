@@ -109,6 +109,7 @@ class GameScene: SKScene {
     let wordBankLayer = SKNode()
     let sentenceLayer = SKNode()
     var wordIndex = Int()
+    let textureAtlas = SKTextureAtlas(named:"redTile.atlas")
 
     
     var selection: Tile = Tile.nilTile
@@ -167,8 +168,8 @@ class GameScene: SKScene {
         tilesArray.insert(tile, atIndex: 0)
         //println("the current tiles are: \(tilesArray)")
 
-        tile.sprite.position = CGPoint(x: tile.xPos, y: tile.yPos)
-        tileLayer.addChild(tile.sprite)
+        tile.position = CGPoint(x: tile.xPos, y: tile.yPos)
+        tileLayer.addChild(tile)
         
         speakWord(tile.word)
     }
@@ -222,19 +223,23 @@ class GameScene: SKScene {
     
     func speakTile(tile: Tile) {
         speakWord(tile.word)
-        rotateTile(tile)
+        tile.rotate()
     }
     
     func selectTile(location: CGPoint) {
         var tile: Tile = findTileTouched(location)
         println("\tSELECTING \(tile.word)")
+        println("\nThe texture is: \(tile.texture)")
         speakSentence(tile)
-        rotateTile(tile)
+        tile.rotate()
+        tile.texture = textureAtlas.textureNamed("red1")
+        
     }
 
     func findTileTouched(touchLocation: CGPoint) -> (Tile) {
         for tile in tilesArray {
             if tile.containsPoint(touchLocation) {
+                tile.texture = textureAtlas.textureNamed("red1")
                 return (tile)
             }
         }
@@ -243,19 +248,22 @@ class GameScene: SKScene {
     
     func selectNodeForTouch(location: CGPoint) {
         let tile: Tile = findTileTouched(location)
-        let touchedNode: SKSpriteNode = tile.sprite
-        if (tile != Tile.nilTile) {
-            println("\nprevTile is: [\(tile.prevTile.word)]=>[[\(tile.word)]]=> nextTile is [\(tile.nextTile.word)]")
-        }
-        selection.sprite.removeAllActions()
-        selection.sprite.runAction(SKAction.rotateToAngle(0.0, duration: 0.1))
+        let touchedNode: SKSpriteNode = tile
+        //useful for figuring out how to connect tiles
+        //if (tile != Tile.nilTile) {
+        //    println("\nprevTile is: [\(tile.prevTile.word)]=>[[\(tile.word)]]=> nextTile is [\(tile.nextTile.word)]")
+        //}
+        selection.removeAllActions()
+        selection.runAction(SKAction.rotateToAngle(0.0, duration: 0.1), completion: {tile.texture = self.textureAtlas.textureNamed("red2")})
+        //is this doing anything???????????????????????
+        //selection.sprite.runAction(SKAction.colorizeWithColor(UIColor.whiteColor(), colorBlendFactor: 1.0, duration: NSTimeInterval(1)))
         selection = tile
         
-        selection.sprite.removeFromParent()
-        tileLayer.addChild(selection.sprite)
+        selection.removeFromParent()
+        tileLayer.addChild(selection)
         for tile in selection.getPhraseTiles() {
-            tile.sprite.removeFromParent()
-            tileLayer.addChild(tile.sprite)
+            tile.removeFromParent()
+            tileLayer.addChild(tile)
         }
         
         if count(tilesArray) > 0 {
@@ -267,18 +275,6 @@ class GameScene: SKScene {
                 }
             }
         }
-    }
-    
-    func rotateTile(tile: Tile) {
-        if (tile.moveable) {
-            println("Rotating!")
-            let sequence: SKAction = SKAction.sequence([SKAction.rotateByAngle(degToRad(Float(-60.0)), duration: 0.3), SKAction.rotateByAngle(degToRad(0.0), duration: 0.2), SKAction.rotateToAngle(0.0, duration: 0.3)])
-            tile.sprite.runAction(SKAction.repeatAction(sequence,count: 1))
-        }
-    }
-    
-    func degToRad(degree: Float) -> (CGFloat) {
-        return CGFloat(Float(degree) / Float(180.0 * M_PI));
     }
     
     func speakWord(str: String) {
@@ -346,7 +342,7 @@ class GameScene: SKScene {
                 println("adding \(tile.getPhraseTiles()) after \(othertile)")
                 tile.makeNextOf(othertile)
                 tile.moveTileAnimated(CGPoint(
-                    x: othertile.xPos + (othertile.sprite.size.width/2) + (tile.sprite.size.width/2),
+                    x: othertile.xPos + (othertile.size.width/2) + (tile.size.width/2),
                     y: othertile.yPos))
                 return
             }
@@ -356,7 +352,7 @@ class GameScene: SKScene {
                 println("ADDING \(tile.getPhraseTiles()) BEFORE \(othertile)")
                 tile.makePrevOf(othertile)
                 tile.moveTileAnimated(CGPoint(
-                    x: othertile.xPos - (othertile.sprite.size.width/2) + (tile.sprite.size.width/2),
+                    x: othertile.xPos - (othertile.size.width/2) + (tile.size.width/2),
                     y: othertile.yPos))
                 return
             }
