@@ -68,11 +68,11 @@ class GameViewController: UIViewController {
         setWidth(maxWordLength)
         setTileWidth(maxWordLengthTile)
 
-        /////////* Section for Scroll View */////////
-        self.scrollView = UIScrollView()
-        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 30))
-        
-        view.addSubview(scrollView)
+//        /////////* Section for Scroll View */////////
+//        self.scrollView = UIScrollView()
+//        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 30))
+//        
+//        view.addSubview(scrollView)
         
         /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
         populateSelector(sortArray(allTiles))
@@ -162,7 +162,7 @@ class GameViewController: UIViewController {
         
         //Set scrollView bounds "size"
         //If scroll width is breaking use 150
-        scrollView.frame = CGRectMake(0, 105, setScrollWidth, view.bounds.height-105)
+        scrollView.frame = CGRectMake(0, 105, setScrollWidth, view.bounds.height-115)
         
         //Set toolbar bounds "size"
         toolbar.frame = CGRectMake(10, 20, CGFloat(view.bounds.width-130), 40)
@@ -178,6 +178,13 @@ class GameViewController: UIViewController {
     var y: CGFloat = 50
     
     func populateSelector(_words: [String]) {
+        /////////* Section for Scroll View */////////
+        self.scrollView = UIScrollView()
+        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(_words) * 30))
+        
+        view.addSubview(scrollView)
+
+        
         //Should add catch to not scroll when category is short enough to fit on the page without scrolling
         toBegining(scrollView)
        
