@@ -422,15 +422,6 @@ class GameViewController: UIViewController {
     var skView: SKView!
     var scene: GameScene!
     
-    @IBOutlet var Word1: UITextField?
-    
-    @IBAction func AddExtraWord(sender: AnyObject) {
-        if (Word1!.text != "" && count(Word1!.text.utf16) < 10) {
-            scene.addExtraTile(Word1!.text)
-            Word1!.text = ""
-        }
-    }
-    
     @IBAction func ResetButtonPressed(sender: AnyObject) {
         scene.resetTiles()
     }

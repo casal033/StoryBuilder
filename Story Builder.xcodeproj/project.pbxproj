@@ -12,7 +12,6 @@
 		84142B61199402DD00EFC78F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84142B60199402DD00EFC78F /* Extensions.swift */; };
 		845349631B4B07110018AD9C /* greenTile.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 845349621B4B07110018AD9C /* greenTile.atlas */; };
 		845349651B4B07190018AD9C /* blueTile.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 845349641B4B07190018AD9C /* blueTile.atlas */; };
-		845349671B4B07240018AD9C /* yellowTile.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 845349661B4B07240018AD9C /* yellowTile.atlas */; };
 		845349691B4B07550018AD9C /* yellowTile.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 845349681B4B07550018AD9C /* yellowTile.atlas */; };
 		8453496B1B4B077E0018AD9C /* redTile.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 8453496A1B4B077E0018AD9C /* redTile.atlas */; };
 		8467B77D19BE934200B8E06A /* Untitled drawing.png in Resources */ = {isa = PBXBuildFile; fileRef = 8467B77C19BE934200B8E06A /* Untitled drawing.png */; };
@@ -45,7 +44,6 @@
 		84142B60199402DD00EFC78F /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		845349621B4B07110018AD9C /* greenTile.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = greenTile.atlas; sourceTree = "<group>"; };
 		845349641B4B07190018AD9C /* blueTile.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = blueTile.atlas; sourceTree = "<group>"; };
-		845349661B4B07240018AD9C /* yellowTile.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; name = yellowTile.atlas; path = blueTile.atlas/yellowTile.atlas; sourceTree = "<group>"; };
 		845349681B4B07550018AD9C /* yellowTile.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = yellowTile.atlas; sourceTree = "<group>"; };
 		8453496A1B4B077E0018AD9C /* redTile.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = redTile.atlas; sourceTree = "<group>"; };
 		8467B77C19BE934200B8E06A /* Untitled drawing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Untitled drawing.png"; sourceTree = "<group>"; };
@@ -108,7 +106,6 @@
 			children = (
 				8453496A1B4B077E0018AD9C /* redTile.atlas */,
 				845349681B4B07550018AD9C /* yellowTile.atlas */,
-				845349661B4B07240018AD9C /* yellowTile.atlas */,
 				845349641B4B07190018AD9C /* blueTile.atlas */,
 				845349621B4B07110018AD9C /* greenTile.atlas */,
 				84BEB1F21976E7F300B8F183 /* iPad */,
@@ -256,7 +253,6 @@
 				8467B77D19BE934200B8E06A /* Untitled drawing.png in Resources */,
 				845349651B4B07190018AD9C /* blueTile.atlas in Resources */,
 				8453496B1B4B077E0018AD9C /* redTile.atlas in Resources */,
-				845349671B4B07240018AD9C /* yellowTile.atlas in Resources */,
 				845349691B4B07550018AD9C /* yellowTile.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
