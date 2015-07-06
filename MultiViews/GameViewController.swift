@@ -54,7 +54,6 @@ class GameViewController: UIViewController {
     var categoryNames = [String]()
     var _alphaDictionary = [String: [String]]()
     let alpha = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +64,7 @@ class GameViewController: UIViewController {
         _categoryDictionary = getStudentWords()
         
         setWidth(maxWordLength)
-        setTileWidth(maxWordLengthTile)
+        setWordWidth(maxWordLengthTile)
 
         /////////* Section for Scroll View */////////
         
@@ -86,17 +85,18 @@ class GameViewController: UIViewController {
         scrollView.maximumZoomScale = 1.0
         scrollView.zoomScale = minScale;
         
-        
-        
+
         /////////* Section for Toolbar */////////
         
         //Array of category names assigned to student
         categoryNames = getCategoryNames(_categoryDictionary)
         var sorted:[String] = sortArray(categoryNames)
+
         /*Array of buttons to add to toolbar
         Currently includes "All" and each category the student is assigned */
         var items = [AnyObject]()
-        items = [UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:")]
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action:"refreshWords:"))
+        items.append (UIBarButtonItem(title: "All", style: UIBarButtonItemStyle.Plain, target: self, action: "allButtonPressed:"))
         for index in 0...sorted.count-1 {
             items.append(UIBarButtonItem(title: sorted[index], style: UIBarButtonItemStyle.Plain, target: self, action: "showCategories:"))
         }
@@ -166,23 +166,32 @@ class GameViewController: UIViewController {
         toolbarAlpha.frame = CGRectMake(10, 60, CGFloat(view.bounds.width-130), 40)
     }
     
+    //Brings scroll to start of words when each category is selected
     func toBegining(scrollView: UIScrollView) {
         scrollView.setContentOffset(CGPointMake(0, 0), animated: true)
+    }
+    
+    //Get names of categories from a dictionary where [name: array] to make buttons for toolbar
+    func getCategoryNames(dict: [String: [String]]) -> [String]{
+        var toReturn = [String]()
+        for (key, value) in dict {
+            toReturn.append(key)
+        }
+        return toReturn
     }
     
     var y: CGFloat = 50
     
     func populateSelector(_words: [String]) {
-        /////////* Section for Scroll View */////////
+        //Allows scroll to move when needed, and stay still when list of words is short
         self.scrollView = UIScrollView()
         self.scrollView.contentSize = CGSizeMake(wordSelectionView.frame.size.width, CGFloat(count(_words) * 30))
-        
         view.addSubview(scrollView)
-
         
-        //Should add catch to not scroll when category is short enough to fit on the page without scrolling
+        //Brings scroll to start of words when each category is selected
         toBegining(scrollView)
        
+        //Formatting words to be displayed in scroll
         y = 0
         for word in _words {
             var wordButton = UIButton()
@@ -209,12 +218,13 @@ class GameViewController: UIViewController {
         }
     }
     
-    //Function adds words from populateSelector() into the game scene
+    //Function adds words from populateSelector() into the game scene as a tile
     func pressed(sender: UIButton!) {
         let word = sender.subviews[0] as! UILabel
         scene.addTile([word.text!, getWordType(word.text!)])
     }
     
+    //Function to grab word type so the word can be made into a tile
     func getWordType(word: String) -> String {
         var toReturn = String()
         for (key, value) in _tiles {
@@ -227,7 +237,8 @@ class GameViewController: UIViewController {
         return toReturn
     }
     
-    @IBAction func allButtonPressed(sender: AnyObject) {
+    //Function filters to show all words assigned to the child
+    func allButtonPressed(sender: AnyObject) {
         let subViews: Array = scrollView.subviews
         for subview in subViews
         {
@@ -236,7 +247,8 @@ class GameViewController: UIViewController {
         populateSelector(sortArray(allTiles))
     }
     
-    @IBAction func showCategories(sender: AnyObject) {
+    //Function filters to show category-specific words assigned to the child
+    func showCategories(sender: AnyObject) {
         var holder:[String: [String]] = _categoryDictionary
         var categoryName = sender.title
         let subViews: Array = scrollView.subviews
@@ -247,7 +259,8 @@ class GameViewController: UIViewController {
         populateSelector(sortArray(getArrayToDisplay(categoryName, dict: holder)))
     }
     
-    @IBAction func showAlphaWords(sender: AnyObject) {
+    //Function filters to show alpha-specific words assigned to the child
+    func showAlphaWords(sender: AnyObject) {
         var holder:[String: [String]] = _alphaDictionary
         var letterName = sender.title
         let subViews: Array = scrollView.subviews
@@ -258,9 +271,24 @@ class GameViewController: UIViewController {
         populateSelector(sortArray(getArrayToDisplay(letterName, dict: holder)))
     }
     
+    
+    //Function refreshes our current words whenever the button is pressed in scene
+    //So a teacher can add a word, and a child can refresh and get it right away
+    func refreshWords(sender: AnyObject){
+        allTiles = []
+        let subViews: Array = scrollView.subviews
+        for subview in subViews
+        {
+            subview.removeFromSuperview()
+        }
+        getStudentInfo()
+        _categoryDictionary = getStudentWords()
+        populateSelector(sortArray(allTiles))
+    }
+
+    //Sets the appropriate scroll width based on lengths of given words
     func setWidth(int:Int) {
         var hold = Int()
-        //println("Count check: \(int > 18)")
         if int > 18 {
             hold = 18
         } else {
@@ -272,7 +300,8 @@ class GameViewController: UIViewController {
         //println(setScrollWidth)
     }
 
-    func setTileWidth(int:Int) {
+    //Sets the appropriate word width based on lengths of given words
+    func setWordWidth(int:Int) {
         var hold = Int()
         //println("Count check tile: \(int > 18)")
         if int > 18 {
@@ -287,6 +316,7 @@ class GameViewController: UIViewController {
         //println(setScrollWidthButton)
     }
     
+    //Parses dictionaries to get associated arrays with given names for alpha & categories currently
     func getArrayToDisplay(category: String?!, dict: [String:[String]]) -> [String] {
         var toReturn = [String]()
         for (key, value) in dict {
@@ -297,10 +327,12 @@ class GameViewController: UIViewController {
         return toReturn
     }
     
+    //Alpha sorting function for arrays
     func sortArray(toSort: [String]) -> [String]{
         return toSort.sorted { $0.localizedCaseInsensitiveCompare($1) == NSComparisonResult.OrderedAscending }
     }
     
+    //Get all related information about student (words & categories their assigned)
     func getStudentInfo() {
         //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
         _categoriesIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contextIDs
@@ -315,6 +347,7 @@ class GameViewController: UIViewController {
         createAlphaDictionary()
     }
     
+    //Parse all word information from getStudentInfo into usable objects
     func getStudentWords() -> [String: [String]] {
         var categoryDictionary = [String: [String]]()
         var valueHolder = String()
@@ -333,14 +366,7 @@ class GameViewController: UIViewController {
         return categoryDictionary
     }
     
-    func getCategoryNames(dict: [String: [String]]) -> [String]{
-        var toReturn = [String]()
-        for (key, value) in dict {
-            toReturn.append(key)
-        }
-        return toReturn
-    }
-    
+    //Helper for getStudentWords()
     func parseDictionaryForLooseTiles(tiles: [String: [String]], looseTiles: [String]) {
         let thecount = tiles.count
         for (key, value) in tiles {
@@ -356,6 +382,7 @@ class GameViewController: UIViewController {
         }
     }
     
+    //Helper for getStudentWords()
     func parseDictionaryForArray(dictionary: [String: [String]], catDict: [String: [String]], id: String!) -> [String]{
         var toReturn = [String]()
         for (key, value) in dictionary {
@@ -378,6 +405,7 @@ class GameViewController: UIViewController {
         return toReturn
     }
     
+    //Helper to get all assigned words, with no doubles
     func addWordToAllTiles(toCheck: String) {
         if contains(allTiles, toCheck) == false {
             allTiles.append(toCheck)
@@ -389,6 +417,7 @@ class GameViewController: UIViewController {
         }
     }
     
+    //Helper for setting scroll width based on the maxword length
     func checkMaxWord(int: Int) {
         if int > maxWordLength {
             maxWordLength = int
@@ -396,12 +425,14 @@ class GameViewController: UIViewController {
         }
     }
     
+    //Helper to initialize the alphaDictionary with empty arrays
     func createAlphaDictionary(){
         for i in 0...alpha.count-1 {
             _alphaDictionary[alpha[i]] = []
         }
     }
     
+    //Helper to organize all assigned words, with no doubles into alphabet filters
     func addToAlphaDictionary(word: String) {
         let currentWord = word.lowercaseString
         let index = advance(currentWord.startIndex, 0)
@@ -426,14 +457,8 @@ class GameViewController: UIViewController {
     
     @IBOutlet var Word1: UITextField?
     
-    @IBAction func AddExtraWord(sender: AnyObject) {
-        if (Word1!.text != "" && count(Word1!.text.utf16) < 10) {
-            scene.addExtraTile(Word1!.text)
-            Word1!.text = ""
-        }
-    }
-    
-    @IBAction func ResetButtonPressed(sender: AnyObject) {
+    //Resets all tiles in playing field
+    func ResetButtonPressed(sender: AnyObject) {
         scene.resetTiles()
     }
     
