@@ -33,8 +33,7 @@ class GameViewController: UIViewController {
     var toolbar:UIToolbar!
     var toolbarAlpha:UIToolbar!
     var scrollView: UIScrollView!
-    var wordSelectionView: UIImageView!
-    var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
+    var wordSelectionView: UIImageView! = UIImageView(image: UIImage(named: "purpleRectangle"));
     //allTiles contains all of the words related to the current student
     var allTiles = [String]()
     //Max word length in allTiles used to set Scrol Width
@@ -68,11 +67,7 @@ class GameViewController: UIViewController {
         setWidth(maxWordLength)
         setTileWidth(maxWordLengthTile)
 
-//        /////////* Section for Scroll View */////////
-//        self.scrollView = UIScrollView()
-//        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(allTiles) * 30))
-//        
-//        view.addSubview(scrollView)
+        /////////* Section for Scroll View */////////
         
         /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
         populateSelector(sortArray(allTiles))
@@ -134,9 +129,9 @@ class GameViewController: UIViewController {
         let button = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         button.frame = CGRectMake(CGFloat(view.bounds.width - 115), 20, 110, 80)
         button.backgroundColor = UIColor.redColor()
-        button.setTitle("Clear All \n Tiles", forState: UIControlState.Normal)
+        button.setTitle("Clear Tiles", forState: UIControlState.Normal)
         button.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        button.titleLabel!.font = UIFont(name: "Times New Roman", size: 18)
+        button.titleLabel!.font = UIFont(name: "Thonburi", size: 18)
         button.addTarget(self, action: "ResetButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         
         self.view.addSubview(button)
@@ -180,7 +175,7 @@ class GameViewController: UIViewController {
     func populateSelector(_words: [String]) {
         /////////* Section for Scroll View */////////
         self.scrollView = UIScrollView()
-        self.scrollView.contentSize = CGSizeMake(wordBar.frame.size.width, CGFloat(count(_words) * 30))
+        self.scrollView.contentSize = CGSizeMake(wordSelectionView.frame.size.width, CGFloat(count(_words) * 30))
         
         view.addSubview(scrollView)
 

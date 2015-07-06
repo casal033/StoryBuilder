@@ -25,17 +25,10 @@
                                     <action selector="NextButtonPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="EAt-E0-SxS"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="purpleRectangle" id="2dy-FY-Gh9">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="768"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-                    <connections>
-                        <outlet property="wordSelectionView" destination="2dy-FY-Gh9" id="NTi-SI-rbY"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
@@ -44,7 +37,6 @@
     </scenes>
     <resources>
         <image name="Button.png" width="100" height="36"/>
-        <image name="purpleRectangle" width="954" height="194"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
