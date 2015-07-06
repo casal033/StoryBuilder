@@ -8,6 +8,7 @@
 
 import UIKit
 import SpriteKit
+import Foundation
 
 extension SKNode {
     class func unarchiveFromFile(file : NSString) -> SKNode? {
@@ -30,6 +31,7 @@ class GameViewController: UIViewController {
     let tapRec = UITapGestureRecognizer()
     
     var toolbar:UIToolbar!
+    var toolbarAlpha:UIToolbar!
     var scrollView: UIScrollView!
     var wordSelectionView: UIImageView!
     var wordBar: UIImageView = UIImageView(image: UIImage(named: "purpleRectangle"));
@@ -51,6 +53,9 @@ class GameViewController: UIViewController {
     var _categories = [String: [String]]()
     var _categoryDictionary = [String: [String]]()
     var categoryNames = [String]()
+    var _alphaDictionary = [String: [String]]()
+    let alpha = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,21 +113,33 @@ class GameViewController: UIViewController {
         //Add toolbat to view
         view.addSubview(toolbar)
         
-//        /////////* Section for Toolbar 2 */////////
-//        
-//        /* Array of buttons to add to toolbar */
-//        let alpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-//        var letters = [AnyObject]()
-//        for position in 0...alpha.count-1 {
-//            letters.append(UIBarButtonItem(title: alpha[position], style: UIBarButtonItemStyle.Plain, target: self, action: "showAlphaWords:"))
-//        }
-//        
-//        //Making a toolbar programatically
-//        toolbar = UIToolbar()
-//        //Add buttons to toolbar
-//        toolbar.items = items
-//        //Add toolbat to view
-//        view.addSubview(toolbar)
+        /////////* Section for Toolbar 2 */////////
+        
+        /* Array of buttons to add to toolbar */
+        var letters = [AnyObject]()
+        var alphaSorted = sortArray(alpha)
+        for position in 0...alphaSorted.count-1 {
+            letters.append(UIBarButtonItem(title: alphaSorted[position], style: UIBarButtonItemStyle.Plain, target: self, action: "showAlphaWords:"))
+        }
+        
+        //Making a toolbar programatically
+        toolbarAlpha = UIToolbar()
+        //Add buttons to toolbar
+        toolbarAlpha.items = letters
+        //Add toolbat to view
+        view.addSubview(toolbarAlpha)
+        
+        
+        //////////Testing buttons
+        let button = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        button.frame = CGRectMake(CGFloat(view.bounds.width - 115), 20, 110, 80)
+        button.backgroundColor = UIColor.redColor()
+        button.setTitle("Clear All \n Tiles", forState: UIControlState.Normal)
+        button.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+        button.titleLabel!.font = UIFont(name: "Times New Roman", size: 18)
+        button.addTarget(self, action: "ResetButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        self.view.addSubview(button)
         
         tapRec.addTarget(self, action: "tappedView")
         panRec.addTarget(self, action: "draggedView")
@@ -145,10 +162,13 @@ class GameViewController: UIViewController {
         
         //Set scrollView bounds "size"
         //If scroll width is breaking use 150
-        scrollView.frame = CGRectMake(0, 70, setScrollWidth, view.bounds.height-100)
+        scrollView.frame = CGRectMake(0, 105, setScrollWidth, view.bounds.height-105)
         
         //Set toolbar bounds "size"
-        toolbar.frame = CGRectMake(0, 20, view.bounds.width, 44)
+        toolbar.frame = CGRectMake(10, 20, CGFloat(view.bounds.width-130), 40)
+        
+        //Set toolbar bounds "size"
+        toolbarAlpha.frame = CGRectMake(10, 60, CGFloat(view.bounds.width-130), 40)
     }
     
     func toBegining(scrollView: UIScrollView) {
@@ -162,7 +182,6 @@ class GameViewController: UIViewController {
         toBegining(scrollView)
        
         y = 0
-        
         for word in _words {
             var wordButton = UIButton()
             var wordLabel = UILabel()
@@ -216,7 +235,7 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func showCategories(sender: AnyObject) {
-        var holder:[String: [String]] = getStudentWords()
+        var holder:[String: [String]] = _categoryDictionary
         var categoryName = sender.title
         let subViews: Array = scrollView.subviews
         for subview in subViews
@@ -226,9 +245,16 @@ class GameViewController: UIViewController {
         populateSelector(sortArray(getArrayToDisplay(categoryName, dict: holder)))
     }
     
-//    @IBAction func showAlphaWords(sender: AnyObject) {
-//        var letter = sender.title
-//    }
+    @IBAction func showAlphaWords(sender: AnyObject) {
+        var holder:[String: [String]] = _alphaDictionary
+        var letterName = sender.title
+        let subViews: Array = scrollView.subviews
+        for subview in subViews
+        {
+            subview.removeFromSuperview()
+        }
+        populateSelector(sortArray(getArrayToDisplay(letterName, dict: holder)))
+    }
     
     func setWidth(int:Int) {
         var hold = Int()
@@ -284,6 +310,7 @@ class GameViewController: UIViewController {
         _tiles = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
         //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
         _categories = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
+        createAlphaDictionary()
     }
     
     func getStudentWords() -> [String: [String]] {
@@ -356,6 +383,7 @@ class GameViewController: UIViewController {
             //println("[\(toCheck), \(getWordType(toCheck))],")
             var wordLength = count(toCheck)
             checkMaxWord(wordLength)
+            addToAlphaDictionary(toCheck)
         }
     }
     
@@ -363,6 +391,30 @@ class GameViewController: UIViewController {
         if int > maxWordLength {
             maxWordLength = int
             maxWordLengthTile = maxWordLength
+        }
+    }
+    
+    func createAlphaDictionary(){
+        for i in 0...alpha.count-1 {
+            _alphaDictionary[alpha[i]] = []
+        }
+    }
+    
+    func addToAlphaDictionary(word: String) {
+        let currentWord = word.lowercaseString
+        let index = advance(currentWord.startIndex, 0)
+        var letterToGet = currentWord[index]
+        var currentLetter = String()
+        currentLetter = String(letterToGet)
+        var holderArr = [String]()
+        //key is the letter, value is the array of associated words
+        for (key, value) in _alphaDictionary {
+            if key == currentLetter {
+                holderArr = value
+                holderArr.append(word)
+                holderArr = sortArray(holderArr)
+                _alphaDictionary[key] = holderArr
+            }
         }
     }
     
