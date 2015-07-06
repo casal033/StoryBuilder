@@ -100,8 +100,8 @@ class GameScene: SKScene {
     
     var mySpeechSynthesizer:AVSpeechSynthesizer = AVSpeechSynthesizer()
     
-    var tileX = CGFloat(200)
-    var tileY = CGFloat(200)
+    var tileX = CGFloat(275)
+    var tileY = CGFloat(500)
     var extraWordCount = 0
     
     let tileLayer = SKNode()
@@ -109,7 +109,7 @@ class GameScene: SKScene {
     let wordBankLayer = SKNode()
     let sentenceLayer = SKNode()
     var wordIndex = Int()
-    let textureAtlas = SKTextureAtlas(named:"redTile.atlas")
+    //let textureAtlas = SKTextureAtlas(named:"redTile.atlas")
 
     
     var selection: Tile = Tile.nilTile
@@ -139,9 +139,6 @@ class GameScene: SKScene {
     
     func addTile(newWord: [String]) {
         // where to put the tile in the scene
-        //tileX = CGFloat(arc4random_uniform(600) + 200)
-        tileX = CGFloat(arc4random_uniform(600) + 250)
-        tileY = CGFloat(arc4random_uniform(500) + 100)
         
         var tile:Tile
         // if there are multiple strings in the array, the second one will be the part of speech
@@ -151,23 +148,16 @@ class GameScene: SKScene {
             tile = Tile(word: newWord[0], partOfSpeech: "", x: tileX, y: tileY)
         }
         
-        var numberOfTilesUnderLeftCorners: Int = count(tile.leftCornersInside(tilesArray))
-        var numberOfTries: Int = 0
-        while (numberOfTilesUnderLeftCorners > 0) && (numberOfTries < 4) {
-            if (tile.xPos + 50 > RIGHT_BOUNDS) {
-//                tile.xPos = CGFloat(arc4random_uniform(300) + 200)
-                tile.xPos = CGFloat(arc4random_uniform(300) + 250)
-            }
-            else {
-                tile.xPos += 50
-            }
-            numberOfTilesUnderLeftCorners = count(tile.leftCornersInside(tilesArray))
-            numberOfTries += 1
+        if (tilesArray.count == 0) {
+            tileX = 275
+            tileY = 500
+        } else if (tilesArray.count >= 1 && tilesArray[0].xPos < 800) {
+            println("The tile at 0 in the array is: \(tilesArray[0])")
+            println("The tiles are: \(tilesArray)")
+            tile.makeNextOf(tilesArray[0])
         }
-        
         tilesArray.insert(tile, atIndex: 0)
-        //println("the current tiles are: \(tilesArray)")
-
+        
         tile.position = CGPoint(x: tile.xPos, y: tile.yPos)
         tileLayer.addChild(tile)
         
@@ -182,15 +172,6 @@ class GameScene: SKScene {
         _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
     }
     
-    //    func addTileFromWordList() {
-    //        if (tilesArray.count - extraWordCount < _words.count) {
-    //            //addTile(_words[tilesArray.count - extraWordCount])
-    //            let newPosition = Int(arc4random_uniform(UInt32(tilesArray.count)))
-    //            addTile(_words[newPosition])
-    //            _words.removeAtIndex(newPosition)
-    //        }
-    //    }
-    
     func addTileFromWordList() {
         if wordIndex == 0 {
             addTile(_words[wordIndex])
@@ -201,11 +182,6 @@ class GameScene: SKScene {
         } else {
             wordIndex = 0
         }
-    }
-    
-    func addExtraTile(newWord: String) {
-        addTile([newWord])
-        extraWordCount++
     }
     
     func speakSentence(speakFromHere: Tile) {
@@ -226,57 +202,6 @@ class GameScene: SKScene {
         tile.rotate()
     }
     
-    func selectTile(location: CGPoint) {
-        var tile: Tile = findTileTouched(location)
-        println("\tSELECTING \(tile.word)")
-        println("\nThe texture is: \(tile.texture)")
-        speakSentence(tile)
-        tile.rotate()
-        tile.texture = textureAtlas.textureNamed("red1")
-        
-    }
-
-    func findTileTouched(touchLocation: CGPoint) -> (Tile) {
-        for tile in tilesArray {
-            if tile.containsPoint(touchLocation) {
-                tile.texture = textureAtlas.textureNamed("red1")
-                return (tile)
-            }
-        }
-        return Tile.nilTile
-    }
-    
-    func selectNodeForTouch(location: CGPoint) {
-        let tile: Tile = findTileTouched(location)
-        let touchedNode: SKSpriteNode = tile
-        //useful for figuring out how to connect tiles
-        //if (tile != Tile.nilTile) {
-        //    println("\nprevTile is: [\(tile.prevTile.word)]=>[[\(tile.word)]]=> nextTile is [\(tile.nextTile.word)]")
-        //}
-        selection.removeAllActions()
-        selection.runAction(SKAction.rotateToAngle(0.0, duration: 0.1), completion: {tile.texture = self.textureAtlas.textureNamed("red2")})
-        //is this doing anything???????????????????????
-        //selection.sprite.runAction(SKAction.colorizeWithColor(UIColor.whiteColor(), colorBlendFactor: 1.0, duration: NSTimeInterval(1)))
-        selection = tile
-        
-        selection.removeFromParent()
-        tileLayer.addChild(selection)
-        for tile in selection.getPhraseTiles() {
-            tile.removeFromParent()
-            tileLayer.addChild(tile)
-        }
-        
-        if count(tilesArray) > 0 {
-            for i in (0...(count(tilesArray) - 1)) {
-                if (tilesArray[i] == selection) {
-                    tilesArray.insert(tilesArray[i], atIndex: 0)
-                    tilesArray.removeAtIndex(i + 1)
-                    break
-                }
-            }
-        }
-    }
-    
     func speakWord(str: String) {
         if (str != "nil") {
             //println("Speaking!")
@@ -291,74 +216,6 @@ class GameScene: SKScene {
         }
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch: UITouch = touches.first as! UITouch
-        let positionInScene: CGPoint = touch.locationInNode(self)
-        selectNodeForTouch(positionInScene)
-        //println("selection previous after touch: \(selection.prevTile)")
-        //selection.detachFromPrev()
-        //println("selection previous after detach: \(selection.prevTile)")
-        current_x_offset = selection.xPos - positionInScene.x
-        current_y_offset = selection.yPos - positionInScene.y
-        
-        currentPhrase = Phrase(root: selection, x: selection.xPos, y: selection.yPos)
-        
-        STICKY_POINT = CGPoint(x: selection.xPos, y: selection.yPos)
-
-        println("Hello!")
-        selectTile(touch.locationInNode(tileLayer))
-    }
-    
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch = touches.first as! UITouch
-        let location = touch.locationInNode(tileLayer)
-        let positionInScene: CGPoint = touch.locationInNode(self)
-        let moveToPosition: CGPoint = CGPoint(x: positionInScene.x + current_x_offset, y: positionInScene.y + current_y_offset)
-        if selection != Tile.nilTile {
-            //println("selection previous before detach: \(selection.prevTile)")
-            //selection.detachFromPrev()
-            //println("selection previous after detach: \(selection.prevTile)")
-            selection.moveTile(moveToPosition)
-        }
-    }
-    
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch = touches.first as! UITouch
-        let tile = findTileTouched(touch.locationInNode(tileLayer))
-        if !tile.didMove() {
-            println("Hello!")
-            selectTile(touch.locationInNode(tileLayer))
-            println("\tthe sticky point is this far from tile: \(tile.distanceToPoint(STICKY_POINT))")
-            let moveToPoint = CGPoint(x: tile.xPos + tile.momentum.x, y: tile.yPos + tile.momentum.y)
-            tile.resetPrevPos()
-        } else {
-            if tile.prevTile != Tile.nilTile {
-                tile.detachFromPrev()
-            }
-            STICKY_POINT = DEFAULT_STICKY_POINT
-            let tilesUnderLeftCorners = tile.leftCornersInside(tilesArray)
-            println("The selected tile overlaps \(count(tilesUnderLeftCorners)) tiles")
-            for othertile in tilesUnderLeftCorners {
-                println("adding \(tile.getPhraseTiles()) after \(othertile)")
-                tile.makeNextOf(othertile)
-                tile.moveTileAnimated(CGPoint(
-                    x: othertile.xPos + (othertile.size.width/2) + (tile.size.width/2),
-                    y: othertile.yPos))
-                return
-            }
-            let tilesUnderRightCorners = tile.rightCornersInside(tilesArray)
-            println("The selected tile overlaps \(count(tilesUnderRightCorners)) tiles")
-            for othertile in tilesUnderRightCorners {
-                println("ADDING \(tile.getPhraseTiles()) BEFORE \(othertile)")
-                tile.makePrevOf(othertile)
-                tile.moveTileAnimated(CGPoint(
-                    x: othertile.xPos - (othertile.size.width/2) + (tile.size.width/2),
-                    y: othertile.yPos))
-                return
-            }
-        }
-    }
-   
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }

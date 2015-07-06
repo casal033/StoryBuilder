@@ -22,8 +22,13 @@ class Tile: SKSpriteNode, Printable, Comparable {
     var xPos: CGFloat
     var yPos: CGFloat
     
+    var baseColorName: String
+    
+    var current_x_offset: CGFloat = 0
+    var current_y_offset: CGFloat = 0
+    
     var prevPos: CGPoint
-    var textureAtlas = SKTextureAtlas(named:"yellowTile.atlas")
+    var textureAtlas = SKTextureAtlas(named:"greenTile.atlas")
     var momentum = CGPoint(x: 0, y: 0)
     
     var phrase: Phrase {
@@ -56,13 +61,12 @@ class Tile: SKSpriteNode, Printable, Comparable {
         self.xPos = 0
         self.yPos = 0
         self.length = 0
+        self.baseColorName = "nil"
         
         let spriteSize = CGSize(width: 0.0, height: 0.0)
         //sprite = SKSpriteNode(texture: SKTexture(imageNamed: ""), size: spriteSize)
         super.init(texture: nil, color: nil, size: spriteSize)
         hidden = true
-
-        
     }
     
     init(word: String, partOfSpeech: String, x: CGFloat, y: CGFloat) {//, tags: [String]) {
@@ -72,8 +76,6 @@ class Tile: SKSpriteNode, Printable, Comparable {
         self.partOfSpeech = partOfSpeech
         self.xPos = x
         self.yPos = y
-        //self.nextTile = Tile.nilTile
-        //self.prevTile = Tile.nilTile
         self.prevPos = CGPoint(x: x, y: y)
         if (word == "nil") { self.moveable = false }
         else { self.moveable = true }
@@ -82,24 +84,26 @@ class Tile: SKSpriteNode, Printable, Comparable {
         var tileImage = ""
         if partOfSpeech == "Noun" || partOfSpeech == "Pronoun" {
             tileImage = "blue1"
-            textureAtlas = SKTextureAtlas(named:"blueTile.atlas")
+            baseColorName = "blue"
         }
         else if partOfSpeech == "Verb" {
             tileImage = "red1"
-            textureAtlas = SKTextureAtlas(named:"redTile.atlas")
+            baseColorName = "red"
         }
         else if partOfSpeech == "Article" || partOfSpeech == "Conjunction" || partOfSpeech == "Preposition" || partOfSpeech == "Adverb" {
-            tileImage = "yellow1"
-            textureAtlas = SKTextureAtlas(named:"yellowTile.atlas")
+            tileImage = "YellowTile"
+            baseColorName = "yellow"
         }
         else if partOfSpeech == "Adjective"  {
             tileImage = "green1"
-            textureAtlas = SKTextureAtlas(named:"greenTile.atlas")
+            baseColorName = "green"
         }
         else {
             let selectionNumber = Int(arc4random_uniform(UInt32(count(colors))))
             tileImage = colors[selectionNumber] + "Tile"
+            baseColorName = colors[selectionNumber].lowercaseString
         }
+        textureAtlas = SKTextureAtlas(named:"\(baseColorName)Tile.atlas")
         //sprite = SKSpriteNode(texture: , size: spriteSize)
         super.init(texture: SKTexture(imageNamed: tileImage), color: nil, size: spriteSize)
         let label = SKLabelNode()
@@ -109,6 +113,7 @@ class Tile: SKSpriteNode, Printable, Comparable {
         label.position = CGPoint(x: 0, y: -6)
         
         name = word
+        userInteractionEnabled = true
         
         if (!moveable) {
             hidden = true
@@ -216,6 +221,9 @@ class Tile: SKSpriteNode, Printable, Comparable {
         self.prevTile = otherTile.prevTile
         otherTile.prevTile = self.phrase.last()
         self.phrase.last().nextTile = otherTile
+        moveTileAnimated(CGPoint(
+            x: otherTile.position.x - (otherTile.size.width/2) + (size.width/2),
+            y: otherTile.position.y))
         
     }
     
@@ -228,6 +236,9 @@ class Tile: SKSpriteNode, Printable, Comparable {
         self.phrase.last().nextTile = otherTile.nextTile
         otherTile.nextTile = self
         self.prevTile = otherTile
+        moveTileAnimated(CGPoint(
+            x: otherTile.position.x + (otherTile.size.width/2) + (size.width/2),
+            y: otherTile.position.y))
     }
     
     func rotate() {
@@ -242,8 +253,9 @@ class Tile: SKSpriteNode, Printable, Comparable {
         if (moveable) {
             println("Highlighting!")
             let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.3)
-            let highlight = SKAction.setTexture(textureAtlas.textureNamed(textureAtlas.textureNames[0] as! String))
-            let sequence: SKAction = SKAction.sequence([highlight, pause])
+            let highlight = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)2"))
+            let revert = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)1"))
+            let sequence: SKAction = SKAction.sequence([highlight, pause, revert])
             runAction(sequence, withKey: "highlight")
         }
     }
@@ -252,7 +264,7 @@ class Tile: SKSpriteNode, Printable, Comparable {
         if (moveable) {
             println("UNHighlighting!")
             let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.1)
-            let revert = SKAction.setTexture(textureAtlas.textureNamed(textureAtlas.textureNames[1] as! String))
+            let revert = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)1"))
             let sequence: SKAction = SKAction.sequence([pause, revert])
             runAction(sequence, withKey: "unhighlight")
         }
@@ -318,6 +330,73 @@ class Tile: SKSpriteNode, Printable, Comparable {
     func distanceToPoint(point: CGPoint) -> CGFloat {
         return (abs(xPos - point.x) + abs(yPos - point.y))
     }
+    
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        var gameScene = self.scene as! GameScene
+        let touch: UITouch = touches.first as! UITouch
+        let location = touch.locationInNode(scene)
+        let touchedNode = nodeAtPoint(location)
+        
+        removeAllActions()
+        for tile in getPhraseTiles() {
+            tile.zPosition = 15
+            tile.highlight()
+        }
+        println("The touch began at location \(location)")
+        
+        gameScene.speakSentence(self)
+        current_x_offset = position.x - location.x
+        current_y_offset = position.y - location.y
+        
+        gameScene.STICKY_POINT = CGPoint(x: location.x, y: position.y)
+        
+    }
+    
+    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+        highlight()
+        let touch = touches.first as! UITouch
+        let positionInScene: CGPoint = touch.locationInNode(scene)
+        let newPosition: CGPoint = CGPoint(x: positionInScene.x + current_x_offset, y: positionInScene.y + current_y_offset)
+        if self != Tile.nilTile {
+            moveTile(newPosition)
+        }
+    }
+    
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        var gameScene = self.scene as! GameScene
+        let touch = touches.first as! UITouch
+        for tile in getPhraseTiles() {
+            tile.highlightRevert()
+            tile.zPosition = 0
+        }
+        println("I found a tile and touch ended")
+        if !didMove() {
+            println("Hello!")
+            println("\tthe sticky point is this far from tile: \(distanceToPoint(gameScene.STICKY_POINT))")
+            let moveToPoint = CGPoint(x: position.x + momentum.x, y: position.y + momentum.y)
+            resetPrevPos()
+        } else
+            if prevTile != Tile.nilTile {
+                detachFromPrev()
+        }
+        gameScene.STICKY_POINT = gameScene.DEFAULT_STICKY_POINT
+        
+        let tilesUnderLeftCorners = leftCornersInside(gameScene.tilesArray)
+        //println("The selected tile overlaps \(count(tilesUnderLeftCorners)) tiles")
+        for othertile in tilesUnderLeftCorners {
+            println("adding \(getPhraseTiles()) after \(othertile)")
+            makeNextOf(othertile)
+            return
+        }
+        let tilesUnderRightCorners = rightCornersInside(gameScene.tilesArray)
+        println("The selected tile overlaps \(count(tilesUnderRightCorners)) tiles")
+        for othertile in tilesUnderRightCorners {
+            println("ADDING \(getPhraseTiles()) BEFORE \(othertile)")
+            makePrevOf(othertile)
+            return
+        }
+    }
+
     
 }
 func == (lhs: Tile, rhs: Tile) -> Bool {
