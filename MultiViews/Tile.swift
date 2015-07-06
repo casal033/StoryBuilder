@@ -23,6 +23,7 @@ class Tile: SKSpriteNode, Printable, Comparable {
     var yPos: CGFloat
     
     var prevPos: CGPoint
+    var textureAtlas = SKTextureAtlas(named:"yellowTile.atlas")
     var momentum = CGPoint(x: 0, y: 0)
     
     var phrase: Phrase {
@@ -80,16 +81,20 @@ class Tile: SKSpriteNode, Printable, Comparable {
         let spriteSize = CGSize(width: max(CGFloat(20 * length), 50) + 10.0, height: 85.0)
         var tileImage = ""
         if partOfSpeech == "Noun" || partOfSpeech == "Pronoun" {
-            tileImage = "red1"
+            tileImage = "blue1"
+            textureAtlas = SKTextureAtlas(named:"blueTile.atlas")
         }
         else if partOfSpeech == "Verb" {
-            tileImage = "GreenTile"
+            tileImage = "red1"
+            textureAtlas = SKTextureAtlas(named:"redTile.atlas")
         }
-        else if partOfSpeech == "Article" || partOfSpeech == "Conjunction" {
-            tileImage = "YellowTile"
+        else if partOfSpeech == "Article" || partOfSpeech == "Conjunction" || partOfSpeech == "Preposition" || partOfSpeech == "Adverb" {
+            tileImage = "yellow1"
+            textureAtlas = SKTextureAtlas(named:"yellowTile.atlas")
         }
-        else if partOfSpeech == "Adjective" || partOfSpeech == "Preposition" || partOfSpeech == "Adverb" {
-            tileImage = "BlueTile"
+        else if partOfSpeech == "Adjective"  {
+            tileImage = "green1"
+            textureAtlas = SKTextureAtlas(named:"greenTile.atlas")
         }
         else {
             let selectionNumber = Int(arc4random_uniform(UInt32(count(colors))))
@@ -230,6 +235,38 @@ class Tile: SKSpriteNode, Printable, Comparable {
             println("Rotating!")
             let sequence: SKAction = SKAction.sequence([SKAction.rotateByAngle(degToRad(Float(-60.0)), duration: 0.3), SKAction.rotateByAngle(degToRad(0.0), duration: 0.2), SKAction.rotateToAngle(0.0, duration: 0.3)])
             runAction(SKAction.repeatAction(sequence,count: 1))
+        }
+    }
+    
+    func highlight() {
+        if (moveable) {
+            println("Highlighting!")
+            let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.3)
+            let highlight = SKAction.setTexture(textureAtlas.textureNamed(textureAtlas.textureNames[0] as! String))
+            let sequence: SKAction = SKAction.sequence([highlight, pause])
+            runAction(sequence, withKey: "highlight")
+        }
+    }
+    
+    func highlightRevert() {
+        if (moveable) {
+            println("UNHighlighting!")
+            let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.1)
+            let revert = SKAction.setTexture(textureAtlas.textureNamed(textureAtlas.textureNames[1] as! String))
+            let sequence: SKAction = SKAction.sequence([pause, revert])
+            runAction(sequence, withKey: "unhighlight")
+        }
+    }
+    
+    func wiggle() {
+        if (moveable) {
+            println("Wiggling!")
+            let wiggleRight = SKAction.rotateByAngle(degToRad(Float(-15.0)), duration: 0.1)
+            let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.05)
+            let backToCenter = SKAction.rotateToAngle(0.0, duration: 0.05)
+            let wiggleLeft = SKAction.rotateByAngle(degToRad(Float(15.0)), duration: 0.1)
+            let sequence: SKAction = SKAction.sequence([wiggleLeft, pause, backToCenter, pause, wiggleRight, pause, backToCenter])
+            runAction(sequence, withKey: "wiggle")
         }
     }
     
