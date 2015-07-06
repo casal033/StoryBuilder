@@ -108,6 +108,22 @@ class GameViewController: UIViewController {
         //Add toolbat to view
         view.addSubview(toolbar)
         
+//        /////////* Section for Toolbar 2 */////////
+//        
+//        /* Array of buttons to add to toolbar */
+//        let alpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+//        var letters = [AnyObject]()
+//        for position in 0...alpha.count-1 {
+//            letters.append(UIBarButtonItem(title: alpha[position], style: UIBarButtonItemStyle.Plain, target: self, action: "showAlphaWords:"))
+//        }
+//        
+//        //Making a toolbar programatically
+//        toolbar = UIToolbar()
+//        //Add buttons to toolbar
+//        toolbar.items = items
+//        //Add toolbat to view
+//        view.addSubview(toolbar)
+        
         tapRec.addTarget(self, action: "tappedView")
         panRec.addTarget(self, action: "draggedView")
         
@@ -209,6 +225,10 @@ class GameViewController: UIViewController {
         }
         populateSelector(sortArray(getArrayToDisplay(categoryName, dict: holder)))
     }
+    
+//    @IBAction func showAlphaWords(sender: AnyObject) {
+//        var letter = sender.title
+//    }
     
     func setWidth(int:Int) {
         var hold = Int()
