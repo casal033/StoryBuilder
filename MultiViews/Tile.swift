@@ -22,6 +22,8 @@ class Tile: SKSpriteNode, Printable, Comparable {
     var xPos: CGFloat
     var yPos: CGFloat
     
+    var baseColorName: String
+    
     var current_x_offset: CGFloat = 0
     var current_y_offset: CGFloat = 0
     
@@ -59,6 +61,7 @@ class Tile: SKSpriteNode, Printable, Comparable {
         self.xPos = 0
         self.yPos = 0
         self.length = 0
+        self.baseColorName = "nil"
         
         let spriteSize = CGSize(width: 0.0, height: 0.0)
         //sprite = SKSpriteNode(texture: SKTexture(imageNamed: ""), size: spriteSize)
@@ -81,24 +84,26 @@ class Tile: SKSpriteNode, Printable, Comparable {
         var tileImage = ""
         if partOfSpeech == "Noun" || partOfSpeech == "Pronoun" {
             tileImage = "blue1"
-            textureAtlas = SKTextureAtlas(named:"blueTile.atlas")
+            baseColorName = "blue"
         }
         else if partOfSpeech == "Verb" {
             tileImage = "red1"
-            textureAtlas = SKTextureAtlas(named:"redTile.atlas")
+            baseColorName = "red"
         }
         else if partOfSpeech == "Article" || partOfSpeech == "Conjunction" || partOfSpeech == "Preposition" || partOfSpeech == "Adverb" {
-            tileImage = "yellow1"
-            textureAtlas = SKTextureAtlas(named:"yellowTile.atlas")
+            tileImage = "YellowTile"
+            baseColorName = "yellow"
         }
         else if partOfSpeech == "Adjective"  {
             tileImage = "green1"
-            textureAtlas = SKTextureAtlas(named:"greenTile.atlas")
+            baseColorName = "green"
         }
         else {
             let selectionNumber = Int(arc4random_uniform(UInt32(count(colors))))
             tileImage = colors[selectionNumber] + "Tile"
+            baseColorName = colors[selectionNumber].lowercaseString
         }
+        textureAtlas = SKTextureAtlas(named:"\(baseColorName)Tile.atlas")
         //sprite = SKSpriteNode(texture: , size: spriteSize)
         super.init(texture: SKTexture(imageNamed: tileImage), color: nil, size: spriteSize)
         let label = SKLabelNode()
@@ -248,8 +253,8 @@ class Tile: SKSpriteNode, Printable, Comparable {
         if (moveable) {
             println("Highlighting!")
             let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.3)
-            let highlight = SKAction.setTexture(textureAtlas.textureNamed(textureAtlas.textureNames[0] as! String))
-            let revert = SKAction.setTexture(textureAtlas.textureNamed(textureAtlas.textureNames[1] as! String))
+            let highlight = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)2"))
+            let revert = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)1"))
             let sequence: SKAction = SKAction.sequence([highlight, pause, revert])
             runAction(sequence, withKey: "highlight")
         }
@@ -259,7 +264,7 @@ class Tile: SKSpriteNode, Printable, Comparable {
         if (moveable) {
             println("UNHighlighting!")
             let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.1)
-            let revert = SKAction.setTexture(textureAtlas.textureNamed(textureAtlas.textureNames[1] as! String))
+            let revert = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)1"))
             let sequence: SKAction = SKAction.sequence([pause, revert])
             runAction(sequence, withKey: "unhighlight")
         }
