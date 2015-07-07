@@ -251,19 +251,14 @@ class Tile: SKSpriteNode, Printable, Comparable {
     
     func highlight() {
         if (moveable) {
-            println("Highlighting!")
-            let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.3)
             let highlight = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)2"))
-            let revert = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)1"))
-            let sequence: SKAction = SKAction.sequence([highlight, pause, revert])
-            runAction(sequence, withKey: "highlight")
+            runAction(highlight, withKey: "highlight")
         }
     }
     
     func highlightRevert() {
         if (moveable) {
-            println("UNHighlighting!")
-            let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.1)
+            let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.3)
             let revert = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)1"))
             let sequence: SKAction = SKAction.sequence([pause, revert])
             runAction(sequence, withKey: "unhighlight")
@@ -353,7 +348,6 @@ class Tile: SKSpriteNode, Printable, Comparable {
     }
     
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        highlight()
         let touch = touches.first as! UITouch
         let positionInScene: CGPoint = touch.locationInNode(scene)
         let newPosition: CGPoint = CGPoint(x: positionInScene.x + current_x_offset, y: positionInScene.y + current_y_offset)
@@ -371,8 +365,6 @@ class Tile: SKSpriteNode, Printable, Comparable {
         }
         println("I found a tile and touch ended")
         if !didMove() {
-            println("Hello!")
-            println("\tthe sticky point is this far from tile: \(distanceToPoint(gameScene.STICKY_POINT))")
             let moveToPoint = CGPoint(x: position.x + momentum.x, y: position.y + momentum.y)
             resetPrevPos()
         } else
@@ -395,6 +387,24 @@ class Tile: SKSpriteNode, Printable, Comparable {
             makePrevOf(othertile)
             return
         }
+    }
+
+    override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
+        var gameScene = self.scene as! GameScene
+        let touch = touches.first as! UITouch
+        for tile in getPhraseTiles() {
+            tile.highlightRevert()
+            tile.zPosition = 0
+        }
+        println("I found a tile and touch was cancelled")
+        //if !didMove() {
+        //    let moveToPoint = CGPoint(x: position.x + momentum.x, y: position.y + momentum.y)
+        //    resetPrevPos()
+        //} else
+        //    if prevTile != Tile.nilTile {
+        //        println("Huh - I thought it moved.")
+        //        detachFromPrev()
+        //}
     }
 
     
