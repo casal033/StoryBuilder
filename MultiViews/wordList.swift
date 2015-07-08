@@ -108,8 +108,8 @@ public class WordList {
         if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonStudent = JSON(studentDictionary)
-                contextIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "contextTags")
-                looseTilesIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "tileBucket")
+                contextIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "wordPacks")
+                looseTilesIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "words")
         } else {
             println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
         }
@@ -142,7 +142,7 @@ public class WordList {
             options: NSJSONReadingOptions(), error: &error){
                 let jsonTile = JSON(tileDictionary)
                 tiles = getNestedDictionaryFromJSON(jsonTile, id: "_id", firstItem: "name", secondItem: "wordType")
-                categories = getStringArrayDictionaryFromJSON(jsonTile, id: "_id", array: "contextTags")
+                categories = getStringArrayDictionaryFromJSON(jsonTile, id: "_id", array: "wordPacks")
         } else {
             println("The file at '\(urlTiles)' is not valid JSON, error: \(error!)")
         }
