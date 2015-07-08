@@ -373,10 +373,12 @@ class GameViewController: UIViewController {
             let holder = value
             let tileName:String = holder[0]
             let tilecount = looseTiles.count
-            for index in 0...tilecount-1 {
-                let looseID = looseTiles[index]
-                if key == looseID {
-                    addWordToAllTiles(tileName)
+            if(tilecount > 0) {
+                for index in 0...tilecount-1 {
+                    let looseID = looseTiles[index]
+                    if key == looseID {
+                        addWordToAllTiles(tileName)
+                    }
                 }
             }
         }
