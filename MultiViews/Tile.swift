@@ -115,6 +115,14 @@ class Tile: SKSpriteNode, Printable, Comparable {
         name = word
         userInteractionEnabled = true
         
+        var body = SKPhysicsBody(rectangleOfSize: self.size)
+        body.dynamic = false
+        body.categoryBitMask = BodyType.tile.rawValue
+        body.collisionBitMask = BodyType.tile.rawValue
+        body.contactTestBitMask = BodyType.tile.rawValue
+        
+        self.physicsBody = body
+        
         if (!moveable) {
             hidden = true
         }
@@ -397,17 +405,8 @@ class Tile: SKSpriteNode, Printable, Comparable {
             tile.zPosition = 0
         }
         println("I found a tile and touch was cancelled")
-        //if !didMove() {
-        //    let moveToPoint = CGPoint(x: position.x + momentum.x, y: position.y + momentum.y)
-        //    resetPrevPos()
-        //} else
-        //    if prevTile != Tile.nilTile {
-        //        println("Huh - I thought it moved.")
-        //        detachFromPrev()
-        //}
     }
 
-    
 }
 func == (lhs: Tile, rhs: Tile) -> Bool {
     return (lhs.word == rhs.word) && (lhs.position == rhs.position)

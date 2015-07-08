@@ -10,6 +10,11 @@ import Foundation
 import SpriteKit
 import AVFoundation
 
+enum BodyType: UInt32 {
+    //each new case gets twice the value of the case before it
+    case tile = 1
+}
+
 var Adverb = "Adverb"
 var Noun = "Noun"
 var Verb = "Verb"
@@ -78,7 +83,7 @@ let DEFAULT_WORD_LIST:[[String]] = [
 ]
 
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //let FRICTION: CGFloat = 10
     
@@ -135,6 +140,8 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         mySpeechSynthesizer.stopSpeakingAtBoundary(AVSpeechBoundary.Word)
+        self.physicsWorld.contactDelegate = self
+        view.showsPhysics = true
     }
     
     func addTile(newWord: [String]) {
@@ -218,5 +225,23 @@ class GameScene: SKScene {
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        //called automatically when contact begins
+        
+        let firstNode = contact.bodyA.node as! SKSpriteNode
+        let secondNode = contact.bodyB.node as! SKSpriteNode
+        
+        if (contact.bodyA.categoryBitMask == BodyType.tile.rawValue) &&
+            (contact.bodyB.categoryBitMask == BodyType.tile.rawValue) {
+                        println("Hit")
+        }
+        
+        //this value holds onto whatever two things just contacted each other
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        //called automatically when contact ends
     }
 }
