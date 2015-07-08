@@ -116,10 +116,11 @@ class Tile: SKSpriteNode, Printable, Comparable {
         userInteractionEnabled = true
         
         var body = SKPhysicsBody(rectangleOfSize: self.size)
-        body.dynamic = false
+        body.dynamic = true
+        body.affectedByGravity = false
         body.categoryBitMask = BodyType.tile.rawValue
-        body.collisionBitMask = BodyType.tile.rawValue
-        body.contactTestBitMask = BodyType.tile.rawValue
+        body.collisionBitMask = 0
+        body.contactTestBitMask = BodyType.trash.rawValue | BodyType.tile.rawValue
         
         self.physicsBody = body
         

@@ -13,6 +13,7 @@ import AVFoundation
 enum BodyType: UInt32 {
     //each new case gets twice the value of the case before it
     case tile = 1
+    case trash = 2
 }
 
 var Adverb = "Adverb"
@@ -139,9 +140,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
+        let trash = SKSpriteNode(imageNamed: "blankTile")
+        var body = SKPhysicsBody(rectangleOfSize: trash.size)
+        body.dynamic = false
+        body.categoryBitMask = BodyType.trash.rawValue
+        body.collisionBitMask = 0
+        body.contactTestBitMask = BodyType.tile.rawValue
+        
+        trash.position = CGPointMake(300, 100)
+        trash.physicsBody = body
+        trash.zPosition = 15
+        addChild(trash)
+        trash.name = "trashcan"
+        
+        
         mySpeechSynthesizer.stopSpeakingAtBoundary(AVSpeechBoundary.Word)
         self.physicsWorld.contactDelegate = self
         view.showsPhysics = true
+        
+        
     }
     
     func addTile(newWord: [String]) {
@@ -233,15 +250,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let firstNode = contact.bodyA.node as! SKSpriteNode
         let secondNode = contact.bodyB.node as! SKSpriteNode
         
+        println("touching!!!!")
+        
         if (contact.bodyA.categoryBitMask == BodyType.tile.rawValue) &&
             (contact.bodyB.categoryBitMask == BodyType.tile.rawValue) {
-                        println("Hit")
+                if (firstNode.zPosition == 0 && secondNode.zPosition == 15){
+                    let tile = firstNode as! Tile
+                    tile.highlight()
+                }
+                if (secondNode.zPosition == 0 && firstNode.zPosition == 15){
+                    let tile = secondNode as! Tile
+                    tile.highlight()
+                }
         }
         
         //this value holds onto whatever two things just contacted each other
     }
     
     func didEndContact(contact: SKPhysicsContact) {
+        let firstNode = contact.bodyA.node as! SKSpriteNode
+        let secondNode = contact.bodyB.node as! SKSpriteNode
+        
+        if (contact.bodyA.categoryBitMask == BodyType.tile.rawValue) &&
+            (contact.bodyB.categoryBitMask == BodyType.tile.rawValue) {
+                if (firstNode.zPosition == 0 && secondNode.zPosition == 15) {
+                    let tile = firstNode as! Tile
+                    tile.highlightRevert()
+                }
+                if (secondNode.zPosition == 0 && firstNode.zPosition == 15){
+                    let tile = secondNode as! Tile
+                    tile.highlightRevert()
+                }
+        }
         //called automatically when contact ends
     }
 }
