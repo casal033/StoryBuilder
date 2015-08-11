@@ -277,19 +277,17 @@ class GameViewController: UIViewController {
     //So a teacher can add a word, and a child can refresh and get it right away
     func refreshWords(sender: AnyObject){
         allWords = []
-        maxWordLength = Int()
-        maxWordLengthWord = Int()
         setScrollWidth = CGFloat()
+        setScrollWidthText = CGFloat()
+        setScrollWidthButton = CGFloat()
 
         let subViews: Array = scrollView.subviews
         for subview in subViews
         {
             subview.removeFromSuperview()
         }
-        println("setScrollWidth \(setScrollWidth)")
         viewDidLoad()
         viewDidLayoutSubviews()
-        println("setScrollWidth \(setScrollWidth)")
     }
 
     //Sets the appropriate scroll width based on lengths of given words
@@ -381,22 +379,24 @@ class GameViewController: UIViewController {
         var wpsInCPs = [String]()
         for (contextName, wordPackIDs) in studentContextPacks {
             var wordIDs = [String]()
-            for index in 0...wordPackIDs.count-1 {
-                for (wpID, wpWordIDs) in studentWordPacks {
-                    if(wordPackIDs[index] == wpID){
-                        if (!(contains(wpsInCPs, wpID))){
-                            wpsInCPs.append(wpID)
-                        }
-                        var wpWords = wpWordIDs
-                        for index2 in 1...wpWordIDs.count-1{
-                            if (!(contains(wordIDs, wpWordIDs[index2]))) {
-                                wordIDs.append(wpWordIDs[index2])
+            if (wordPackIDs.count > 0) {
+                for index in 0...wordPackIDs.count-1 {
+                    for (wpID, wpWordIDs) in studentWordPacks {
+                        if(wordPackIDs[index] == wpID){
+                            if (!(contains(wpsInCPs, wpID))){
+                                wpsInCPs.append(wpID)
+                            }
+                            var wpWords = wpWordIDs
+                            for index2 in 1...wpWordIDs.count-1{
+                                if (!(contains(wordIDs, wpWordIDs[index2]))) {
+                                    wordIDs.append(wpWordIDs[index2])
+                                }
                             }
                         }
                     }
                 }
+                studentContextPacks[contextName] = wordIDs
             }
-            studentContextPacks[contextName] = wordIDs
         }
 
         for (wpIDnonContext, wpWordIDnonContext) in studentWordPacks {
@@ -415,11 +415,13 @@ class GameViewController: UIViewController {
         
         for (wordID, wordArr) in studentWords {
             for (contName, contWordIDs) in studentContextPacks {
-                for i in 0...contWordIDs.count-1 {
-                    if (wordID == contWordIDs[i]) {
-                        var wordsHold = contWordIDs
-                        wordsHold[i] = wordArr[0]
-                        studentContextPacks[contName] = wordsHold
+                if(contWordIDs.count > 0){
+                    for i in 0...contWordIDs.count-1 {
+                        if (wordID == contWordIDs[i]) {
+                            var wordsHold = contWordIDs
+                            wordsHold[i] = wordArr[0]
+                            studentContextPacks[contName] = wordsHold
+                        }
                     }
                 }
             }
