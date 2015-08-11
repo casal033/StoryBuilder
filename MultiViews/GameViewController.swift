@@ -338,30 +338,44 @@ class GameViewController: UIViewController {
     
     //Get all related information about student (words & categories their assigned)
     func getStudentInfo() {
-        //_looseWordPackIDs has an array of the student's contextpacksIDs they're assigned
+        //_looseWordPackIDs has an array of the student's individual word pack IDs they're assigned
         studentWordPackIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseStudentWordPackIDs
-        //_looseWordsIDs has an array of the student's individually assigned words
+        //_looseWordsIDs has an array of the student's individual word IDs they're assigned
         studentWordIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseStudentWordIDs
-        //_wordPack has a dictionary with all of the <contextIDs, contextTitle> in the word river system
+        //studentWordPacks is a dictionary with all of the [wordPackID: [wordPackName, list of word IDs]]
         studentWordPacks = WordList(urlWordPacks: "https://teacherwordriver.herokuapp.com/api/wordPacks", wpIDs: studentWordPackIDs).wordPack
+        //studentWordPackWordIDs has an array of the student's word IDs they're assigned from the assigned word packs
         studentWordPackWordIDs = WordList(urlWordPacks: "https://teacherwordriver.herokuapp.com/api/wordPacks", wpIDs: studentWordPackIDs).wordIDs
-        //_words has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
+        //studentWords is a dictionary with all of the [wordID: [wordName, wordType]]
         studentWords = WordList(urlWords: "https://teacherwordriver.herokuapp.com/api/words", wdIDs: studentWordPackWordIDs).words
+        
+        //Combine word IDs from word packs and individually assigned word IDs
         for index in 0...studentWordIDs.count-1{
             if(!(contains(studentWordPackWordIDs, studentWordIDs[index]))){
                 studentWordPackWordIDs.append(studentWordIDs[index])
             }
         }
+        
+        //Start the alphabet filter sorting
         createAlphaDictionary()
+        
+        //Go through all grabbed student words
         for (id, arr) in studentWords {
             if(contains(studentWordPackWordIDs, id)){
+                //Add each word to allWords
                 allWords.append(arr[0])
+                //Check the size of each word for the scroll bar width
                 var wordLength = count(arr[0])
                 checkMaxWord(wordLength)
+                //Add each word to the alphabet dictionary
                 addToAlphaDictionary(arr[0])
             }
         }
+        
+        //studentContextPacks is a dictionary with all of the [contextPackName: [wordPackIDs]]
         studentContextPacks = WordList(urlContextPacks: "https://teacherwordriver.herokuapp.com/api/contextPacks", wpIDs: studentWordPackIDs).contextPack
+        
+        //Print staetment to check speed of gathering student info
         println("Got api info!")
     }
     
@@ -375,18 +389,25 @@ class GameViewController: UIViewController {
     
     //Parse all word information from getStudentInfo into usable objects
     func getStudentWords() {
-        //Loop through array of known assigned context packs
         var wpsInCPs = [String]()
+        //Loop through dictionary of known assigned context packs
         for (contextName, wordPackIDs) in studentContextPacks {
             var wordIDs = [String]()
+            //If contextPack has assigned wordPacks
             if (wordPackIDs.count > 0) {
+                //Loop through assigned wordPacks in contextPack
                 for index in 0...wordPackIDs.count-1 {
+                    //Loop through dictionary of known assigned wordPacks
                     for (wpID, wpWordIDs) in studentWordPacks {
+                        //If ID from contextPack matches ID of current wordPack
                         if(wordPackIDs[index] == wpID){
+                            //Helper for getting wordPacks not assigned to contextPacks
                             if (!(contains(wpsInCPs, wpID))){
                                 wpsInCPs.append(wpID)
                             }
+                            //Holder for matched words from wordPack
                             var wpWords = wpWordIDs
+                            //Loop through word IDs in current wordPack and add them to all word IDs in current contextPack
                             for index2 in 1...wpWordIDs.count-1{
                                 if (!(contains(wordIDs, wpWordIDs[index2]))) {
                                     wordIDs.append(wpWordIDs[index2])
@@ -395,31 +416,44 @@ class GameViewController: UIViewController {
                         }
                     }
                 }
+                //Assigning all word IDs from wordPacks in current contextPack to the name of the current contextPack
+                //Essentially replacing wordPack IDs with all of the word IDs from those previous wordPack IDs
                 studentContextPacks[contextName] = wordIDs
             }
         }
 
+        //Loop through dictionary of known assigned wordPacks again to check if not in a contextPack
         for (wpIDnonContext, wpWordIDnonContext) in studentWordPacks {
             var nonContextWordIDs = [String]()
+            //If the current wordPack ID is not in the helper list of wordPack IDs in a contextPack
             if(!(contains(wpsInCPs, wpIDnonContext))){
                 var wpWordsNonContext = [String]()
                 wpWordsNonContext = wpWordIDnonContext
+                //Loop through word IDs in current wordPack and add them to all word IDs in current wordPack
                 for index3 in 1...wpWordIDnonContext.count-1{
                     if (!(contains(nonContextWordIDs, wpWordIDnonContext[index3]))) {
                         nonContextWordIDs.append(wpWordIDnonContext[index3])
                     }
                 }
+                //Make wordPack a "contextPack" by adding name and it's assigned word IDs
+                //wpWordIDnonContext[0] is the wordPackName
                 studentContextPacks[wpWordIDnonContext[0]] = nonContextWordIDs
             }
         }
         
+        //Loop through all words assigned to the student
         for (wordID, wordArr) in studentWords {
+            //Loop through all contextPacks with their assigned word IDs
             for (contName, contWordIDs) in studentContextPacks {
+                //If contextPack has words assigned
                 if(contWordIDs.count > 0){
+                    //Loop through word IDs assigned to contextPack
                     for i in 0...contWordIDs.count-1 {
+                        //If current word ID in contextPack matches the current student word
                         if (wordID == contWordIDs[i]) {
                             var wordsHold = contWordIDs
                             wordsHold[i] = wordArr[0]
+                            //Replace the word ID with the word name
                             studentContextPacks[contName] = wordsHold
                         }
                     }
