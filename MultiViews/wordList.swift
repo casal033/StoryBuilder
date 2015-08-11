@@ -18,8 +18,9 @@ public class WordList {
     var wordIDs: [String]!
     //Holds all of the wordPack IDs and wordPack name
     var wordPack = [String: [String]]()
+    var contextPack = [String: [String]]()
     //Holds all of the word ID's in the system and an array containing the name at [0] and type at [1]
-    var allWords = [String: [String]]()
+//    var allWords = [String: [String]]()
     //Holds all of the word ID's in the system and an array containing the name at [0] and type at [1]
     var words = [String: [String]]()
     //Holds all of the word ID's in the system and an array of associated wordPack IDs
@@ -41,7 +42,22 @@ public class WordList {
         }
         return toReturn
     }
-
+    
+    func getNameAndWordPackIDsFromJSON(json: JSON, wordPackIDs: [String]) -> [String: [String]]{
+        var toReturn = [String: [String]]()
+        for index in 0...json.count-1 {
+            var arrHold = json[index]["wordPacks"].arrayValue.map { $0.string!}
+            var idHold = [String]()
+            for index2 in 0...arrHold.count-1 {
+                if(contains(wordPackIDs, arrHold[index2])){
+                    idHold.append(arrHold[index2])
+                }
+            }
+            toReturn[json[index]["name"].string!] = idHold
+        }
+        return toReturn
+    }
+    
     //Takes in JSON (swifty) object "json" and parses it for "key" and "value" returns results as a
     //dictionary with string:key string:value
     func getStringStringDictionaryFromJSON(json: JSON, wordPackIDs: [String]) -> [String: [String]]{
@@ -80,22 +96,17 @@ public class WordList {
     //dictionary with string:idReturn array: [itemReturn1, itemReturn2]
     func getNestedDictionaryFromJSON(json: JSON, wordPackIDs: [String]) -> [String: [String]]{
         var toReturn = [String: [String]]()
+        var idCheck = [String]()
         var thecount = json.count
         for index in 0...thecount-1 {
             var result = [String]()
-            var resultAll = [String]()
             var idReturn = json[index]["_id"].stringValue
             var itemReturn1 = json[index]["name"].stringValue
             var itemReturn2 = json[index]["wordType"].stringValue
-            resultAll.append(itemReturn1)
-            resultAll.append(itemReturn2)
-            allWords[idReturn] = resultAll
-            for index2 in 0...wordPackIDs.count-1 {
-                if(json[index]["_id"].string! == wordPackIDs[index2]){
-                    result.append(itemReturn1)
-                    result.append(itemReturn2)
-                    toReturn[idReturn] = result
-                }
+            if(!(contains(idCheck, idReturn))){
+                result.append(itemReturn1)
+                result.append(itemReturn2)
+                toReturn[idReturn] = result
             }
         }
         return toReturn
@@ -184,8 +195,8 @@ public class WordList {
                         }
                     }
                 }
-                println("WordPacks: '\(looseStudentWordPackIDs)' ")
-                println("Words: '\(looseStudentWordIDs)' ")
+//                println("WordPacks: '\(looseStudentWordPackIDs)' ")
+//                println("Words: '\(looseStudentWordIDs)' ")
         } else {
             println("The file at '\(urlTeachers)' is not valid JSON, error: \(error!)")
         }
@@ -218,6 +229,23 @@ public class WordList {
             println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
         }
     }
+
+    
+    //initializer for getting all of the wordPack information
+    init(urlContextPacks: String, wpIDs: [String]){
+        let nsurl = NSURL(string: urlContextPacks)
+        var error: NSError?
+        
+        let contextPackData: NSData = NSData(contentsOfURL: nsurl!)!
+        
+        if let contextPackDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(contextPackData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonContextPack = JSON(contextPackDictionary)
+                contextPack = getNameAndWordPackIDsFromJSON(jsonContextPack, wordPackIDs: wpIDs)
+        } else {
+            println("The file at '\(urlContextPacks)' is not valid JSON, error: \(error!)")
+        }
+    }
     
     //initializer for getting all of the wordPack information
     init(urlWordPacks: String, wpIDs: [String]){
@@ -238,8 +266,6 @@ public class WordList {
     
     //initializer for getting tile information
     init(urlWords: String, wdIDs: [String]){
-        allWords = [String: [String]]()
-
         let nsurl = NSURL(string: urlWords)
         var error: NSError?
         
