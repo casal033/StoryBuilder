@@ -66,11 +66,16 @@ public class WordList {
         for index in 0...thecount-1 {
             for index2 in 0...wordPackIDs.count-1 {
                 if(json[index]["_id"].string! == wordPackIDs[index2]){
-                    var arrHold = json[index]["words"].arrayValue.map { $0.string!}
-                    toReturn[json[index]["name"].string!] = arrHold
-                    for index3 in 0...arrHold.count-1{
-                        if(!(contains(wordIDs, arrHold[index3]))){
-                            wordIDs.append(arrHold[index3])
+                    var wordsHold = json[index]["words"].arrayValue.map { $0.string!}
+                    var arrHold = [String]()
+                    arrHold.append(json[index]["name"].string!)
+                    for i in 0...wordsHold.count-1 {
+                        arrHold.append(wordsHold[i])
+                    }
+                    toReturn[json[index]["_id"].string!] = arrHold
+                    for index3 in 0...wordsHold.count-1{
+                        if(!(contains(wordIDs, wordsHold[index3]))){
+                            wordIDs.append(wordsHold[index3])
                         }
                     }
                 }

@@ -51,9 +51,7 @@ class GameViewController: UIViewController {
     var studentContextPacks = [String: [String]]()
     //_words has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
     var studentWords = [String: [String]]()
-    var _wordPackDictionary = [String: [String]]()
-    var _contextPackDictionary = [String: [String]]()
-    var wordPackNames = [String]()
+    var contextPackNames = [String]()
     var _alphaDictionary = [String: [String]]()
     let alpha = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 
@@ -91,8 +89,8 @@ class GameViewController: UIViewController {
         /////////* Section for Toolbar */////////
         
         //Array of category names assigned to student
-        wordPackNames = getWordPackNames(studentWordPacks)
-        var sorted:[String] = sortArray(wordPackNames)
+        contextPackNames = getWordPackNames(studentContextPacks)
+        var sorted:[String] = sortArray(contextPackNames)
 
         /*Array of buttons to add to toolbar
         Currently includes "All" and each category the student is assigned */
@@ -252,7 +250,7 @@ class GameViewController: UIViewController {
     
     //Function filters to show category-specific words assigned to the child
     func showCategories(sender: AnyObject) {
-        var holder:[String: [String]] = studentWordPacks
+        var holder:[String: [String]] = studentContextPacks
         var categoryName = sender.title
         let subViews: Array = scrollView.subviews
         for subview in subViews
@@ -279,14 +277,19 @@ class GameViewController: UIViewController {
     //So a teacher can add a word, and a child can refresh and get it right away
     func refreshWords(sender: AnyObject){
         allWords = []
+        maxWordLength = Int()
+        maxWordLengthWord = Int()
+        setScrollWidth = CGFloat()
+
         let subViews: Array = scrollView.subviews
         for subview in subViews
         {
             subview.removeFromSuperview()
         }
-        getStudentInfo()
-        getStudentWords()
-        populateSelector(sortArray(allWords))
+        println("setScrollWidth \(setScrollWidth)")
+        viewDidLoad()
+        viewDidLayoutSubviews()
+        println("setScrollWidth \(setScrollWidth)")
     }
 
     //Sets the appropriate scroll width based on lengths of given words
@@ -351,6 +354,7 @@ class GameViewController: UIViewController {
                 studentWordPackWordIDs.append(studentWordIDs[index])
             }
         }
+        createAlphaDictionary()
         for (id, arr) in studentWords {
             if(contains(studentWordPackWordIDs, id)){
                 allWords.append(arr[0])
@@ -360,7 +364,6 @@ class GameViewController: UIViewController {
             }
         }
         studentContextPacks = WordList(urlContextPacks: "https://teacherwordriver.herokuapp.com/api/contextPacks", wpIDs: studentWordPackIDs).contextPack
-        createAlphaDictionary()
         println("Got api info!")
     }
     
@@ -374,26 +377,55 @@ class GameViewController: UIViewController {
     
     //Parse all word information from getStudentInfo into usable objects
     func getStudentWords() {
-        _wordPackDictionary = [String: [String]]()
-        _contextPackDictionary = [String: [String]]()
+        //Loop through array of known assigned context packs
+        var wpsInCPs = [String]()
+        for (contextName, wordPackIDs) in studentContextPacks {
+            var wordIDs = [String]()
+            for index in 0...wordPackIDs.count-1 {
+                for (wpID, wpWordIDs) in studentWordPacks {
+                    if(wordPackIDs[index] == wpID){
+                        if (!(contains(wpsInCPs, wpID))){
+                            wpsInCPs.append(wpID)
+                        }
+                        var wpWords = wpWordIDs
+                        for index2 in 1...wpWordIDs.count-1{
+                            if (!(contains(wordIDs, wpWordIDs[index2]))) {
+                                wordIDs.append(wpWordIDs[index2])
+                            }
+                        }
+                    }
+                }
+            }
+            studentContextPacks[contextName] = wordIDs
+        }
 
-        //Loop through array of known assigned word packs
-        for (id, arr) in studentWords {
-            var wpNameHold = String()
-            wpNameHold = arr[0]
-            for (name, arrID) in studentWordPacks {
-                for index in 0...arrID.count-1 {
-                    if(arrID[index] == id){
-                        var arrHold = [String]()
-                        arrHold = arrID
-                        arrHold[index] = wpNameHold
-                        studentWordPacks[name] = arrHold
+        for (wpIDnonContext, wpWordIDnonContext) in studentWordPacks {
+            var nonContextWordIDs = [String]()
+            if(!(contains(wpsInCPs, wpIDnonContext))){
+                var wpWordsNonContext = [String]()
+                wpWordsNonContext = wpWordIDnonContext
+                for index3 in 1...wpWordIDnonContext.count-1{
+                    if (!(contains(nonContextWordIDs, wpWordIDnonContext[index3]))) {
+                        nonContextWordIDs.append(wpWordIDnonContext[index3])
+                    }
+                }
+                studentContextPacks[wpWordIDnonContext[0]] = nonContextWordIDs
+            }
+        }
+        
+        for (wordID, wordArr) in studentWords {
+            for (contName, contWordIDs) in studentContextPacks {
+                for i in 0...contWordIDs.count-1 {
+                    if (wordID == contWordIDs[i]) {
+                        var wordsHold = contWordIDs
+                        wordsHold[i] = wordArr[0]
+                        studentContextPacks[contName] = wordsHold
                     }
                 }
             }
         }
     }
-    
+
     //Helper for setting scroll width based on the maxword length
     func checkMaxWord(int: Int) {
         if int > maxWordLength {
