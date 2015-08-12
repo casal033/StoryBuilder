@@ -34,42 +34,42 @@ class GameViewController: UIViewController {
     var toolbarAlpha:UIToolbar!
     var scrollView: UIScrollView!
     var wordSelectionView: UIImageView! = UIImageView(image: UIImage(named: "purpleRectangle"));
-    //allTiles contains all of the words related to the current student
-    var allTiles = [String]()
-    //Max word length in allTiles used to set Scrol Width
+    //allWords contains all of the words related to the current student
+    var allWords = [String]()
+    //Max word length in allWords used to set Scrol Width
     var maxWordLength = Int()
-    //Max word length in allTiles used to set tile width
-    var maxWordLengthTile = Int()
-    //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
-    var _categoriesIDs = [String]()
-    //_looseTilesIDs has an array of the student's individually assigned words
-    var _looseTilesIDs = [String]()
-    //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
-    var _category = [String: String]()
-    //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
-    var _tiles = [String: [String]]()
-    //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
-    var _categories = [String: [String]]()
-    var _categoryDictionary = [String: [String]]()
-    var categoryNames = [String]()
+    //Max word length in allWords used to set tile width
+    var maxWordLengthWord = Int()
+    //_wordPackIDs has an array of the student's contextpacksIDs they're assigned
+    var studentWordPackIDs = [String]()
+    //_looseWordsIDs has an array of the student's individually assigned words
+    var studentWordIDs = [String]()
+    //_looseWordsIDs has an array of the student's individually assigned words
+    var studentWordPackWordIDs = [String]()
+    //_wordPacks has a dictionary with all of the <contextIDs, contextTitle> in the word river system
+    var studentWordPacks = [String: [String]]()
+    var studentContextPacks = [String: [String]]()
+    //_words has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
+    var studentWords = [String: [String]]()
+    var contextPackNames = [String]()
     var _alphaDictionary = [String: [String]]()
     let alpha = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         //Generate helpful objects of related student information
         getStudentInfo()
         
         //Dictionary of categories and associated arrays
-        _categoryDictionary = getStudentWords()
+        getStudentWords()
         
         setWidth(maxWordLength)
-        setWordWidth(maxWordLengthTile)
+        setWordWidth(maxWordLengthWord)
 
         /////////* Section for Scroll View */////////
         
         /* Populate the scroll bar with all of the words related to the student (Their assigned category words and inidviudally assigned words) */
-        populateSelector(sortArray(allTiles))
+        populateSelector(sortArray(allWords))
         
         //Add word view to scroll
         scrollView.addSubview(wordSelectionView)
@@ -89,8 +89,8 @@ class GameViewController: UIViewController {
         /////////* Section for Toolbar */////////
         
         //Array of category names assigned to student
-        categoryNames = getCategoryNames(_categoryDictionary)
-        var sorted:[String] = sortArray(categoryNames)
+        contextPackNames = getWordPackNames(studentContextPacks)
+        var sorted:[String] = sortArray(contextPackNames)
 
         /*Array of buttons to add to toolbar
         Currently includes "All" and each category the student is assigned */
@@ -107,6 +107,7 @@ class GameViewController: UIViewController {
         toolbar.items = items
         //Add toolbat to view
         view.addSubview(toolbar)
+
         
         /////////* Section for Toolbar 2 */////////
         
@@ -172,7 +173,7 @@ class GameViewController: UIViewController {
     }
     
     //Get names of categories from a dictionary where [name: array] to make buttons for toolbar
-    func getCategoryNames(dict: [String: [String]]) -> [String]{
+    func getWordPackNames(dict: [String: [String]]) -> [String]{
         var toReturn = [String]()
         for (key, value) in dict {
             toReturn.append(key)
@@ -227,7 +228,7 @@ class GameViewController: UIViewController {
     //Function to grab word type so the word can be made into a tile
     func getWordType(word: String) -> String {
         var toReturn = String()
-        for (key, value) in _tiles {
+        for (key, value) in studentWords {
             let tileName:String = value[0]
             let tileType:String = value[1]
             if tileName == word {
@@ -244,12 +245,12 @@ class GameViewController: UIViewController {
         {
             subview.removeFromSuperview()
         }
-        populateSelector(sortArray(allTiles))
+        populateSelector(sortArray(allWords))
     }
     
     //Function filters to show category-specific words assigned to the child
     func showCategories(sender: AnyObject) {
-        var holder:[String: [String]] = _categoryDictionary
+        var holder:[String: [String]] = studentContextPacks
         var categoryName = sender.title
         let subViews: Array = scrollView.subviews
         for subview in subViews
@@ -275,15 +276,18 @@ class GameViewController: UIViewController {
     //Function refreshes our current words whenever the button is pressed in scene
     //So a teacher can add a word, and a child can refresh and get it right away
     func refreshWords(sender: AnyObject){
-        allTiles = []
+        allWords = []
+        setScrollWidth = CGFloat()
+        setScrollWidthText = CGFloat()
+        setScrollWidthButton = CGFloat()
+
         let subViews: Array = scrollView.subviews
         for subview in subViews
         {
             subview.removeFromSuperview()
         }
-        getStudentInfo()
-        _categoryDictionary = getStudentWords()
-        populateSelector(sortArray(allTiles))
+        viewDidLoad()
+        viewDidLayoutSubviews()
     }
 
     //Sets the appropriate scroll width based on lengths of given words
@@ -334,103 +338,135 @@ class GameViewController: UIViewController {
     
     //Get all related information about student (words & categories their assigned)
     func getStudentInfo() {
-        //_categoriesIDs has an array of the student's contextpacksIDs they're assigned
-        _categoriesIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").contextIDs
-        //_looseTilesIDs has an array of the student's individually assigned words
-        _looseTilesIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseTilesIDs
-        //_category has a dictionary with all of the <contextIDs, contextTitle> in the word river system
-        _category = WordList(urlCategories: "https://teacherwordriver.herokuapp.com/api/categories").category
-        //_tiles has a dictionary with all of the contextIDs and a nested dictionary <wordIDs, <name:wordName, type:wordType> in the word river system
-        _tiles = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").tiles
-        //_categories has a dictionary with all of the <wordIDs, array of contextIDs their related to> in the word river system
-        _categories = WordList(urlTiles: "https://teacherwordriver.herokuapp.com/api/tile").categories
-        createAlphaDictionary()
-    }
-    
-    //Parse all word information from getStudentInfo into usable objects
-    func getStudentWords() -> [String: [String]] {
-        var categoryDictionary = [String: [String]]()
-        var valueHolder = String()
+        //_looseWordPackIDs has an array of the student's individual word pack IDs they're assigned
+        studentWordPackIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseStudentWordPackIDs
+        //_looseWordsIDs has an array of the student's individual word IDs they're assigned
+        studentWordIDs = WordList(urlStudents: "https://teacherwordriver.herokuapp.com/api/students").looseStudentWordIDs
+        //studentWordPacks is a dictionary with all of the [wordPackID: [wordPackName, list of word IDs]]
+        studentWordPacks = WordList(urlWordPacks: "https://teacherwordriver.herokuapp.com/api/wordPacks", wpIDs: studentWordPackIDs).wordPack
+        //studentWordPackWordIDs has an array of the student's word IDs they're assigned from the assigned word packs
+        studentWordPackWordIDs = WordList(urlWordPacks: "https://teacherwordriver.herokuapp.com/api/wordPacks", wpIDs: studentWordPackIDs).wordIDs
+        //studentWords is a dictionary with all of the [wordID: [wordName, wordType]]
+        studentWords = WordList(urlWords: "https://teacherwordriver.herokuapp.com/api/words", wdIDs: studentWordPackWordIDs).words
         
-        //Loop through array of known assigned categories
-        let counter = _categoriesIDs.count
-        for i in 0...counter-1 {
-            //catID is the current category ID
-            let catID = _categoriesIDs[i]
-            //valueHolder is the name of the current category
-            let valueHolder:String? = _category[catID]
-            var arrHolder:[String] = parseDictionaryForArray(_tiles, catDict: _categories, id: catID)
-            categoryDictionary[valueHolder!] = arrHolder
-        }
-        parseDictionaryForLooseTiles(_tiles, looseTiles: _looseTilesIDs)
-        return categoryDictionary
-    }
-    
-    //Helper for getStudentWords()
-    func parseDictionaryForLooseTiles(tiles: [String: [String]], looseTiles: [String]) {
-        let thecount = tiles.count
-        for (key, value) in tiles {
-            let holder = value
-            let tileName:String = holder[0]
-            let tilecount = looseTiles.count
-            if(tilecount > 0) {
-                for index in 0...tilecount-1 {
-                    let looseID = looseTiles[index]
-                    if key == looseID {
-                        addWordToAllTiles(tileName)
-                    }
-                }
+        //Combine word IDs from word packs and individually assigned word IDs
+        for index in 0...studentWordIDs.count-1{
+            if(!(contains(studentWordPackWordIDs, studentWordIDs[index]))){
+                studentWordPackWordIDs.append(studentWordIDs[index])
             }
         }
-    }
-    
-    //Helper for getStudentWords()
-    func parseDictionaryForArray(dictionary: [String: [String]], catDict: [String: [String]], id: String!) -> [String]{
-        var toReturn = [String]()
-        for (key, value) in dictionary {
-            let tileName:String = value[0]
-            for (key2, value2) in catDict {
-                if key == key2 {
-                    let arrSize = value2.count
-                    if arrSize > 0 {
-                        for index in 0...arrSize-1 {
-                            var catIDHold = value2[index]
-                            if catIDHold == id {
-                                toReturn.append(tileName)
-                                addWordToAllTiles(tileName)
-                            }
-                        }
-                    }
-                }
+        
+        //Start the alphabet filter sorting
+        createAlphaDictionary()
+        
+        //Go through all grabbed student words
+        for (id, arr) in studentWords {
+            if(contains(studentWordPackWordIDs, id)){
+                //Add each word to allWords
+                allWords.append(arr[0])
+                //Check the size of each word for the scroll bar width
+                var wordLength = count(arr[0])
+                checkMaxWord(wordLength)
+                //Add each word to the alphabet dictionary
+                addToAlphaDictionary(arr[0])
             }
         }
-        return toReturn
+        
+        //studentContextPacks is a dictionary with all of the [contextPackName: [wordPackIDs]]
+        studentContextPacks = WordList(urlContextPacks: "https://teacherwordriver.herokuapp.com/api/contextPacks", wpIDs: studentWordPackIDs).contextPack
+        
+        //Print staetment to check speed of gathering student info
+        println("Got api info!")
     }
     
-    //Helper to get all assigned words, with no doubles
-    func addWordToAllTiles(toCheck: String) {
-        if contains(allTiles, toCheck) == false {
-            allTiles.append(toCheck)
-            //Used to get default word list in gamescene
-            //println("[\(toCheck), \(getWordType(toCheck))],")
-            var wordLength = count(toCheck)
-            checkMaxWord(wordLength)
-            addToAlphaDictionary(toCheck)
-        }
-    }
-    
-    //Helper for setting scroll width based on the maxword length
-    func checkMaxWord(int: Int) {
-        if int > maxWordLength {
-            maxWordLength = int
-            maxWordLengthTile = maxWordLength
-        }
-    }
     
     //Helper to initialize the alphaDictionary with empty arrays
     func createAlphaDictionary(){
         for i in 0...alpha.count-1 {
             _alphaDictionary[alpha[i]] = []
+        }
+    }
+    
+    //Parse all word information from getStudentInfo into usable objects
+    func getStudentWords() {
+        var wpsInCPs = [String]()
+        //Loop through dictionary of known assigned context packs
+        for (contextName, wordPackIDs) in studentContextPacks {
+            var wordIDs = [String]()
+            //If contextPack has assigned wordPacks
+            if (wordPackIDs.count > 0) {
+                //Loop through assigned wordPacks in contextPack
+                for index in 0...wordPackIDs.count-1 {
+                    //Loop through dictionary of known assigned wordPacks
+                    for (wpID, wpWordIDs) in studentWordPacks {
+                        //If ID from contextPack matches ID of current wordPack
+                        if(wordPackIDs[index] == wpID){
+                            //Helper for getting wordPacks not assigned to contextPacks
+                            if (!(contains(wpsInCPs, wpID))){
+                                wpsInCPs.append(wpID)
+                            }
+                            //Holder for matched words from wordPack
+                            var wpWords = wpWordIDs
+                            //Loop through word IDs in current wordPack and add them to all word IDs in current contextPack
+                            for index2 in 1...wpWordIDs.count-1{
+                                if (!(contains(wordIDs, wpWordIDs[index2]))) {
+                                    wordIDs.append(wpWordIDs[index2])
+                                }
+                            }
+                        }
+                    }
+                }
+                //Assigning all word IDs from wordPacks in current contextPack to the name of the current contextPack
+                //Essentially replacing wordPack IDs with all of the word IDs from those previous wordPack IDs
+                studentContextPacks[contextName] = wordIDs
+            }
+        }
+
+        //Loop through dictionary of known assigned wordPacks again to check if not in a contextPack
+        for (wpIDnonContext, wpWordIDnonContext) in studentWordPacks {
+            var nonContextWordIDs = [String]()
+            //If the current wordPack ID is not in the helper list of wordPack IDs in a contextPack
+            if(!(contains(wpsInCPs, wpIDnonContext))){
+                var wpWordsNonContext = [String]()
+                wpWordsNonContext = wpWordIDnonContext
+                //Loop through word IDs in current wordPack and add them to all word IDs in current wordPack
+                for index3 in 1...wpWordIDnonContext.count-1{
+                    if (!(contains(nonContextWordIDs, wpWordIDnonContext[index3]))) {
+                        nonContextWordIDs.append(wpWordIDnonContext[index3])
+                    }
+                }
+                //Make wordPack a "contextPack" by adding name and it's assigned word IDs
+                //wpWordIDnonContext[0] is the wordPackName
+                studentContextPacks[wpWordIDnonContext[0]] = nonContextWordIDs
+            }
+        }
+        
+        //Loop through all words assigned to the student
+        for (wordID, wordArr) in studentWords {
+            //Loop through all contextPacks with their assigned word IDs
+            for (contName, contWordIDs) in studentContextPacks {
+                //If contextPack has words assigned
+                if(contWordIDs.count > 0){
+                    //Loop through word IDs assigned to contextPack
+                    for i in 0...contWordIDs.count-1 {
+                        //If current word ID in contextPack matches the current student word
+                        if (wordID == contWordIDs[i]) {
+                            var wordsHold = contWordIDs
+                            wordsHold[i] = wordArr[0]
+                            //Replace the word ID with the word name
+                            studentContextPacks[contName] = wordsHold
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //Helper for setting scroll width based on the maxword length
+    func checkMaxWord(int: Int) {
+        if int > maxWordLength {
+            maxWordLength = int
+            maxWordLengthWord = maxWordLength
         }
     }
     

@@ -9,20 +9,24 @@
 import SpriteKit
 
 public class WordList {
-    //Holds all of the categories associated with given student
-    var contextIDs: [String]!
+    //Holds all of the classes/groups associated with given student
+    var classListIDs: [String:[String]]!
+    //Holds all of the wordPacks associated with given student
+    var looseStudentWordPackIDs: [String]!
     //Holds all of the individually assigned words
-    var looseTilesIDs: [String]!
-    //Holds all of the category IDs and category name
-    var category = [String: String]()
+    var looseStudentWordIDs: [String]!
+    var wordIDs: [String]!
+    //Holds all of the wordPack IDs and wordPack name
+    var wordPack = [String: [String]]()
+    var contextPack = [String: [String]]()
     //Holds all of the word ID's in the system and an array containing the name at [0] and type at [1]
-    var tiles = [String: [String]]()
-    //Holds all of the word ID's in the system and an array of associated category IDs
-    var categories = [String: [String]]()
-    //Holds all of the words in the word river database
-    var words: [String]!
+//    var allWords = [String: [String]]()
+    //Holds all of the word ID's in the system and an array containing the name at [0] and type at [1]
+    var words = [String: [String]]()
+    //Holds all of the word ID's in the system and an array of associated wordPack IDs
+    var wordPacks = [String: [String]]()
     //Holds associative array from local array
-    var wordsWithCategories: [[String]]!
+    var wordsWithWordPacks: [[String]]!
 
 
     //////////* Helper functions for initializers *//////////
@@ -38,16 +42,42 @@ public class WordList {
         }
         return toReturn
     }
-
+    
+    func getNameAndWordPackIDsFromJSON(json: JSON, wordPackIDs: [String]) -> [String: [String]]{
+        var toReturn = [String: [String]]()
+        for index in 0...json.count-1 {
+            var arrHold = json[index]["wordPacks"].arrayValue.map { $0.string!}
+            var idHold = [String]()
+            for index2 in 0...arrHold.count-1 {
+                if(contains(wordPackIDs, arrHold[index2])){
+                    idHold.append(arrHold[index2])
+                }
+            }
+            toReturn[json[index]["name"].string!] = idHold
+        }
+        return toReturn
+    }
+    
     //Takes in JSON (swifty) object "json" and parses it for "key" and "value" returns results as a
     //dictionary with string:key string:value
-    func getStringStringDictionaryFromJSON(json: JSON, key: String, value: String) -> [String: String]{
-        var toReturn = [String: String]()
+    func getStringStringDictionaryFromJSON(json: JSON, wordPackIDs: [String]) -> [String: [String]]{
+        var toReturn = [String: [String]]()
         var thecount = json.count
         for index in 0...thecount-1 {
-            if let wantKey = json[index][key].string {
-                if let wantValue = json[index][value].string {
-                    toReturn[wantKey] = wantValue
+            for index2 in 0...wordPackIDs.count-1 {
+                if(json[index]["_id"].string! == wordPackIDs[index2]){
+                    var wordsHold = json[index]["words"].arrayValue.map { $0.string!}
+                    var arrHold = [String]()
+                    arrHold.append(json[index]["name"].string!)
+                    for i in 0...wordsHold.count-1 {
+                        arrHold.append(wordsHold[i])
+                    }
+                    toReturn[json[index]["_id"].string!] = arrHold
+                    for index3 in 0...wordsHold.count-1{
+                        if(!(contains(wordIDs, wordsHold[index3]))){
+                            wordIDs.append(wordsHold[index3])
+                        }
+                    }
                 }
             }
         }
@@ -69,17 +99,20 @@ public class WordList {
 
     //Takes in JSON (swifty) object "json" and parses it for "id", "firstItem", and "secondItem" returns results as a
     //dictionary with string:idReturn array: [itemReturn1, itemReturn2]
-    func getNestedDictionaryFromJSON(json: JSON, id: String, firstItem: String, secondItem: String) -> [String: [String]]{
+    func getNestedDictionaryFromJSON(json: JSON, wordPackIDs: [String]) -> [String: [String]]{
         var toReturn = [String: [String]]()
+        var idCheck = [String]()
         var thecount = json.count
         for index in 0...thecount-1 {
             var result = [String]()
-            var idReturn = json[index][id].stringValue
-            var itemReturn1 = json[index][firstItem].stringValue
-            var itemReturn2 = json[index][secondItem].stringValue
-            result.append(itemReturn1)
-            result.append(itemReturn2)
-            toReturn[idReturn] = result
+            var idReturn = json[index]["_id"].stringValue
+            var itemReturn1 = json[index]["name"].stringValue
+            var itemReturn2 = json[index]["wordType"].stringValue
+            if(!(contains(idCheck, idReturn))){
+                result.append(itemReturn1)
+                result.append(itemReturn2)
+                toReturn[idReturn] = result
+            }
         }
         return toReturn
     }
@@ -97,6 +130,91 @@ public class WordList {
         return toReturn
     }
     
+    //Takes in JSON (swifty) object "json" and parses it for "id", and a "arrToGet" returns results as a string array
+    func getClassListFromStudent(json: JSON, id: String) -> [String: [String]]{
+        var classList = [String: [String]]()
+        var thecount = json.count;
+        for index in 0...thecount-1 {
+            let StudentID = json[index]["_id"].string
+            if StudentID == id {
+                for index2 in 0...json[index]["classList"].count-1 {
+                    classList[json[index]["classList"][index2]["_id"].string!] = getGroupListFromStudent(json[index]["classList"][index2]["groupList"].arrayValue.map { $0.string!})
+                }
+            }
+        }
+        return classList
+    }
+    
+    func getGroupListFromStudent(json: [String]) -> [String] {
+        var groupList = [String]()
+        groupList = json
+        return groupList
+    }
+    
+    //initializer for getting teacher information
+    /* This will need to be modified for desired teacher's id once we have a login */
+    func getClassInfo (urlTeachers: String){
+        let nsurl = NSURL(string: urlTeachers)
+        var error: NSError?
+        let teacherData: NSData = NSData(contentsOfURL: nsurl!)!
+        if let teacherDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(teacherData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonTeacher = JSON(teacherDictionary)
+                for index in 0...jsonTeacher.count-1 {
+                    if(jsonTeacher[index]["_id"] == "5511a83da168f8b5f3144f02"){
+                        for index2 in 0...jsonTeacher[index]["classList"].count-1 {
+                            for (str, arr) in classListIDs {
+                                var classID: String
+                                classID = jsonTeacher[index]["classList"][index2]["_id"].string!
+                                for wpindex in 0...jsonTeacher[index]["classList"][index2]["wordPacks"].count-1 {
+                                    if(!(contains(looseStudentWordPackIDs, jsonTeacher[index]["classList"][index2]["wordPacks"][wpindex].string!))){
+                                        looseStudentWordPackIDs.append(jsonTeacher[index]["classList"][index2]["wordPacks"][wpindex].string!)
+                                    }
+                                }
+                                for wdindex in 0...jsonTeacher[index]["classList"][index2]["words"].count-1 {
+                                    if(!(contains(looseStudentWordIDs, jsonTeacher[index]["classList"][index2]["words"][wdindex].string!))){
+                                        looseStudentWordIDs.append(jsonTeacher[index]["classList"][index2]["words"][wdindex].string!)
+                                    }
+                                }
+                                if(compareIDs(str, otherID:classID)){
+                                    for index3 in 0...jsonTeacher[index]["classList"][index2]["groupList"].count-1{
+                                        var groupID: String
+                                        groupID = jsonTeacher[index]["classList"][index2]["groupList"][index3]["_id"].string!
+                                        for index4 in 0...arr.count-1 {
+                                            if(compareIDs(arr[index4], otherID:groupID)){
+                                                for wpindex2 in 0...jsonTeacher[index]["classList"][index2]["groupList"][index3]["wordPacks"].count-1 {
+                                                    if(!(contains(looseStudentWordPackIDs, jsonTeacher[index]["classList"][index2]["groupList"][index3]["wordPacks"][wpindex2].string!))){
+                                                        looseStudentWordPackIDs.append(jsonTeacher[index]["classList"][index2]["groupList"][index3]["wordPacks"][wpindex2].string!)
+                                                    }
+                                                }
+                                                for wdindex2 in 0...jsonTeacher[index]["classList"][index2]["groupList"][index3]["words"].count-1 {
+                                                    if(!(contains(looseStudentWordIDs, jsonTeacher[index]["classList"][index2]["groupList"][index3]["words"].string!))){
+                                                        looseStudentWordIDs.append(jsonTeacher[index]["classList"][index2]["groupList"][index3]["words"].string!)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+//                println("WordPacks: '\(looseStudentWordPackIDs)' ")
+//                println("Words: '\(looseStudentWordIDs)' ")
+        } else {
+            println("The file at '\(urlTeachers)' is not valid JSON, error: \(error!)")
+        }
+    }
+    
+    func compareIDs(id: String, otherID: String) -> Bool{
+        if(id == otherID){
+            return true
+        } else {
+            return false
+        }
+    }
+    
     //initializer for getting student information
     /* This will need to be modified for desired student's id once we have a login */
     init(urlStudents: String){
@@ -108,77 +226,69 @@ public class WordList {
         if let studentDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(studentData,
             options: NSJSONReadingOptions(), error: &error){
                 let jsonStudent = JSON(studentDictionary)
-                contextIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "wordPacks")
-                looseTilesIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "words")
+                looseStudentWordPackIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "wordPacks")
+                looseStudentWordIDs = getArrayFromJSONWithStudentID(jsonStudent, id: "5511ab56117e23f0412fd08f", arrToGet: "words")
+                classListIDs = getClassListFromStudent(jsonStudent, id: "5511ab56117e23f0412fd08f")
+//                getClassInfo("https://teacherwordriver.herokuapp.com/api/users/")
         } else {
             println("The file at '\(urlStudents)' is not valid JSON, error: \(error!)")
         }
     }
+
     
-    //initializer for getting all of the category information
-    init(urlCategories: String){
-        let nsurl = NSURL(string: urlCategories)
+    //initializer for getting all of the wordPack information
+    init(urlContextPacks: String, wpIDs: [String]){
+        let nsurl = NSURL(string: urlContextPacks)
         var error: NSError?
         
-        let categoryData: NSData = NSData(contentsOfURL: nsurl!)!
+        let contextPackData: NSData = NSData(contentsOfURL: nsurl!)!
         
-        if let categoryDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(categoryData,
+        if let contextPackDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(contextPackData,
             options: NSJSONReadingOptions(), error: &error){
-                let jsonCategory = JSON(categoryDictionary)
-                category = getStringStringDictionaryFromJSON(jsonCategory, key: "_id", value: "name")
+                let jsonContextPack = JSON(contextPackDictionary)
+                contextPack = getNameAndWordPackIDsFromJSON(jsonContextPack, wordPackIDs: wpIDs)
         } else {
-            println("The file at '\(urlCategories)' is not valid JSON, error: \(error!)")
+            println("The file at '\(urlContextPacks)' is not valid JSON, error: \(error!)")
+        }
+    }
+    
+    //initializer for getting all of the wordPack information
+    init(urlWordPacks: String, wpIDs: [String]){
+        wordIDs = [String]()
+        let nsurl = NSURL(string: urlWordPacks)
+        var error: NSError?
+        
+        let wordPackData: NSData = NSData(contentsOfURL: nsurl!)!
+        
+        if let wordPackDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(wordPackData,
+            options: NSJSONReadingOptions(), error: &error){
+                let jsonWordPack = JSON(wordPackDictionary)
+                wordPack = getStringStringDictionaryFromJSON(jsonWordPack, wordPackIDs: wpIDs)
+        } else {
+            println("The file at '\(urlWordPacks)' is not valid JSON, error: \(error!)")
         }
     }
     
     //initializer for getting tile information
-    init(urlTiles: String){
-        let nsurl = NSURL(string: urlTiles)
+    init(urlWords: String, wdIDs: [String]){
+        let nsurl = NSURL(string: urlWords)
         var error: NSError?
         
-        let tileData: NSData = NSData(contentsOfURL: nsurl!)!
+        let wordData: NSData = NSData(contentsOfURL: nsurl!)!
         
-        if let tileDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(tileData,
+        if let wordDictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(wordData,
             options: NSJSONReadingOptions(), error: &error){
-                let jsonTile = JSON(tileDictionary)
-                tiles = getNestedDictionaryFromJSON(jsonTile, id: "_id", firstItem: "name", secondItem: "wordType")
-                categories = getStringArrayDictionaryFromJSON(jsonTile, id: "_id", array: "wordPacks")
+                let jsonWord = JSON(wordDictionary)
+                words = getNestedDictionaryFromJSON(jsonWord, wordPackIDs: wdIDs)
         } else {
-            println("The file at '\(urlTiles)' is not valid JSON, error: \(error!)")
+            println("The file at '\(urlWords)' is not valid JSON, error: \(error!)")
         }
     }
-    
-    //Gets ALL of the words from word river database
-    init(url: String){
-        let nsurl = NSURL(string: url)
-        var error: NSError?
-        
-        //the data seems to be not valid json
-        let data: NSData = NSData(contentsOfURL: nsurl!)!
-        //println("The data is: \(data)")
-        
-        //but, we can make JSON out of the stuff that is returned when we ask for JSONSerialization on that data
-        if let dictionary: AnyObject = NSJSONSerialization.JSONObjectWithData(data,
-            options: NSJSONReadingOptions(), error: &error){
-                let somestuff:JSON = JSON(dictionary)
-                let want:String = "name"
-                words = getStringArrayFromJSON(somestuff, toGet: want)
-        } else {
-            println("The file at '\(url)' is not valid JSON, error: \(error!)")
-        }
-    }
+
     
     //Deals with the nested array Default Word List
     init(arr: [[String]]!) {
-        wordsWithCategories = arr
+        wordsWithWordPacks = arr
     }
     
-    
-    init(filename: String) {
-        if let dictionary = Dictionary<String, AnyObject>.loadJSONFromBundle(filename) {
-            if let wordsArray: AnyObject = dictionary["words"] {
-                words = wordsArray as! [String]
-            }
-        }
-    }
 }

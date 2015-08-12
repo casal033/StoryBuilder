@@ -99,7 +99,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //let LEFT_BOUNDS: CGFloat = 200
     let LEFT_BOUNDS: CGFloat = 250
     
-    var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
+    var _words:[[String]] = WordList(arr: DEFAULT_WORD_LIST).wordsWithWordPacks
     //var _words:[String] = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
     //var _words:[String] = []
     var _currentLabel:SKLabelNode = SKLabelNode()
@@ -193,7 +193,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         tilesArray = []
         wordIndex = 0
         //_words = WordList(url: "http://facultypages.morris.umn.edu/~lamberty/research/sightWords.json").words
-        _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithCategories
+        _words = WordList(arr: DEFAULT_WORD_LIST).wordsWithWordPacks
     }
     
     func addTileFromWordList() {
