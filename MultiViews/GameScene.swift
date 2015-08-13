@@ -147,16 +147,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         body.collisionBitMask = 0
         body.contactTestBitMask = BodyType.tile.rawValue
         
-        trash.position = CGPointMake(300, 100)
+        trash.position = CGPointMake(300, 50)
         trash.physicsBody = body
         trash.zPosition = 15
-        addChild(trash)
+        //addChild(trash)
         trash.name = "trashcan"
         
         
         mySpeechSynthesizer.stopSpeakingAtBoundary(AVSpeechBoundary.Word)
         self.physicsWorld.contactDelegate = self
-        view.showsPhysics = true
+        view.showsPhysics = false
         
         
     }
@@ -263,6 +263,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     tile.highlight()
                 }
         }
+        //if you are throwing away some tiles by releasing them over the trash can
+        //if (contact.bodyA.categoryBitMask == BodyType.trash.rawValue) &&
+        //    (contact.bodyB.categoryBitMask == BodyType.tile.rawValue) {
+        //        let tile = secondNode as! Tile
+        //        if tile.touchesEnded(<#touches: Set<NSObject>#>, withEvent: <#UIEvent#>)
+                
+        //}
         
         //this value holds onto whatever two things just contacted each other
     }
@@ -270,6 +277,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func didEndContact(contact: SKPhysicsContact) {
         let firstNode = contact.bodyA.node as! SKSpriteNode
         let secondNode = contact.bodyB.node as! SKSpriteNode
+        
+        //println("done touching!!!!")
         
         if (contact.bodyA.categoryBitMask == BodyType.tile.rawValue) &&
             (contact.bodyB.categoryBitMask == BodyType.tile.rawValue) {
@@ -283,5 +292,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
         }
         //called automatically when contact ends
+    }
+    
+    func revertTileHighlighting() {
+        for tile in tilesArray {
+            tile.highlightRevert()
+            tile.zPosition = 0
+        }
     }
 }

@@ -228,11 +228,13 @@ class Tile: SKSpriteNode, Printable, Comparable {
             otherTile.prevTile.nextTile = self
         }
         self.prevTile = otherTile.prevTile
+        //otherTile.prevTile.highlightRevert()
         otherTile.prevTile = self.phrase.last()
         self.phrase.last().nextTile = otherTile
         moveTileAnimated(CGPoint(
             x: otherTile.position.x - (otherTile.size.width/2) + (size.width/2),
             y: otherTile.position.y))
+        //otherTile.highlightRevert()
         
     }
     
@@ -243,11 +245,13 @@ class Tile: SKSpriteNode, Printable, Comparable {
             otherTile.nextTile.prevTile = self.phrase.last()
         }
         self.phrase.last().nextTile = otherTile.nextTile
+        //otherTile.nextTile.highlightRevert()
         otherTile.nextTile = self
         self.prevTile = otherTile
         moveTileAnimated(CGPoint(
             x: otherTile.position.x + (otherTile.size.width/2) + (size.width/2),
             y: otherTile.position.y))
+        //otherTile.highlightRevert()
     }
     
     func rotate() {
@@ -368,10 +372,10 @@ class Tile: SKSpriteNode, Printable, Comparable {
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         var gameScene = self.scene as! GameScene
         let touch = touches.first as! UITouch
-        for tile in getPhraseTiles() {
-            tile.highlightRevert()
-            tile.zPosition = 0
-        }
+        //this next thing, we used to just do for tiels in the seemingly most impacted phrase...
+        //it might be a bit of a hack to unhighlight all the tiles in the scene, but this does
+        //seem to work without being super horrible. We shall see.
+        gameScene.revertTileHighlighting()
         println("I found a tile and touch ended")
         if !didMove() {
             let moveToPoint = CGPoint(x: position.x + momentum.x, y: position.y + momentum.y)
@@ -401,10 +405,10 @@ class Tile: SKSpriteNode, Printable, Comparable {
     override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
         var gameScene = self.scene as! GameScene
         let touch = touches.first as! UITouch
-        for tile in getPhraseTiles() {
-            tile.highlightRevert()
-            tile.zPosition = 0
-        }
+        //this next thing, we used to just do for tiels in the seemingly most impacted phrase...
+        //it might be a bit of a hack to unhighlight all the tiles in the scene, but this does
+        //seem to work without being super horrible. We shall see.
+        gameScene.revertTileHighlighting()
         println("I found a tile and touch was cancelled")
     }
 
