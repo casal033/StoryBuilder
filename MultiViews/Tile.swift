@@ -272,6 +272,10 @@ class Tile: SKSpriteNode, Printable, Comparable {
     func highlightRevert() {
         if (moveable) {
             let pause = SKAction.rotateByAngle(degToRad(0.0), duration: 0.3)
+            /*
+             *we might want more than one type of highlighting event - for dragging over a tile, we want it to revert quickly
+             * BUT for speaking a phrase, we may want more of a pause (maybe even related to the length of the phrase... awesome idea!
+             */
             let revert = SKAction.setTexture(textureAtlas.textureNamed("\(baseColorName)1"))
             let sequence: SKAction = SKAction.sequence([pause, revert])
             runAction(sequence, withKey: "unhighlight")

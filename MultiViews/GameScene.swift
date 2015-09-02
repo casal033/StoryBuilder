@@ -218,6 +218,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             sentence += " " + nextTile.word
             nextTile = nextTile.nextTile
         }
+        /*
+         * Something to check on - can we split the phrase in some meaningful way (on space) to move along to the next tile for highlighting at the right moment...
+         * e.g. once that tile is done speaking
+         */
         speakWord(sentence)
     }
     
